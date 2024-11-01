@@ -9,6 +9,8 @@ export default function Devices({}) {
       <Navbar title="Devices" />
       <div className="flex h-full flex-1">
         <ProjectList />
+
+
         <div className="flex-1 min-h-svh">
           <div className="flex items-center p-6">
 
@@ -61,6 +63,8 @@ export default function Devices({}) {
             </div>
           </div>
         </div>
+
+        {/* TODO: Add table here */}
       </div>
 
     </div>
