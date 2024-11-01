@@ -1,7 +1,7 @@
 // src/pages/MyPage.js
 import React from "react";
 import Navbar from "@/components/navbar";
-import ProjectList from "@/components/projectList";
+import ProjectItem from "@/components/project-item";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 
@@ -33,7 +33,7 @@ const Projects = () => {
           <h3 className=" font-semibold mb-3">Project List</h3>
           <ul className="space-y-2">
             {items.map((item, index) => (
-              <ProjectList key={index} item={item} />
+              <ProjectItem key={index} item={item} />
             ))}
           </ul>
         </div>
