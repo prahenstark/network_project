@@ -1,31 +1,36 @@
-"use client"
+"use client";
 import { useState } from "react";
 import Navbar from "@/components/navbar";
 import ToggleNav from "@/components/toggle-nav";
 import BeforeAuthComponent from "@/components/auth-page/beforeAuth";
+import Strategy from "@/components/auth-page/strategy";
+import AuthMethods from "@/components/auth-page/auth-methods";
+import AuthDetails from "@/components/auth-page/auth-details";
 
 export default function Auth() {
   const tabs = ["Auth", "Strategy", "Auth Methods", "Auth Details"];
   const [activeTab, setActiveTab] = useState("Auth");
 
+  const tabsContent = {
+    Auth: <BeforeAuthComponent />,
+    Strategy: <Strategy />,
+    "Auth Methods": <AuthMethods/>,
+    "Auth Details": <AuthDetails/>,
+  };
+
   return (
     <div>
       <Navbar title="Authentication" />
-      <div>
+
+      <div className="min-h-screen flex flex-col p-6">
+        {/* Navbar for Tab Controls */}
         <ToggleNav
-          className="p-6"
+          className="pb-6"
           tabs={tabs}
           activeTab={activeTab}
           setActiveTab={setActiveTab}
         />
-      </div>
-
-      <div className="p-6">
-        {activeTab === "Auth" ? (
-          <BeforeAuthComponent />
-        ) : (
-          <div>Coming soon...</div>
-        )}
+        {tabsContent[activeTab]}
       </div>
     </div>
   );
