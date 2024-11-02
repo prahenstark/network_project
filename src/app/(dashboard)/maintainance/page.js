@@ -6,6 +6,9 @@ import ToggleNav from "@/components/toggle-nav";
 import ToggleDisplay from "@/components/toggle-display";
 import ToggleHeader from "@/components/toggle-header";
 import Upgrade from "@/components/maintainace-page/upgrade";
+import ConfigurationLog from "@/components/maintainace-page/configuration-log";
+import UpgradeLog from "@/components/maintainace-page/upgrade-log";
+import Template from "@/components/maintainace-page/template";
 
 export default function Maintainance({}) {
   const tabs = ["Upgrade", "Configuration Log", "Upgrade Log", "Template"];
@@ -14,9 +17,9 @@ export default function Maintainance({}) {
 
   const tabsContent = {
     Upgrade: <Upgrade />,
-    "Configuration Log": "Learn more About us in this section.",
-    "Upgrade Log": "Discover our Services here.",
-    Template: "Get in touch with us through the Contact section.",
+    "Configuration Log": <ConfigurationLog/>,
+    "Upgrade Log": <UpgradeLog/>,
+    Template: <Template/>,
   };
 
   return (

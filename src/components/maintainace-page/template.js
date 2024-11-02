@@ -20,10 +20,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import DatePicker from "../date-picker";
 
-function Upgrade() {
+function Template() {
   const dropdownOptions = [
-    { label: "All", value: "all" },
+    { label: "All Models", value: "allModels" },
     { label: "Test 1", value: "test1" },
     { label: "Test 2", value: "test2" },
     { label: "Test 3", value: "test3" },
@@ -36,26 +37,7 @@ function Upgrade() {
   ];
 
   const data = [
-    {
-      id: "m5gr84i9",
-      sn: 1,
-      mac: "01-23-45-67-89-AB",
-      ip: "192.168.1.1",
-      name: "Prahen",
-      type: "EAP520",
-      status: "Success",
-      version: "V4",
-    },
-    {
-      id: "3u1reuv4",
-      sn: 1,
-      mac: "00-B0-D0-63-C2-26",
-      ip: "192.0.2.146",
-      name: "Arghya",
-      type: "EAP520",
-      status: "Success",
-      version: "V4",
-    },
+    
   ];
 
   const columns = [
@@ -87,18 +69,21 @@ function Upgrade() {
       cell: ({ row }) => <div className="capitalize">{row.getValue("sn")}</div>,
     },
     {
-      accessorKey: "mac",
-      header: () => {
-        return <h1>MAC</h1>;
-      },
-      cell: ({ row }) => <div className="lowercase">{row.getValue("mac")}</div>,
-    },
-    {
-      accessorKey: "ip",
+      accessorKey: "templateName",
       header: ({ column }) => {
-        return <h1>IP</h1>;
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Template Name
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
       },
-      cell: ({ row }) => <div className="lowercase">{row.getValue("ip")}</div>,
+      cell: ({ row }) => (
+        <div className="lowercase">{row.getValue("templateName")}</div>
+      ),
     },
     {
       accessorKey: "name",
@@ -135,29 +120,48 @@ function Upgrade() {
       ),
     },
     {
-      accessorKey: "status",
-      header: "Status",
+      accessorKey: "createAccount",
+      header: ({ column }) => {
+        return <h1>Create Account</h1>;
+      },
       cell: ({ row }) => (
-        <div className="capitalize">{row.getValue("status")}</div>
+        <div className="lowercase">{row.getValue("createAccount")}</div>
       ),
     },
     {
-      accessorKey: "version",
+      accessorKey: "creationTime",
       header: ({ column }) => {
         return (
           <Button
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
-            Version
+            Creation Time
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         );
       },
       cell: ({ row }) => (
-        <div className="lowercase">{row.getValue("version")}</div>
+        <div className="lowercase">{row.getValue("creationTime")}</div>
       ),
     },
+
+
+    //   {
+    //     accessorKey: "amount",
+    //     header: () => <div className="text-right">Amount</div>,
+    //     cell: ({ row }) => {
+    //       const amount = parseFloat(row.getValue("amount"));
+
+    //       // Format the amount as a dollar amount
+    //       const formatted = new Intl.NumberFormat("en-US", {
+    //         style: "currency",
+    //         currency: "USD",
+    //       }).format(amount);
+
+    //       return <div className="text-right font-medium">{formatted}</div>;
+    //     },
+    //   },
     {
       id: "config",
       enableHiding: false,
@@ -193,25 +197,20 @@ function Upgrade() {
   ];
 
   return (
-    <div className="flex h-full w-full">
-      <ProjectList />
-
-      <div className="w-full">
-        <ToggleHeader pageName="Upgrade" className="px-6">
-          <SelectDropdown className="min-w-28" options={dropdownOptions} />
-          <Searchbar displayText="🔍 Search" />
-          <IconDropdown
-            className="border-green-500 min-w-20"
-            options={iconDropdownOptions}
-          >
-            <FileInput size={18} />
-            <ChevronDown size={18} />
-          </IconDropdown>
-        </ToggleHeader>
-        <DataTable columns={columns} data={data} />
-      </div>
+    <div className="flex flex-col h-full w-full">
+      <ToggleHeader pageName="Upgrade Log" className="px-6">
+        <SelectDropdown className="w-28" options={dropdownOptions} />
+        <IconDropdown
+          className="border-green-500 min-w-20"
+          options={iconDropdownOptions}
+        >
+          <FileInput size={18} />
+          <ChevronDown size={18} />
+        </IconDropdown>
+      </ToggleHeader>
+      <DataTable columns={columns} data={data} />
     </div>
   );
 }
 
-export default Upgrade;
+export default Template;

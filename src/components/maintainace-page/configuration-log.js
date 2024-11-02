@@ -20,14 +20,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import DatePicker from "../date-picker";
 
-function Upgrade() {
-  const dropdownOptions = [
-    { label: "All", value: "all" },
-    { label: "Test 1", value: "test1" },
-    { label: "Test 2", value: "test2" },
-    { label: "Test 3", value: "test3" },
-  ];
+function ConfigurationLog() {
+    const dropdownOptions = [
+      { label: "All", value: "all" },
+      { label: "Test 1", value: "test1" },
+      { label: "Test 2", value: "test2" },
+      { label: "Test 3", value: "test3" },
+    ];
 
   const iconDropdownOptions = [
     "Create Account",
@@ -39,22 +40,22 @@ function Upgrade() {
     {
       id: "m5gr84i9",
       sn: 1,
+      configurationTime: "2024-10-25 00:15:27",
+      account: "Prahen",
+      nickName: "Stark",
       mac: "01-23-45-67-89-AB",
-      ip: "192.168.1.1",
-      name: "Prahen",
-      type: "EAP520",
+      content: "Modify Device WiFi Info",
       status: "Success",
-      version: "V4",
     },
     {
       id: "3u1reuv4",
-      sn: 1,
+      sn: 2,
+      configurationTime: "2024-10-27 00:02:53",
+      account: "Arghya",
+      nickName: "Decodam",
       mac: "00-B0-D0-63-C2-26",
-      ip: "192.0.2.146",
-      name: "Arghya",
-      type: "EAP520",
-      status: "Success",
-      version: "V4",
+      content: "Modify Device WiFi Info",
+      status: "Failed",
     },
   ];
 
@@ -87,6 +88,49 @@ function Upgrade() {
       cell: ({ row }) => <div className="capitalize">{row.getValue("sn")}</div>,
     },
     {
+      accessorKey: "configurationTime",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Configuration Time
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      cell: ({ row }) => (
+        <div className="lowercase">{row.getValue("configurationTime")}</div>
+      ),
+    },
+    {
+      accessorKey: "account",
+      header: ({ column }) => {
+        return <h1>Account</h1>;
+      },
+      cell: ({ row }) => (
+        <div className="lowercase">{row.getValue("account")}</div>
+      ),
+    },
+    {
+      accessorKey: "nickName",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Nick Name
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      cell: ({ row }) => (
+        <div className="lowercase">{row.getValue("nickName")}</div>
+      ),
+    },
+    {
       accessorKey: "mac",
       header: () => {
         return <h1>MAC</h1>;
@@ -94,46 +138,23 @@ function Upgrade() {
       cell: ({ row }) => <div className="lowercase">{row.getValue("mac")}</div>,
     },
     {
-      accessorKey: "ip",
-      header: ({ column }) => {
-        return <h1>IP</h1>;
-      },
-      cell: ({ row }) => <div className="lowercase">{row.getValue("ip")}</div>,
-    },
-    {
-      accessorKey: "name",
+      accessorKey: "content",
       header: ({ column }) => {
         return (
           <Button
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
-            Name
+            Content
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         );
       },
       cell: ({ row }) => (
-        <div className="lowercase">{row.getValue("name")}</div>
+        <div className="lowercase">{row.getValue("content")}</div>
       ),
     },
-    {
-      accessorKey: "type",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Type
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        );
-      },
-      cell: ({ row }) => (
-        <div className="lowercase">{row.getValue("type")}</div>
-      ),
-    },
+
     {
       accessorKey: "status",
       header: "Status",
@@ -141,23 +162,22 @@ function Upgrade() {
         <div className="capitalize">{row.getValue("status")}</div>
       ),
     },
-    {
-      accessorKey: "version",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Version
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        );
-      },
-      cell: ({ row }) => (
-        <div className="lowercase">{row.getValue("version")}</div>
-      ),
-    },
+
+    //   {
+    //     accessorKey: "amount",
+    //     header: () => <div className="text-right">Amount</div>,
+    //     cell: ({ row }) => {
+    //       const amount = parseFloat(row.getValue("amount"));
+
+    //       // Format the amount as a dollar amount
+    //       const formatted = new Intl.NumberFormat("en-US", {
+    //         style: "currency",
+    //         currency: "USD",
+    //       }).format(amount);
+
+    //       return <div className="text-right font-medium">{formatted}</div>;
+    //     },
+    //   },
     {
       id: "config",
       enableHiding: false,
@@ -193,25 +213,21 @@ function Upgrade() {
   ];
 
   return (
-    <div className="flex h-full w-full">
-      <ProjectList />
-
-      <div className="w-full">
-        <ToggleHeader pageName="Upgrade" className="px-6">
-          <SelectDropdown className="min-w-28" options={dropdownOptions} />
-          <Searchbar displayText="🔍 Search" />
-          <IconDropdown
-            className="border-green-500 min-w-20"
-            options={iconDropdownOptions}
-          >
-            <FileInput size={18} />
-            <ChevronDown size={18} />
-          </IconDropdown>
-        </ToggleHeader>
-        <DataTable columns={columns} data={data} />
-      </div>
+    <div className="flex flex-col h-full w-full">
+      <ToggleHeader pageName="Configuration Log" className="px-6">
+        <SelectDropdown className="w-28" options={dropdownOptions} />
+        <DatePicker displayText="Pick a date" />
+        <IconDropdown
+          className="border-green-500 min-w-20"
+          options={iconDropdownOptions}
+        >
+          <FileInput size={18} />
+          <ChevronDown size={18} />
+        </IconDropdown>
+      </ToggleHeader>
+      <DataTable columns={columns} data={data} />
     </div>
   );
 }
 
-export default Upgrade;
+export default ConfigurationLog;
