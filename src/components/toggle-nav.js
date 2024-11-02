@@ -6,7 +6,7 @@ const ToggleNav = ({ tabs, activeTab, setActiveTab, className = "" }) => {
       {tabs.map((tab, index) => (
         <button
           key={tab}
-          className={`py-2 w-1/4 ${
+          className={`py-2 flex-1 ${
             activeTab === tab
               ? "bg-white bg-opacity-5 border-2 border-green-500"
               : "bg-white bg-opacity-5 hover:bg-opacity-10"
