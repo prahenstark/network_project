@@ -14,7 +14,11 @@ const Projects = () => {
       <Navbar title="Projects" />
 
       {/* Page Info */}
+<<<<<<< HEAD
       <div className="px-4 space-y-6 w-full mx-auto">
+=======
+      <div className="p-4 mx-6 space-y-6 ">
+>>>>>>> e77bbd8f8961a96656eb7ffd3f6fbc4390f0cac1
         {/* Top Horizontal Section */}
         <div className="flex items-center justify-between p-4 text-white rounded-lg">
           {/* Left: Static Page Name */}
