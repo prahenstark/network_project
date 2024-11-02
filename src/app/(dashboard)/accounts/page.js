@@ -7,14 +7,24 @@ import { ChevronDown } from "lucide-react";
 import { FileInput } from "lucide-react";
 
 export default function Accounts({}) {
-  const iconDropdownOptions = ["Profile", "Billing", "Team", "Subscription"];
+  const iconDropdownOptions = [
+    "Create Account",
+    "Reset Account",
+    "Delete Account",
+  ];
+
+  const dropdownOptions = [
+    { label: "Test 1", value: "test1" },
+    { label: "Test 2", value: "test2" },
+    { label: "Test 3", value: "test3" },
+  ];
 
   return (
     <div>
       <Navbar title="Accounts" />
       <ToggleHeader pageName="Account List" className=" p-6">
-        <SelectDropdown className="min-w-28" />
-        <SelectDropdown className="min-w-28" />
+        <SelectDropdown className="min-w-28" options={dropdownOptions} />
+        <SelectDropdown className="min-w-28" options={dropdownOptions} />
         <Searchbar displayText="🔍 Account/Email Address" />
         <IconDropdown
           className="border-green-500 min-w-20"
