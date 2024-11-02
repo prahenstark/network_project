@@ -13,7 +13,7 @@ export default function Maintainance({}) {
   const [activeTab, setActiveTab] = useState("Upgrade");
 
   const tabsContent = {
-    Upgrade: <Upgrade/>,
+    Upgrade: <Upgrade />,
     "Configuration Log": "Learn more About us in this section.",
     "Upgrade Log": "Discover our Services here.",
     Template: "Get in touch with us through the Contact section.",
@@ -23,22 +23,19 @@ export default function Maintainance({}) {
     <div>
       <Navbar title="Maintainance" />
       {/* <div className="flex h-full flex-1"> */}
-        {/* <ProjectList /> */}
-        <div className="flex-1 min-h-svh">
-          <div className="min-h-screen flex flex-col items-center ">
-            {/* Navbar for Tab Controls */}
+      {/* <ProjectList /> */}
+      <div className="flex-1 min-h-svh">
+        <div className="min-h-screen flex flex-col items-center ">
+          {/* Navbar for Tab Controls */}
           <ToggleNav
             className="p-6"
-              tabs={tabs}
-              activeTab={activeTab}
-              setActiveTab={setActiveTab}
-            />
-
-            {tabsContent[activeTab]}
-            {/* Display Section */}
-            {/* <ToggleDisplay activeTab={activeTab} content={tabsContent} /> */}
-          </div>
+            tabs={tabs}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+          />
+          {tabsContent[activeTab]}
         </div>
+      </div>
       {/* </div> */}
     </div>
   );

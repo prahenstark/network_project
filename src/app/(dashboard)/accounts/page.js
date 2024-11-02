@@ -1,3 +1,4 @@
+import DataTable from "@/components/data-table";
 import IconDropdown from "@/components/icon-dropdown";
 import Navbar from "@/components/navbar";
 import Searchbar from "@/components/searchbar";
@@ -34,6 +35,7 @@ export default function Accounts({}) {
           <ChevronDown size={18} />
         </IconDropdown>
       </ToggleHeader>
+      <DataTable/>
     </div>
   );
 }
