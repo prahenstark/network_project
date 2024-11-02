@@ -145,3 +145,9 @@
     @apply bg-background text-foreground;
   }
 }
+
+.toggle-button{
+  display: flex !important;
+  flex-grow: 1;
+  
+}
