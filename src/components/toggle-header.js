@@ -10,8 +10,10 @@ const ToggleHeader = ({ pageName, children, className }) => {
       <h2 className="text-lg font-semibold ">{pageName}</h2>
 
       {/* Right: Placeholder for Control Buttons */}
-      <div>
-        <div className="space-x-4">{children}</div>
+      <div className="">
+        <div className="flex flex-grow mx-auto w-full space-x-4 h-9">
+          {children}
+        </div>
       </div>
     </div>
   );
