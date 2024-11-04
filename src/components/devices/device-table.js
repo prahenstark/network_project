@@ -1,6 +1,7 @@
 "use client";
+
 import React from "react";
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
@@ -14,33 +15,20 @@ import {
 import DataTable from "@/components/data-table";
 import { Button } from "../ui/button";
 
-function DeviceTable() {
-  const data = [
-    {
-      id: "m5gr84i9",
-      sn: 1,
-      mac: "01-23-45-67-89-AB",
-      ip: "192.168.1.1",
-      name: "Prahen",
-      type: "EAP520",
-      mode: "AP",
-      version: "WIS-EAP520",
-      accessTime: "2024-08-22 02:23:15",
-      status: "Success",
-    },
-    {
-      id: "3u1reuv4",
-      sn: 1,
-      mac: "00-B0-D0-63-C2-26",
-      ip: "192.0.2.146",
-      name: "Arghya",
-      type: "EAP520",
-      mode: "AP",
-      version: "WIS-EAP520",
-      accessTime: "2024-08-22 02:23:15",
-      status: "Success",
-    },
-  ];
+function DeviceTable({ data }) {
+  // Transform the data as needed for the table
+  const tableData = data.map(device => ({
+    id: device.gid,
+    sn: device.device_nums, // Assuming device_nums corresponds to 'sn'
+    mac: device.mac || 'N/A', // Provide a fallback if MAC isn't in the data
+    ip: device.ip || 'N/A', // Same for IP
+    name: device.name,
+    type: device.type || 'N/A', // Provide a default
+    mode: device.mode || 'N/A',
+    version: device.version || 'N/A',
+    accessTime: device.created_at || 'N/A', // Or any other relevant field
+    status: device.status || 'N/A',
+  }));
 
   const columns = [
     {
@@ -72,116 +60,88 @@ function DeviceTable() {
     },
     {
       accessorKey: "mac",
-      header: () => {
-        return <h1>MAC</h1>;
-      },
+      header: "MAC",
       cell: ({ row }) => <div className="lowercase">{row.getValue("mac")}</div>,
     },
     {
       accessorKey: "ip",
-      header: ({ column }) => {
-        return <h1>IP</h1>;
-      },
+      header: "IP",
       cell: ({ row }) => <div className="lowercase">{row.getValue("ip")}</div>,
     },
     {
       accessorKey: "name",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Name
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        );
-      },
-      cell: ({ row }) => (
-        <div className="lowercase">{row.getValue("name")}</div>
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Name
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
       ),
+      cell: ({ row }) => <div className="lowercase">{row.getValue("name")}</div>,
     },
     {
       accessorKey: "type",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Type
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        );
-      },
-      cell: ({ row }) => (
-        <div className="lowercase">{row.getValue("type")}</div>
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Type
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
       ),
+      cell: ({ row }) => <div className="lowercase">{row.getValue("type")}</div>,
     },
     {
       accessorKey: "mode",
       header: "Mode",
-      cell: ({ row }) => (
-        <div className="capitalize">{row.getValue("mode")}</div>
-      ),
+      cell: ({ row }) => <div className="capitalize">{row.getValue("mode")}</div>,
     },
     {
       accessorKey: "version",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Version
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        );
-      },
-      cell: ({ row }) => (
-        <div className="lowercase">{row.getValue("version")}</div>
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Version
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
       ),
+      cell: ({ row }) => <div className="lowercase">{row.getValue("version")}</div>,
     },
     {
       accessorKey: "accessTime",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Access Time
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        );
-      },
-      cell: ({ row }) => (
-        <div className="lowercase">{row.getValue("accessTime")}</div>
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Access Time
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
       ),
+      cell: ({ row }) => <div className="lowercase">{row.getValue("accessTime")}</div>,
     },
     {
       accessorKey: "status",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Status
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        );
-      },
-      cell: ({ row }) => (
-        <div className="lowercase">{row.getValue("status")}</div>
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Status
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
       ),
+      cell: ({ row }) => <div className="lowercase">{row.getValue("status")}</div>,
     },
     {
       id: "config",
       enableHiding: false,
-      header: () => {
-        return <h1> Config</h1>;
-      },
+      header: "Config",
       cell: ({ row }) => {
         const payment = row.original;
 
@@ -194,7 +154,7 @@ function DeviceTable() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>config</DropdownMenuLabel>
+              <DropdownMenuLabel>Config</DropdownMenuLabel>
               <DropdownMenuItem
                 onClick={() => navigator.clipboard.writeText(payment.id)}
               >
@@ -210,7 +170,7 @@ function DeviceTable() {
     },
   ];
 
-  return <DataTable columns={columns} data={data} />;
+  return <DataTable columns={columns} data={tableData} />;
 }
 
 export default DeviceTable;
