@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Bearer token variable
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjZjYTEzODQ0NDA1YTM2YjIyMTY1MjE3Iiwicm9sZSI6InN1cGVyLWFkbWluIn0sImlhdCI6MTczMDcwMzE3NiwiZXhwIjoxNzMwNzA2Nzc2fQ.oiq6yQ-_omaoIBL4vZCDjftDY-YAi60OiOMYoeg_16M';
+const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjZjYTEzODQ0NDA1YTM2YjIyMTY1MjE3Iiwicm9sZSI6InN1cGVyLWFkbWluIn0sImlhdCI6MTczMDcwNzI5MywiZXhwIjoxNzMwNzEwODkzfQ.iyZzUzPlPRwpfpmqSRtRoQJICxKwAKf2giq7BoF1khU"
 
 // Axios instance for API calls
 const apiInstance = axios.create({
@@ -13,9 +13,9 @@ const apiInstance = axios.create({
 });
 
 
-export const fetchDashboardInfo = async () => {
+export const fetchDashboardInfo = async (path) => {
   try {
-    const response = await apiInstance.get('cloudnet/portal/dashboard/info');
+    const response = await apiInstance.get('cloudnet/portal/dashboard'+path);
     return response.data;
   } catch (error) {
     console.error('Error fetching dashboard data:', error);
