@@ -53,6 +53,13 @@ export const AuthProvider = ({ children }) => {
     setLoading(false); // Ensure loading stops after redirection
   };
 
+  // Check if the user is not an admin and trying to access the account page
+  useEffect(() => {
+    if (user && user.role !== 'admin' && pathname === '/accounts') {
+      router.push('/'); // Redirect to home or an unauthorized page
+    }
+  }, [user, pathname, router]);
+
   // Render a loading state until we confirm the user's authentication status
   if (loading) {
     return <div>Loading...</div>;

@@ -14,6 +14,7 @@ const apiInstance = axios.create({
 // Interceptor to add the token dynamically and handle 401 errors
 apiInstance.interceptors.request.use((config) => {
   const token = localStorage.getItem('bearerToken');
+  console.log(token)
   if (token) {
     config.headers['Authorization'] = `Bearer ${token}`;
   }
