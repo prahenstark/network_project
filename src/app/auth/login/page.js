@@ -44,7 +44,7 @@ export default function Page() {
         </div>
         <div className="mt-4 text-center text-sm">
           Don&apos;t have an account?{" "}
-          <Link href="#" className="underline hover:text-primary">
+          <Link href="/auth/signup" className="underline hover:text-primary">
             Sign up
           </Link>
         </div>
