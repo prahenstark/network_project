@@ -24,11 +24,7 @@ export default function Devices() {
         const data = await fetchDashboardInfo("/device"); // Adjust the API path as necessary
         setDevicesData(data?.workgroupInfo || []); // Use optional chaining and default to an empty array
       } catch (error) {
-<<<<<<< HEAD
-        console.error("Failed to fetch devices data:", error);
-=======
         console.log('Failed to fetch devices data:', error);
->>>>>>> 18d8cea460244fe83d323f7afb240bbb262944b6
       } finally {
         setLoading(false); // Stop loading
       }
@@ -72,13 +68,7 @@ export default function Devices() {
             <>
               <div className="flex items-center p-6">
                 <div className="flex-1 flex items-center gap-2 text-primary">
-<<<<<<< HEAD
-                  <div className="text-5xl font-bold">
-                    {devicesData.length || 0}   
-                  </div>
-=======
                   <div className="text-5xl font-bold">{devicesData?.length ?? 0}</div>
->>>>>>> 18d8cea460244fe83d323f7afb240bbb262944b6
                   <div className="text-lg font-medium">All</div>
                 </div>
 
@@ -106,13 +96,7 @@ export default function Devices() {
                   <div className="flex gap-4">
                     <div className="flex-1 flex items-center gap-2">
                       <div className="size-4 rounded-md bg-blue-600" />
-<<<<<<< HEAD
-                      <span className="text-xs">
-                        Devices: {devicesData.length || 0}
-                      </span>
-=======
                       <span className="text-xs">Devices: {devicesData?.length ?? 0}</span>
->>>>>>> 18d8cea460244fe83d323f7afb240bbb262944b6
                     </div>
                     <div className="flex-1 flex items-center gap-2">
                       <div className="size-4 rounded-md bg-green-600" />
@@ -126,13 +110,7 @@ export default function Devices() {
                     </div>
                     <div className="flex-1 flex items-center gap-2">
                       <div className="size-4 rounded-md bg-white" />
-<<<<<<< HEAD
-                      <span className="text-xs">
-                        Online: {devicesData.length || 0}
-                      </span>
-=======
                       <span className="text-xs">Online: {devicesData?.length ?? 0}</span>
->>>>>>> 18d8cea460244fe83d323f7afb240bbb262944b6
                     </div>
                   </div>
                 </div>
