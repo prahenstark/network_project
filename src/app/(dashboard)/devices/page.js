@@ -24,7 +24,7 @@ export default function Devices() {
         const data = await fetchDashboardInfo("/device"); // Adjust the API path as necessary
         setDevicesData(data.workgroupInfo || []); // Set the fetched data
       } catch (error) {
-        console.error('Failed to fetch devices data:', error);
+        console.log('Failed to fetch devices data:', error);
       } finally {
         setLoading(false); // Stop loading
       }

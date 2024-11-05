@@ -1,3 +1,4 @@
+import { AuthProvider } from "@/context/auth-provider";
 import "@/theme/globals.css";
 
 export const metadata = {
@@ -8,10 +9,8 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body
-        className={`antialiased`}
-      >
-        {children}
+      <body className={`antialiased`}>
+        <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
   );

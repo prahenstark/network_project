@@ -30,7 +30,7 @@ export default function Home() {
         const data = await fetchDashboardInfo("/info"); // Call the fetch function
         setDashboardData(data.dashboardData); // Set the fetched data in state
       } catch (error) {
-        console.error('Failed to fetch dashboard data:', error);
+        console.log('Failed to fetch dashboard data:', error);
       } finally {
         setLoading(false); // Stop loading
       }
