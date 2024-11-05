@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import { LayoutDashboardIcon, FolderIcon, UsersIcon, LockIcon, ShieldAlertIcon, WifiIcon, SettingsIcon } from "lucide-react";
 import Link from "next/link";
+import { useAuth } from "@/context/auth-provider"; // Adjust the import path based on your project structure
 
 // Define the menu items as an array of objects
 const menuItems = [
@@ -10,19 +11,25 @@ const menuItems = [
   { href: "/devices", icon: WifiIcon },
   { href: "/projects", icon: FolderIcon },
   { href: "/maintainance", icon: ShieldAlertIcon },
-  { href: "/auth", icon: LockIcon },
-  { href: "/accounts", icon: UsersIcon },
+  { href: "/app-auth", icon: LockIcon },
+  // The Accounts link will be conditionally added
 ];
 
 export default function Sidebar() {
   const pathname = usePathname();
-  
+  const { user } = useAuth(); // Assuming useAuth provides the user object
+
+  // Conditionally add the Accounts link based on the user's role
+  if (user && user.role === "admin") {
+    menuItems.push({ href: "/accounts", icon: UsersIcon });
+  }
+
   return (
     <div className="w-20 bg-background border-r flex flex-col justify-between items-center">
       <div className="w-full">
         <Link href="/">
           <div className="logo-container mx-auto flex size-16 items-center justify-center border-b">
-            <img src="/assets/Logo.png" alt="" />
+            <img src="/assets/Logo.png" alt="Logo" />
           </div>
         </Link>
 

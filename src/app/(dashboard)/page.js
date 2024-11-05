@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useEffect, useState } from 'react';
 import Navbar from "@/components/navbar";
@@ -28,9 +28,9 @@ export default function Home() {
       try {
         setLoading(true); // Start loading
         const data = await fetchDashboardInfo("/info"); // Call the fetch function
-        setDashboardData(data.dashboardData); // Set the fetched data in state
+        setDashboardData(data?.dashboardData); // Use optional chaining when setting the state
       } catch (error) {
-        console.error('Failed to fetch dashboard data:', error);
+        console.log('Failed to fetch dashboard data:', error);
       } finally {
         setLoading(false); // Stop loading
       }
@@ -76,8 +76,8 @@ export default function Home() {
       {
         label: "Device Statistics",
         data: [
-          dashboardData?.deviceStatistics.product.GateWay || 0, // Use optional chaining
-          dashboardData?.deviceStatistics.product.Repeater || 0,
+          dashboardData?.deviceStatistics?.product?.GateWay ?? 0, // Use optional chaining and default to 0
+          dashboardData?.deviceStatistics?.product?.Repeater ?? 0,
         ],
         backgroundColor: ["#4BC0C0", "#36A2EB"],
         hoverOffset: 4,
@@ -99,12 +99,12 @@ export default function Home() {
           {/* Resource Statistics */}
           <div className="px-12 mt-6 space-y-2">
             <h1 className="text-2xl">Resource Statistics</h1>
-            <div className="flex items-center pX-6 gap-4">
+            <div className="flex items-center px-6 gap-4">
               {[ 
-                { label: "Total Device", value: dashboardData?.deviceStatistics.all || 0 },
-                { label: "Online Total", value: dashboardData?.deviceStatistics.online || 0 },
-                { label: "Alarm Total", value: dashboardData?.deviceStatistics.alarm || 0 },
-                { label: "Offline Total", value: dashboardData?.deviceStatistics.offline || 0 },
+                { label: "Total Device", value: dashboardData?.deviceStatistics?.all ?? 0 },
+                { label: "Online Total", value: dashboardData?.deviceStatistics?.online ?? 0 },
+                { label: "Alarm Total", value: dashboardData?.deviceStatistics?.alarm ?? 0 },
+                { label: "Offline Total", value: dashboardData?.deviceStatistics?.offline ?? 0 },
                 { label: "Inspection Report", value: 6 }, // Hardcoded or from another source
               ].map((item, index) => (
                 <div key={index} className="flex-1 flex items-center gap-6">
@@ -130,7 +130,7 @@ export default function Home() {
               <h1 className="text-2xl py-6">Project Info</h1>
               <div className="flex gap-4">
                 {/* My Project Card */}
-                {dashboardData && dashboardData.projectInfo.length > 0 ? (
+                {dashboardData?.projectInfo?.length > 0 ? (
                   <div className="project-card flex-1 p-6 bg-white/5 border rounded-xl hover:bg-white/10 transition">
                     <div className="text-xl flex items-center">
                       <Wifi className="mr-4" /> 
