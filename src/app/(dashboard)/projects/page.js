@@ -36,12 +36,12 @@ const Projects = () => {
               </div>
             </Link>
 
-            {/* <CreateAccountModal isOpen={isModalOpen} onClose={closeModal} /> */}
+            <CreateAccountModal isOpen={isModalOpen} onClose={closeModal} />
 
-            <AddProjectModal
+            {/* <AddProjectModal
               isOpen={isModalOpen}
               onClose={closeModal}
-            />
+            /> */}
           </div>
 
           {/* Section with List */}

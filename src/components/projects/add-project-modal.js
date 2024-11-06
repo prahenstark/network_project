@@ -55,7 +55,7 @@ const AddProjectModal = ({ isOpen, onClose }) => {
               name="field2"
               value={formData.field2}
               onChange={handleChange}
-              className="w-1/2 px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-blue-200 text-black"
+              className="w-1/2 px-3 py-2 bg-white bg-opacity-5 border rounded focus:outline-none focus:ring focus:ring-blue-200 text-black"
               required
             />
           </div>
@@ -65,7 +65,7 @@ const AddProjectModal = ({ isOpen, onClose }) => {
               name="textarea"
               value={formData.textarea}
               onChange={handleChange}
-              className="w-1/2 px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-blue-200 text-black"
+              className="w-1/2 px-3 py-2 bg-white bg-opacity-5 border rounded focus:outline-none focus:ring focus:ring-blue-200 text-black"
               rows="3"
               required
             />
