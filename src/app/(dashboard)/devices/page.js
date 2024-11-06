@@ -19,15 +19,15 @@ export default function Devices() {
   const [loading, setLoading] = useState(true);
   const [devicesData, setDevicesData] = useState(null); // State to hold device data
 
-  
   useEffect(() => {
     const getData = async () => {
       try {
         setLoading(true); // Start loading
         const data = await fetchDashboardInfo("/device"); // Adjust the API path as necessary
         setDevicesData(data?.workgroupInfo || []); // Use optional chaining and default to an empty array
+        console.log(devicesData);
       } catch (error) {
-        console.log('Failed to fetch devices data:', error);
+        console.log("Failed to fetch devices data:", error);
       } finally {
         setLoading(false); // Stop loading
       }

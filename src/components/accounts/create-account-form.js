@@ -37,8 +37,8 @@ function CreateAccountForm({ onClose }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-      console.log(formData);
-      
+    console.log(formData);
+
     setFormData({
       account: "",
       nickName: "",
@@ -53,8 +53,8 @@ function CreateAccountForm({ onClose }) {
         proj3: false,
       },
     });
-      
-      alert("Submitted");
+
+    alert("Submitted");
   };
 
   const handleCancel = () => {
