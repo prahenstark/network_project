@@ -8,7 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-function IconDropdown({ className, children, options = [] }) {
+function IconDropdown({ className, children, onSelect, options = [] }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
@@ -19,7 +19,9 @@ function IconDropdown({ className, children, options = [] }) {
       <DropdownMenuContent>
         {/* Map over options to create DropdownMenuItems dynamically */}
         {options.map((option, index) => (
-          <DropdownMenuItem key={index}>{option}</DropdownMenuItem>
+          <DropdownMenuItem key={index} onClick={() => onSelect(option)}>
+            {option}
+          </DropdownMenuItem>
         ))}
       </DropdownMenuContent>
     </DropdownMenu>

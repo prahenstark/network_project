@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const DeleteAccountModal = ({ isOpen, onClose }) => {
+const ResetAccountModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   const handleSubmit = (e) => {
@@ -33,7 +33,7 @@ const DeleteAccountModal = ({ isOpen, onClose }) => {
           onSubmit={handleSubmit}
           className="w-[30vw] h-[25vh] flex flex-col gap-6 items-center justify-center"
         >
-          <h1>Are you sure you want to delete this project?</h1>
+          <h1>Do you want to reset the password of the selected account?</h1>
 
           <div className={`flex space-x-4 mt-4 justify-center`}>
             <button
@@ -55,4 +55,4 @@ const DeleteAccountModal = ({ isOpen, onClose }) => {
   );
 };
 
-export default DeleteAccountModal;
+export default ResetAccountModal;

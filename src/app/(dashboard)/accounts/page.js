@@ -21,13 +21,44 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useEffect, useState } from "react";
 import { fetchDashboardInfo } from "@/lib/api";
+import CreateAccountModal from "@/components/accounts/create-account-modal";
+import ResetAccountModal from "@/components/accounts/reset-account-modal";
+import DeleteAccountModal from "@/components/projects/delete-modal";
 
 export default function Accounts({}) {
+  const [selectediconDropdownOption, setSelectediconDropdownOption] =
+    useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleSelect = (option) => {
+    setSelectediconDropdownOption(option);
+    setIsModalOpen(true); // Set the selected option directly
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectediconDropdownOption(null); // Reset selected option when closing modal
+  };
+
   const iconDropdownOptions = [
     "Create Account",
     "Reset Account",
     "Delete Account",
   ];
+
+  const [activeIconDropdown, setactiveIconDropdown] = useState(null);
+
+  const iconDropdownContent = {
+    "Create Account": (
+      <CreateAccountModal isOpen={isModalOpen} onClose={closeModal} />
+    ),
+    "Reset Account": (
+      <ResetAccountModal isOpen={isModalOpen} onClose={closeModal} />
+    ),
+    "Delete Account": (
+      <DeleteAccountModal isOpen={isModalOpen} onClose={closeModal} />
+    ),
+  };
 
   const dropdownOptions = [
     { label: "All", value: "all" },
@@ -40,7 +71,7 @@ export default function Accounts({}) {
 
   useEffect(() => {
     const fetchData = async () => {
-      const path = '/account?pageOffset=10&pageIndex=1&status=2';
+      const path = "/account?pageOffset=10&pageIndex=1&status=2";
       try {
         const response = await fetchDashboardInfo(path);
         const transformedData = response.users.map((user, index) => ({
@@ -49,19 +80,18 @@ export default function Accounts({}) {
           account: user.username,
           nickName: user.nickname,
           email: user.email,
-          role: "User",  // Assuming role is "User"; adjust if role data is available
-          status: user.status === "1" ? "Success" : "Failed",  // Assuming status mapping
+          role: "User", // Assuming role is "User"; adjust if role data is available
+          status: user.status === "1" ? "Success" : "Failed", // Assuming status mapping
           creationTime: user.created_at,
         }));
         setData(transformedData);
       } catch (error) {
-        console.log('Error transforming data:', error);
+        console.log("Error transforming data:", error);
       }
     };
 
     fetchData();
   }, []);
-
 
   const columns = [
     {
@@ -243,11 +273,19 @@ export default function Accounts({}) {
         <IconDropdown
           className="border-green-500 min-w-20"
           options={iconDropdownOptions}
+          onSelect={handleSelect}
         >
           <FileInput size={18} />
           <ChevronDown size={18} />
         </IconDropdown>
       </ToggleHeader>
+
+      {selectediconDropdownOption && (
+        <div className="">
+          {iconDropdownContent[selectediconDropdownOption]}
+        </div>
+      )}
+
       <DataTable columns={columns} data={data} />
     </div>
   );
