@@ -30,8 +30,12 @@ export default function Sidebar() {
 
   // Conditionally add the Accounts link based on the user's role
   if (user && user.role === "vendor") {
-    menuItems.push({ href: "/accounts", icon: UsersIcon });
+    const exists = menuItems.some(item => item.href === "/accounts");
+    if (!exists) {
+      menuItems.push({ href: "/accounts", icon: UsersIcon });
+    }
   }
+  
 
   return (
     <div className="w-20 bg-background border-r flex flex-col justify-between items-center">

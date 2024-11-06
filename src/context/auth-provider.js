@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }) => {
           }
         } else if (response.status === 200) {
           const data = await response.json();
-          setUser(data);
+          setUser(data?.user);
         }
       } catch (error) {
         console.log("Error checking authentication:", error);
