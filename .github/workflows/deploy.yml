@@ -44,4 +44,4 @@ jobs:
           cd ${{ secrets.EC2_PATH }}
           npm install
           npm run build
-          pm2 restart your_nextjs_app_name  # or restart your service
+          pm2 start npm --name "network_frontend" -- start
