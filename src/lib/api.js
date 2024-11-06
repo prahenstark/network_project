@@ -44,15 +44,3 @@ export const fetchDashboardInfo = async (path) => {
   }
 };
 
-// // Function to fetch device page data
-// export const fetchDeviceData = async (path) => {
-//   try {
-//     const response = await apiInstance.get('cloudnet/portal/dashboard' + path);
-//     return response.data;
-//   } catch (error) {
-//     console.log('Error fetching device data:', error);
-//     // Additional error handling if needed
-//   }
-// };
-
-

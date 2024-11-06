@@ -19,6 +19,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useEffect, useState } from "react";
+import { fetchDashboardInfo } from "@/lib/api";
 
 export default function Accounts({}) {
   const iconDropdownOptions = [
@@ -34,28 +36,32 @@ export default function Accounts({}) {
     { label: "Test 3", value: "test3" },
   ];
 
-  const data = [
-    {
-      id: "m5gr84i9",
-      sn: 1,
-      account: "Prahen",
-      nickName: "Stark",
-      email: "parijaprahen@gmail.com",
-      role: "Admin",
-      status: "Success",
-      creationTime: "2024-10-25 00:15:27",
-    },
-    {
-      id: "3u1reuv4",
-      sn: 2,
-      account: "Arghya",
-      nickName: "Decodam",
-      email: "ken99@yahoo.com",
-      role: "User",
-      status: "Failed",
-      creationTime: "2024-10-27 00:02:53",
-    },
-  ];
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const path = '/account?pageOffset=10&pageIndex=1&status=2';
+      try {
+        const response = await fetchDashboardInfo(path);
+        const transformedData = response.users.map((user, index) => ({
+          id: user.uid,
+          sn: index + 1,
+          account: user.username,
+          nickName: user.nickname,
+          email: user.email,
+          role: "User",  // Assuming role is "User"; adjust if role data is available
+          status: user.status === "1" ? "Success" : "Failed",  // Assuming status mapping
+          creationTime: user.created_at,
+        }));
+        setData(transformedData);
+      } catch (error) {
+        console.log('Error transforming data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
 
   const columns = [
     {
