@@ -12,11 +12,14 @@ import { ChevronDown } from "lucide-react";
 import DeviceTable from "@/components/devices/device-table";
 import Loader from "@/components/loader"; // Assuming you have a Loader component
 import { fetchDashboardInfo } from "@/lib/api"; // Adjust import as necessary
+import { GitFork } from "lucide-react";
+import { Filter } from "lucide-react";
 
 export default function Devices() {
   const [loading, setLoading] = useState(true);
   const [devicesData, setDevicesData] = useState(null); // State to hold device data
 
+  
   useEffect(() => {
     const getData = async () => {
       try {
@@ -68,7 +71,9 @@ export default function Devices() {
             <>
               <div className="flex items-center p-6">
                 <div className="flex-1 flex items-center gap-2 text-primary">
-                  <div className="text-5xl font-bold">{devicesData?.length ?? 0}</div>
+                  <div className="text-5xl font-bold">
+                    {devicesData?.length ?? 0}
+                  </div>
                   <div className="text-lg font-medium">All</div>
                 </div>
 
@@ -96,10 +101,12 @@ export default function Devices() {
                   <div className="flex gap-4">
                     <div className="flex-1 flex items-center gap-2">
                       <div className="size-4 rounded-md bg-blue-600" />
-                      <span className="text-xs">Devices: {devicesData?.length ?? 0}</span>
+                      <span className="text-xs">
+                        Devices: {devicesData?.length ?? 0}
+                      </span>
                     </div>
                     <div className="flex-1 flex items-center gap-2">
-                      <div className="size-4 rounded-md bg-green-600" />
+                      <div className="size-4 rounded-md bg-green-500" />
                       <span className="text-xs">Offline: 0</span>
                     </div>
                   </div>
@@ -110,12 +117,21 @@ export default function Devices() {
                     </div>
                     <div className="flex-1 flex items-center gap-2">
                       <div className="size-4 rounded-md bg-white" />
-                      <span className="text-xs">Online: {devicesData?.length ?? 0}</span>
+                      <span className="text-xs">
+                        Online: {devicesData?.length ?? 0}
+                      </span>
                     </div>
                   </div>
                 </div>
               </div>
               <ToggleHeader pageName="Upgrade" className="px-6">
+                <IconDropdown
+                  className="border-green-500 min-w-20"
+                  options={iconDropdownOptions}
+                >
+                  <GitFork size={18} />
+                  <ChevronDown size={18} />
+                </IconDropdown>
                 <SelectDropdown
                   className="min-w-28"
                   options={dropdownOptions}
@@ -130,6 +146,13 @@ export default function Devices() {
                   options={iconDropdownOptions}
                 >
                   <FileInput size={18} />
+                  <ChevronDown size={18} />
+                </IconDropdown>
+                <IconDropdown
+                  className="border-green-500 min-w-20 "
+                  options={iconDropdownOptions}
+                >
+                  <Filter size={18} />
                   <ChevronDown size={18} />
                 </IconDropdown>
               </ToggleHeader>

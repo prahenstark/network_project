@@ -12,7 +12,7 @@ function IconDropdown({ className, children, options = [] }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        className={`min-h-9 flex items-center justify-between px-2 py-3 border-2 rounded-md text-white ${className}`}
+        className={`min-h-9 flex items-center justify-between px-2 border-2 rounded-md text-white ${className}`}
       >
         {children}
       </DropdownMenuTrigger>

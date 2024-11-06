@@ -1,9 +1,18 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { LayoutDashboardIcon, FolderIcon, UsersIcon, LockIcon, ShieldAlertIcon, WifiIcon, SettingsIcon } from "lucide-react";
+import {
+  LayoutDashboardIcon,
+  FolderIcon,
+  UsersIcon,
+  LockIcon,
+  ShieldAlertIcon,
+  WifiIcon,
+  SettingsIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "@/context/auth-provider"; // Adjust the import path based on your project structure
+import { LogOut } from "lucide-react";
 
 // Define the menu items as an array of objects
 const menuItems = [
@@ -20,7 +29,7 @@ export default function Sidebar() {
   const { user } = useAuth(); // Assuming useAuth provides the user object
 
   // Conditionally add the Accounts link based on the user's role
-  if (user && user.role === "admin") {
+  if (user && user.role === "vendor") {
     menuItems.push({ href: "/accounts", icon: UsersIcon });
   }
 
@@ -48,15 +57,27 @@ export default function Sidebar() {
                 </Link>
               </div>
               {/* Change bg color if active */}
-              <div className={`h-10 w-1 ml-auto rounded-tl-md rounded-bl-md ${pathname === item.href ? "bg-primary" : ""}`} />
+              <div
+                className={`h-10 w-1 ml-auto rounded-tl-md rounded-bl-md ${
+                  pathname === item.href ? "bg-primary" : ""
+                }`}
+              />
             </div>
           ))}
         </div>
       </div>
 
-      <div className="settings-container flex size-16 items-center justify-center border-b">
+      <div className="w-full lower-container flex flex-col size-16 items-center justify-center border-b pb-16">
         <Link href="/settings">
-          <SettingsIcon size={20} />
+          <div className="icon p-4 w-full ">
+            <SettingsIcon size={20} />
+          </div>
+        </Link>
+
+        <Link href="/settings">
+          <div className="icon p-4 w-full ">
+            <LogOut size={20} />
+          </div>
         </Link>
       </div>
     </div>

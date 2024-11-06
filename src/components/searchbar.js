@@ -6,7 +6,7 @@ function Searchbar({displayText, className }) {
     <Input
       type="text"
       placeholder={displayText}
-      className={`min-h-9 bg-white bg-opacity-5 min-w-80 ${className}`}
+      className={`min-h-9 min-w-80 bg-white bg-opacity-5  ${className}`}
     />
   );
 }

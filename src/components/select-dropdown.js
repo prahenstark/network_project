@@ -5,7 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 function SelectDropdown({className, options = []}) {
   return (
     <Select>
-      <SelectTrigger className={`min-h-9 bg-white bg-opacity-5 ${className}`}>
+      <SelectTrigger className={`min-h-9 bg-white bg-opacity-5 border-0 ${className}`}>
         <SelectValue placeholder={options[0].label} />
       </SelectTrigger>
       <SelectContent>
