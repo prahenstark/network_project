@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -15,20 +15,30 @@ import {
 import DataTable from "@/components/data-table";
 import { Button } from "../ui/button";
 
-function DeviceTable({ data }) {
+function DeviceTable({data }) {
   // Transform the data as needed for the table
-  // const tableData = data.map(device => ({
-  //   id: device.gid,
-  //   sn: device.device_nums, // Assuming device_nums corresponds to 'sn'
-  //   mac: device.mac || 'N/A', // Provide a fallback if MAC isn't in the data
-  //   ip: device.ip || 'N/A', // Same for IP
-  //   name: device.name,
-  //   type: device.type || 'N/A', // Provide a default
-  //   mode: device.mode || 'N/A',
-  //   version: device.version || 'N/A',
-  //   accessTime: device.created_at || 'N/A', // Or any other relevant field
-  //   status: device.status || 'N/A',
-  // }));
+  
+const [tableData, setTableData] = useState([]);
+
+// Update tableData whenever the data prop changes
+useEffect(() => {
+  if (data) {
+    const deviceList = data?.deviceList;
+    const formattedData = deviceList?.map((deviceListData, index) => ({
+      id: index,
+      name: deviceListData?.name || "N/A", // Provide a default
+      type: deviceListData?.type || "N/A", // Provide a default
+      sn: index + 1,
+      mac: deviceListData?.mac || "N/A", // Provide a fallback if MAC isn't in the data
+      ip: deviceListData?.ip || "N/A", // Same for IP
+      mode: deviceListData?.mode || "N/A",
+      version: deviceListData?.version || "N/A",
+      accessTime: deviceListData?.access_time || "N/A", // Or any other relevant field
+      status: deviceListData?.status === "1" ? "Success" : "Failed",
+    }));
+    setTableData(formattedData);
+  }
+}, [data]);
 
   const columns = [
     {
@@ -182,8 +192,8 @@ function DeviceTable({ data }) {
     },
   ];
 
-  // return <DataTable columns={columns} data={tableData} />;
-  return <></>;
+  return <DataTable columns={columns} data={tableData} />;
+  
 }
 
 export default DeviceTable;

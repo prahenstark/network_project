@@ -48,6 +48,8 @@ export default function DataTable({ columns = [], data }) {
     },
   });
 
+  // console.log("Table Data:", table?.getRowModel()?.rows?.length);
+
   return (
     <div className="w-full p-6">
       {/* <div className="flex items-center py-4">
@@ -107,7 +109,7 @@ export default function DataTable({ columns = [], data }) {
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {table.getRowModel()?.rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
