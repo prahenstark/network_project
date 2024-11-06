@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
 import Navbar from "@/components/navbar";
 import ProjectList from "@/components/projects-list";
@@ -18,15 +17,49 @@ import { Filter } from "lucide-react";
 export default function Devices() {
   const [loading, setLoading] = useState(true);
   const [devicesData, setDevicesData] = useState(null); // State to hold device data
+  const [selectedProject, setSelectedProject] = useState(null);
+
+  // Flatten the project list to get all projects regardless of hierarchy
+  const flattenProjects = (data) => {
+    let projects = data?.projectList ?? [];
+    let flatList = [];
+
+    const recurse = (project) => {
+      if (!project || typeof project !== "object") {
+        console.warn("Invalid project structure:", project);
+        return;
+      }
+
+      flatList.push(project);
+
+      // Ensure child is an array before iterating
+      if (Array.isArray(project.child)) {
+        project.child.forEach(recurse);
+      } else {
+        console.warn("Expected child to be an array, got:", project.child);
+      }
+    };
+
+    // Check if projects is an array
+    if (Array.isArray(projects)) {
+      projects.forEach(recurse);
+    } else {
+      console.warn("Expected projects to be an array, got:", projects);
+    }
+
+    return flatList;
+  };
+
+  const allProjects = flattenProjects(devicesData);
+  
 
   useEffect(() => {
     const getData = async () => {
       try {
         setLoading(true); // Start loading
         const data = await fetchDashboardInfo("/device"); // Adjust the API path as necessary
-        setDevicesData(data?.workgroupInfo || []); // Use optional chaining and default to an empty array
-        console.log(data);
-        console.log(devicesData?.devices?.deviceStatistics?.all);
+        setDevicesData(data?.DevicePageData || []); // Use optional chaining and default to an empty array
+        // console.log(data);
       } catch (error) {
         console.log("Failed to fetch devices data:", error);
       } finally {
@@ -61,7 +94,7 @@ export default function Devices() {
     <div>
       <Navbar title="Devices" />
       <div className="flex h-full flex-1">
-        <ProjectList />
+        <ProjectList projects={allProjects} />
 
         <div className="flex flex-col w-full">
           {loading ? (

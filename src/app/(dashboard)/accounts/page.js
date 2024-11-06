@@ -46,8 +46,6 @@ export default function Accounts({}) {
     "Delete Account",
   ];
 
-  const [activeIconDropdown, setactiveIconDropdown] = useState(null);
-
   const iconDropdownContent = {
     "Create Account": (
       <CreateAccountModal isOpen={isModalOpen} onClose={closeModal} />
@@ -68,6 +66,8 @@ export default function Accounts({}) {
   ];
 
   const [data, setData] = useState([]);
+  
+
 
   useEffect(() => {
     const fetchData = async () => {

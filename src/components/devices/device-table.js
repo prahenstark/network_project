@@ -17,18 +17,18 @@ import { Button } from "../ui/button";
 
 function DeviceTable({ data }) {
   // Transform the data as needed for the table
-  const tableData = data.map(device => ({
-    id: device.gid,
-    sn: device.device_nums, // Assuming device_nums corresponds to 'sn'
-    mac: device.mac || 'N/A', // Provide a fallback if MAC isn't in the data
-    ip: device.ip || 'N/A', // Same for IP
-    name: device.name,
-    type: device.type || 'N/A', // Provide a default
-    mode: device.mode || 'N/A',
-    version: device.version || 'N/A',
-    accessTime: device.created_at || 'N/A', // Or any other relevant field
-    status: device.status || 'N/A',
-  }));
+  // const tableData = data.map(device => ({
+  //   id: device.gid,
+  //   sn: device.device_nums, // Assuming device_nums corresponds to 'sn'
+  //   mac: device.mac || 'N/A', // Provide a fallback if MAC isn't in the data
+  //   ip: device.ip || 'N/A', // Same for IP
+  //   name: device.name,
+  //   type: device.type || 'N/A', // Provide a default
+  //   mode: device.mode || 'N/A',
+  //   version: device.version || 'N/A',
+  //   accessTime: device.created_at || 'N/A', // Or any other relevant field
+  //   status: device.status || 'N/A',
+  // }));
 
   const columns = [
     {
@@ -79,7 +79,9 @@ function DeviceTable({ data }) {
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       ),
-      cell: ({ row }) => <div className="lowercase">{row.getValue("name")}</div>,
+      cell: ({ row }) => (
+        <div className="lowercase">{row.getValue("name")}</div>
+      ),
     },
     {
       accessorKey: "type",
@@ -92,12 +94,16 @@ function DeviceTable({ data }) {
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       ),
-      cell: ({ row }) => <div className="lowercase">{row.getValue("type")}</div>,
+      cell: ({ row }) => (
+        <div className="lowercase">{row.getValue("type")}</div>
+      ),
     },
     {
       accessorKey: "mode",
       header: "Mode",
-      cell: ({ row }) => <div className="capitalize">{row.getValue("mode")}</div>,
+      cell: ({ row }) => (
+        <div className="capitalize">{row.getValue("mode")}</div>
+      ),
     },
     {
       accessorKey: "version",
@@ -110,7 +116,9 @@ function DeviceTable({ data }) {
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       ),
-      cell: ({ row }) => <div className="lowercase">{row.getValue("version")}</div>,
+      cell: ({ row }) => (
+        <div className="lowercase">{row.getValue("version")}</div>
+      ),
     },
     {
       accessorKey: "accessTime",
@@ -123,7 +131,9 @@ function DeviceTable({ data }) {
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       ),
-      cell: ({ row }) => <div className="lowercase">{row.getValue("accessTime")}</div>,
+      cell: ({ row }) => (
+        <div className="lowercase">{row.getValue("accessTime")}</div>
+      ),
     },
     {
       accessorKey: "status",
@@ -136,7 +146,9 @@ function DeviceTable({ data }) {
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       ),
-      cell: ({ row }) => <div className="lowercase">{row.getValue("status")}</div>,
+      cell: ({ row }) => (
+        <div className="lowercase">{row.getValue("status")}</div>
+      ),
     },
     {
       id: "config",
@@ -170,7 +182,8 @@ function DeviceTable({ data }) {
     },
   ];
 
-  return <DataTable columns={columns} data={tableData} />;
+  // return <DataTable columns={columns} data={tableData} />;
+  return <></>;
 }
 
 export default DeviceTable;
