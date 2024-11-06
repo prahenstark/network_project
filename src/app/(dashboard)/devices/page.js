@@ -25,7 +25,8 @@ export default function Devices() {
         setLoading(true); // Start loading
         const data = await fetchDashboardInfo("/device"); // Adjust the API path as necessary
         setDevicesData(data?.workgroupInfo || []); // Use optional chaining and default to an empty array
-        console.log(devicesData);
+        console.log(data);
+        console.log(devicesData?.devices?.deviceStatistics?.all);
       } catch (error) {
         console.log("Failed to fetch devices data:", error);
       } finally {
@@ -72,7 +73,7 @@ export default function Devices() {
               <div className="flex items-center p-6">
                 <div className="flex-1 flex items-center gap-2 text-primary">
                   <div className="text-5xl font-bold">
-                    {devicesData?.length ?? 0}
+                    {devicesData?.devices?.deviceStatistics?.all ?? 0}
                   </div>
                   <div className="text-lg font-medium">All</div>
                 </div>

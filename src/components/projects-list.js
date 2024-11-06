@@ -20,7 +20,7 @@ export default function ProjectList() {
 
       <ul className="flex flex-col gap-2">
         <li className="flex items-center gap-2 py-3  hover:bg-[#2C3E38] hover:border-2 border-2 border-transparent rounded-md cursor-pointer hover:bg-primary">
-          <FolderUp size={16} />
+          <FolderUp size={16}/>
           <span className="text-base font-bold text-white">Proj Main</span>
         </li>
         
