@@ -33,14 +33,18 @@ apiInstance.interceptors.response.use((response) => {
   return Promise.reject(error);
 });
 
-// Function to fetch dashboard info
-export const fetchDashboardInfo = async (path) => {
+export const fetchDashboardInfo = async (path, method = 'GET', data = null) => {
   try {
-    const response = await apiInstance.get('cloudnet/portal/dashboard' + path);
+    const response = await apiInstance({
+      url: 'cloudnet/portal/dashboard' + path,
+      method: method,
+      data: data,
+    });
     return response.data;
   } catch (error) {
-    console.log('Error fetching dashboard data:', error);
+    console.log(`Error ${method === 'POST' ? 'posting' : 'fetching'} dashboard data:`, error);
     // Additional error handling if needed
   }
 };
+
 

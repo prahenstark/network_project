@@ -1,5 +1,7 @@
 "use client";
 import React, { useState } from "react";
+import axios from "axios";
+import { fetchDashboardInfo } from "@/lib/api";
 
 function CreateAccountForm({ onClose }) {
   const [formData, setFormData] = useState({
@@ -35,26 +37,53 @@ function CreateAccountForm({ onClose }) {
     }
   };
 
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
-
-    setFormData({
-      account: "",
-      nickName: "",
-      password: "",
-      mobile: "",
-      email: "",
-      role: "",
-      status: "",
-      bindingProject: {
-        proj1: false,
-        proj2: false,
-        proj3: false,
-      },
-    });
-
-    alert("Submitted");
+  
+    // Prepare data for API
+    const apiData = {
+      role: formData.role === "admin" ? "2" : "1",
+      enable: formData.status === "enable" ? "1" : "0",
+      gids: ["cnldryoqwrevzxjkywpjnapgkdbm"],
+      nickname: formData.nickName,
+      country: "IN",
+      phone: formData.mobile,
+      email: formData.email,
+      username: formData.account,
+      password: formData.password,
+    };
+  
+    try {
+      // Use fetchDashboardInfo for POST request
+      const response = await fetchDashboardInfo(
+        '/account/add-users',
+        'POST',
+        apiData
+      );
+      console.log("API Response:", response);
+      alert("Account created successfully!");
+  
+      // Reset form after submission
+      setFormData({
+        account: "",
+        nickName: "",
+        password: "",
+        mobile: "",
+        email: "",
+        role: "",
+        status: "",
+        bindingProject: {
+          proj1: false,
+          proj2: false,
+          proj3: false,
+        },
+      });
+      onClose();
+    } catch (error) {
+      console.error("Error creating account:", error);
+      alert("There was an error creating the account.");
+    }
   };
 
   const handleCancel = () => {
@@ -72,7 +101,10 @@ function CreateAccountForm({ onClose }) {
         proj3: false,
       },
     });
+    onClose();
   };
+
+
   return (
     <form
       onSubmit={handleSubmit}
@@ -239,7 +271,7 @@ function CreateAccountForm({ onClose }) {
       {/* Buttons */}
       <div className={`flex space-x-4 mt-auto`}>
         <button
-          onClick={onClose}
+          onClick={handleCancel}
           className="min-w-32 px-4 py-2 bg-transparent border-2 border-white border-opacity-5 rounded hover:bg-white hover:bg-opacity-5"
         >
           Cancel

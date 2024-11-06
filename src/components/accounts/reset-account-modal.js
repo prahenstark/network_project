@@ -6,7 +6,7 @@ const ResetAccountModal = ({ isOpen, onClose }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     alert("Submitted!");
-    closeModal();
+    onClose();
     // onSubmit(formData);
   };
 

@@ -37,7 +37,7 @@ export default function Accounts({}) {
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setSelectediconDropdownOption(null); // Reset selected option when closing modal
+    setSelectediconDropdownOption(null);
   };
 
   const iconDropdownOptions = [
