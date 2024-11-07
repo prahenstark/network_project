@@ -5,21 +5,19 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 
 
-const DeleteModal = ({ isOpen, onClose }) => {
+const DeleteModal = ({ isOpen, onClose, gids }) => {
   if (!isOpen) return null;
   const { toast } = useToast();
 
-  // State to hold the uid input
-  const [uid, setUid] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Check if UID is provided
-    if (!uid) {
+    if (!gids) {
       toast({
         title: "Error",
-        description: "UID is required to delete the account.",
+        description: "Please select an account to delete the account.",
       });
       return;
     }
@@ -27,7 +25,7 @@ const DeleteModal = ({ isOpen, onClose }) => {
     try {
       // Send API call to delete the user with the provided UID
       const result = await fetchDashboardInfo("/account/delete-users", "DELETE", {
-        uids: [uid],
+        uids: gids,
       });
 
       if (result) {
@@ -76,23 +74,6 @@ const DeleteModal = ({ isOpen, onClose }) => {
           className="w-[30vw] h-[30vh] flex flex-col gap-6 items-center justify-center"
         >
           <h1 className="w-full">Do you want to delete the selected account?</h1>
-
-          {/* Input field for UID */}
-          <div className="mt-4 w-full">
-            <Label htmlFor="uid" className="block text-sm font-medium text-white mb-2">
-              Enter UID:
-            </Label>
-            <Input
-              type="text"
-              id="uid"
-              name="uid"
-              value={uid}
-              onChange={(e) => setUid(e.target.value)}
-              className="w-full p-2 bg-gray-700 text-white rounded-md"
-              placeholder="Enter UID"
-            />
-          </div>
-
           <div className="flex space-x-4 mt-4 justify-center">
             <button
               onClick={onClose}
@@ -102,7 +83,6 @@ const DeleteModal = ({ isOpen, onClose }) => {
             </button>
             <button
               type="submit"
-              disabled={!uid}
               className="min-w-32 px-4 py-2 disabled:bg-green-600/20 disabled:text-white/50 bg-green-600 text-zinc-900 font-medium rounded hover:bg-green-300"
             >
               Yes

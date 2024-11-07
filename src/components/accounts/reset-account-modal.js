@@ -1,45 +1,44 @@
-//TODO: UPDATE THE MODAL DESIGN
-
 import { useToast } from "@/hooks/use-toast";
 import React, { useState } from "react";
 import { fetchDashboardInfo } from "@/lib/api"; // Adjust the path accordingly
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 
-const ResetAccountModal = ({ isOpen, onClose }) => {
+const ResetAccountModal = ({ isOpen, onClose, gids }) => {
   if (!isOpen) return null;
+
   const { toast } = useToast();
 
-  // State to hold the uid and password inputs
-  const [uid, setUid] = useState("");
+  // State to hold the password input
   const [password, setPassword] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Check if UID and password are provided
-    if (!uid || !password) {
+    // Check if password is provided
+    if (!password) {
       toast({
         title: "Error",
-        description: "Both UID and password are required to reset the account.",
+        description: "New password is required to reset the account.",
         variant: "destructive",
       });
       return;
     }
 
     try {
-      // Send API call to reset the password with the provided UID and password
+      // Send API call to reset the password with the provided gids and password
       const result = await fetchDashboardInfo("/account/reset-passwords", "POST", {
-        uids: [uid],
+        uids: gids,  // Using gids prop to send multiple UIDs
         password: password,
       });
 
       if (result) {
         toast({
           title: "Password reset successful!",
-          description: "Successfully reset the password for the selected account.",
+          description: "Successfully reset the password for the selected account(s).",
         });
         onClose(); // Close the modal after successful reset
+        window.location.reload(); // Refresh the page after successful reset
       } else {
         toast({
           title: "Error",
@@ -79,23 +78,7 @@ const ResetAccountModal = ({ isOpen, onClose }) => {
           onSubmit={handleSubmit}
           className="w-[30vw] h-[30vh] flex flex-col gap-6 items-center justify-center"
         >
-          <h1 className="w-full">Do you want to reset the password of the selected account?</h1>
-
-          {/* Input field for UID */}
-          <div className="mt-4 w-full">
-            <Label htmlFor="uid" className="block text-sm font-medium text-white mb-2">
-              Enter UID:
-            </Label>
-            <Input
-              type="text"
-              id="uid"
-              name="uid"
-              value={uid}
-              onChange={(e) => setUid(e.target.value)}
-              className="w-full p-2 bg-gray-700 text-white rounded-md"
-              placeholder="Enter UID"
-            />
-          </div>
+          <h1 className="w-full">Do you want to reset the password of the selected account(s)?</h1>
 
           {/* Input field for password */}
           <div className=" w-full">
@@ -122,7 +105,7 @@ const ResetAccountModal = ({ isOpen, onClose }) => {
             </button>
             <button
               type="submit"
-              disabled={!uid || !password}
+              disabled={!password}
               className="min-w-32 px-4 py-2 disabled:bg-green-600/20 disabled:text-white/50 bg-green-600 text-zinc-900 font-medium rounded hover:bg-green-300"
             >
               Yes
