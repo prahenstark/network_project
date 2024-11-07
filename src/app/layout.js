@@ -1,3 +1,4 @@
+import { Toaster } from "@/components/ui/toaster";
 import { AuthProvider } from "@/context/auth-provider";
 import "@/theme/globals.css";
 
@@ -11,6 +12,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={`antialiased`}>
         <AuthProvider>{children}</AuthProvider>
+        <Toaster />
       </body>
     </html>
   );
