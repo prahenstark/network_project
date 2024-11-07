@@ -23,7 +23,7 @@ import { useEffect, useState } from "react";
 import { fetchDashboardInfo } from "@/lib/api";
 import CreateAccountModal from "@/components/accounts/create-account-modal";
 import ResetAccountModal from "@/components/accounts/reset-account-modal";
-import DeleteAccountModal from "@/components/projects/delete-modal";
+import DeleteAccountModal from "@/components/accounts/delete-account-modal";
 
 export default function Accounts({}) {
   const [selectediconDropdownOption, setSelectediconDropdownOption] =
