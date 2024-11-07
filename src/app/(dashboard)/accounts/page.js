@@ -23,12 +23,13 @@ import { useEffect, useState } from "react";
 import { fetchDashboardInfo } from "@/lib/api";
 import CreateAccountModal from "@/components/accounts/create-account-modal";
 import ResetAccountModal from "@/components/accounts/reset-account-modal";
-import DeleteAccountModal from "@/components/projects/delete-modal";
+import DeleteAccountModal from "@/components/accounts/delete-account-modal";
 
 export default function Accounts({}) {
   const [selectediconDropdownOption, setSelectediconDropdownOption] =
     useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedIds, setSelectedIds] = useState([]);
 
   const handleSelect = (option) => {
     setSelectediconDropdownOption(option);
@@ -54,7 +55,7 @@ export default function Accounts({}) {
       <ResetAccountModal isOpen={isModalOpen} onClose={closeModal} />
     ),
     "Delete Account": (
-      <DeleteAccountModal isOpen={isModalOpen} onClose={closeModal} />
+      <DeleteAccountModal gids={selectedIds} isOpen={isModalOpen} onClose={closeModal} />
     ),
   };
 
@@ -66,8 +67,6 @@ export default function Accounts({}) {
   ];
 
   const [data, setData] = useState([]);
-  
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -109,13 +108,25 @@ export default function Accounts({}) {
       cell: ({ row }) => (
         <Checkbox
           checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          onCheckedChange={(value) => {
+            row.toggleSelected(!!value);
+            // Update the selected IDs state
+            if (value) {
+              // If the row is selected, add the ID to the selectedIds state
+              setSelectedIds((prev) => [...prev, row.original.id]);
+            } else {
+              // If the row is deselected, remove the ID from the selectedIds state
+              setSelectedIds((prev) =>
+                prev.filter((id) => id !== row.original.id)
+              );
+            }
+          }}
           aria-label="Select row"
         />
       ),
       enableSorting: false,
       enableHiding: false,
-    },
+    },    
     {
       accessorKey: "sn",
       header: "SN",
