@@ -6,7 +6,7 @@ import HandoverModal from "./projects/handover-modal";
 import DeleteModal from "./projects/delete-modal";
 import { useProject } from "@/context/project-provider";
 
-const ProjectItem = ({ item }) => {
+const ProjectItem = ({ item, id }) => {
   const [isAddModalOpen, setAddModalOpen] = useState(false);
   const [isHandoverModalOpen, setHandoverModalOpen] = useState(false);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -46,6 +46,8 @@ const ProjectItem = ({ item }) => {
       <AddProjectModal
         isOpen={isAddModalOpen}
         onClose={() => setAddModalOpen(false)}
+        name={item}
+        id={id}
       />
 
       <HandoverModal

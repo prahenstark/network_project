@@ -7,7 +7,7 @@ import { Plus } from "lucide-react";
 import Link from "next/link";
 import AddProjectModal from "@/components/projects/add-project-modal";
 import CreateAccountModal from "@/components/accounts/create-account-modal";
-import { useDevice } from "@/context/device-context";
+// import { useDevice } from "@/context/device-context";
 import Loader from "@/components/loader";
 import { fetchDashboardInfo } from "@/lib/api";
 
@@ -19,7 +19,7 @@ const Projects = () => {
 
   const [loading, setLoading] = useState(true);
   const [projectData, setprojectData] = useState(null); // State to hold device data
-  const { selectedProject } = useDevice();
+  // const { selectedProject } = useDevice();
 
   // function getProjectNames(data) {
   //   const result = [];
@@ -32,15 +32,17 @@ const Projects = () => {
 
   function getProjectNames(data) {
     const result = [];
-    // console.log("project data", data);
-    data?.forEach((workgroup) => {
-      // Add the parent project name
-      result.push(workgroup.name);
 
-      // Function to recursively get child project names
+    data?.forEach((workgroup) => {
+      // Add the parent project name and id
+      result.push({ id: workgroup.gid, name: workgroup.name });
+
+      // Function to recursively get child project names and ids
       function getChildNames(children) {
         children.forEach((child) => {
-          result.push(child.name);
+          // Push child project name and id
+          result.push({ id: child.gid, name: child.name });
+
           // If the child has its own children, call the function recursively
           if (child.child && child.child.length > 0) {
             getChildNames(child.child);
@@ -48,7 +50,7 @@ const Projects = () => {
         });
       }
 
-      // Get names of all child projects
+      // Get names and ids of all child projects
       getChildNames(workgroup.child);
     });
 
@@ -57,7 +59,7 @@ const Projects = () => {
 
   const projectNames = getProjectNames(projectData);
   // console.log("all data", projectNames);
-  // console.log(projectNames);
+  
 
   useEffect(() => {
     const getData = async () => {
@@ -117,9 +119,7 @@ const Projects = () => {
               <>
                 <h3 className="font-semibold mb-3">Project List</h3>
                 <ul className="space-y-2">
-                  {projectNames.map((item, index) => (
-                    <ProjectItem key={index} item={item} />
-                  ))}
+                    { projectNames.map(project => (<ProjectItem key={project.id} item={project.name} id={project.id}/>))}
                 </ul>
               </>
             )}
