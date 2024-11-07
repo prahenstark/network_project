@@ -5,10 +5,12 @@ import React, { createContext, useContext, useState } from "react";
 const DeviceContext = createContext();
 
 export const DeviceProvider = ({ children }) => {
-  const [selectedProject, setSelectedProject] = useState(null);
+  const [selectedDeviceProject, setSelectedDeviceProject] = useState(null);
 
   return (
-    <DeviceContext.Provider value={{ selectedProject, setSelectedProject }}>
+    <DeviceContext.Provider
+      value={{ selectedDeviceProject, setSelectedDeviceProject }}
+    >
       {children}
     </DeviceContext.Provider>
   );

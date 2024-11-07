@@ -7,12 +7,12 @@ import { useState } from "react";
 
 export default function ProjectList({ projects = [] }) {
   const [mainProject, ...subProjects] = projects;
-  const { setSelectedProject } = useDevice(); // Get the setSelectedProject function from context
+  const { setSelectedDeviceProject } = useDevice(); // Get the setSelectedProject function from context
   const [selectedProject, setSelected] = useState(null);
 
   const handleSelectProject = (project) => {
     setSelected(project);
-    setSelectedProject(project);
+    setSelectedDeviceProject(project);
     // console.log("Selected Project:", project);
   };
 

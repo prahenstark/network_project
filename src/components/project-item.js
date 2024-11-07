@@ -4,11 +4,14 @@ import React, { useState } from "react";
 import AddProjectModal from "./projects/add-project-modal";
 import HandoverModal from "./projects/handover-modal";
 import DeleteModal from "./projects/delete-modal";
+import { useProject } from "@/context/project-provider";
 
 const ProjectItem = ({ item }) => {
   const [isAddModalOpen, setAddModalOpen] = useState(false);
   const [isHandoverModalOpen, setHandoverModalOpen] = useState(false);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+  const { setSelectedProject } = useProject();
+  const [selectedProject, setSelected] = useState(null);
 
   return (
     <>

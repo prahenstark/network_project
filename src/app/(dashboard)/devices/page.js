@@ -18,10 +18,10 @@ import { useDevice } from "@/context/device-context";
 export default function Devices() {
   const [loading, setLoading] = useState(true);
   const [devicesData, setDevicesData] = useState(null); // State to hold device data
-  const { selectedProject } = useDevice();
+  const { selectedDeviceProject } = useDevice();
 
   // Flatten the project list to get all projects regardless of hierarchy
-  const flattenProjects = (data) => {
+  const flattenDeviceProjects = (data) => {
     let projects = data?.projectList ?? [];
     let flatList = [];
 
@@ -51,7 +51,7 @@ export default function Devices() {
     return flatList;
   };
 
-  const allProjects = flattenProjects(devicesData);
+  const allProjects = flattenDeviceProjects(devicesData);
 
   useEffect(() => {
     const getData = async () => {
@@ -72,10 +72,10 @@ export default function Devices() {
 
   // Function to find the device corresponding to the selected project
   const getDeviceForSelectedProject = () => {
-    if (!selectedProject || !devicesData) return null;
+    if (!selectedDeviceProject || !devicesData) return null;
 
     return devicesData?.devices.find(
-      (device) => device.gid === selectedProject.gid
+      (device) => device.gid === selectedDeviceProject.gid
     );
   };
 
@@ -207,7 +207,7 @@ export default function Devices() {
                   <ChevronDown size={18} />
                 </IconDropdown>
               </ToggleHeader>
-                <DeviceTable data={ selectedDevice} />
+              <DeviceTable data={selectedDevice} />
               {/* Pass devicesData to DeviceTable */}
             </>
           )}
