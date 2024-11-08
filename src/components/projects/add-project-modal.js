@@ -1,25 +1,64 @@
+import { fetchDashboardInfo } from "@/lib/api";
 import React, { useState } from "react";
 
-const AddProjectModal = ({ isOpen, onClose }) => {
+const AddProjectModal = ({ isOpen, onClose, id, name }) => {
   if (!isOpen) return null;
 
   const [formData, setFormData] = useState({
-    field1: "",
-    field2: "",
-    textarea: "",
+    projectName: "",
+    projectNotes: "",
   });
 
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert("Submitted!");
-    closeModal();
-    // onSubmit(formData);
+
+    // Prepare data for API
+    const apiData = {
+      name: formData.projectName,
+      description: "desc",
+      gid: id,
+    };
+
+    try {
+      // Use fetchDashboardInfo for POST request
+      const response = await fetchDashboardInfo(
+        '/project/add',
+        'POST',
+        apiData
+      );
+      console.log("API Response:", response);
+      console.log("API DATA", apiData);
+      alert("Project Added Successfully!");
+
+      // Reset form after submission
+      setFormData({
+        projectName: "",
+        projectNotes: "",
+      });
+      onClose();
+    } catch (error) {
+      console.error("Error creating account:", error);
+      alert("There was an error creating the account.");
+    }
   };
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   // Prepare data for API
+  //   const apiData = {
+  //     name: formData.projectName,
+  //     description: formData.projectNotes,
+  //     gid: id,
+  //   };
+
+  //   console.log("api data", apiData);
+  // };
 
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
@@ -46,24 +85,24 @@ const AddProjectModal = ({ isOpen, onClose }) => {
         >
           <div className="w-full flex items-center justify-center">
             <label className="w-1/2">Superior Project</label>
-            <h1 className="w-1/2">My_Project</h1>
+            <h1 className="w-1/2">{name}</h1>
           </div>
           <div className="w-full flex items-center justify-center">
-            <label className="w-1/2">Field 2</label>
+            <label className="w-1/2">Project Name</label>
             <input
               type="text"
-              name="field2"
-              value={formData.field2}
+              name="projectName"
+              value={formData.projectName}
               onChange={handleChange}
               className="w-1/2 px-3 py-2 bg-white bg-opacity-5 border rounded focus:outline-none focus:ring focus:ring-blue-200 text-black"
               required
             />
           </div>
           <div className="w-full flex">
-            <label className="w-1/2">Text Area</label>
+            <label className="w-1/2">Project Notes</label>
             <textarea
-              name="textarea"
-              value={formData.textarea}
+              name="projectNotes"
+              value={formData.projectNotes}
               onChange={handleChange}
               className="w-1/2 px-3 py-2 bg-white bg-opacity-5 border rounded focus:outline-none focus:ring focus:ring-blue-200 text-black"
               rows="3"

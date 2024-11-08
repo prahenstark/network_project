@@ -35,7 +35,7 @@ const CreateAccountModal = ({ isOpen, onClose }) => {
           &times;
         </button>
         <ToggleNav
-          className="h-12 w-[50vw]"
+          className="h-12 min-w-[50vw]"
           tabs={tabs}
           activeTab={activeTab}
           setActiveTab={setActiveTab}
