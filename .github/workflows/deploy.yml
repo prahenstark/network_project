@@ -20,7 +20,7 @@ jobs:
         node-version: '18' # Use the Node.js version you need
 
     - name: Install dependencies
-      run: npm install --legacy-peer-deps
+      run: pnpm install
 
     - name: Build Next.js project
       run: npm run build
@@ -42,6 +42,6 @@ jobs:
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
           cd ${{ secrets.EC2_PATH }}
-          npm install --legacy-peer-deps
+          pnpm install
           npm run build
           pm2 start npm --name "network_frontend" -- start
