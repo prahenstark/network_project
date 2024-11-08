@@ -27,23 +27,38 @@ const AddProjectModal = ({ isOpen, onClose, id, name }) => {
     try {
       // Use fetchDashboardInfo for POST request
       const response = await fetchDashboardInfo(
-        '/project/add',
-        'POST',
+        "/project/add",
+        "POST",
         apiData
       );
-      console.log("API Response:", response);
-      console.log("API DATA", apiData);
-      alert("Project Added Successfully!");
-
-      // Reset form after submission
+      if (response) {
+        toast({
+          title: "Project Created!",
+          description: "Successfully created the project.",
+        });
+        setFormData({
+          projectName: "",
+          projectNotes: "",
+        });
+        onClose(); // Close the modal after successful deletion
+      } else {
+        toast({
+          title: "Error",
+          variant: "destructive",
+          description: "Failed to create the project.",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        variant: "destructive",
+        description: "Something went wrong. Please try again later.",
+      });
       setFormData({
         projectName: "",
         projectNotes: "",
       });
       onClose();
-    } catch (error) {
-      console.error("Error creating account:", error);
-      alert("There was an error creating the account.");
     }
   };
 
