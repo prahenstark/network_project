@@ -15,6 +15,18 @@ const ResetAccountModal = ({ isOpen, onClose, gids }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Check if UID is provided
+    if (!gids) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Please select an account to update the account.",
+      });
+      return;
+    }
+
+    console.log(gids);
+
     // Check if password is provided
     if (!password) {
       toast({
@@ -25,15 +37,17 @@ const ResetAccountModal = ({ isOpen, onClose, gids }) => {
       return;
     }
 
+    const postData = {
+      uids: gids, // Using gids prop to send multiple UIDs
+      password: password,
+    };
+    console.log(postData)
     try {
       // Send API call to reset the password with the provided gids and password
       const result = await fetchDashboardInfo(
-        "/account/reset-passwords",
-        "POST",
-        {
-          uids: gids, // Using gids prop to send multiple UIDs
-          password: password,
-        }
+        "/cloudnet/portal/dashboard/account/reset-passwords",
+        "PUT",
+        postData
       );
 
       if (result) {
@@ -44,14 +58,9 @@ const ResetAccountModal = ({ isOpen, onClose, gids }) => {
         });
         onClose(); // Close the modal after successful reset
         window.location.reload(); // Refresh the page after successful reset
-      } else {
-        toast({
-          title: "Error",
-          variant: "destructive",
-          description: "Failed to reset the password. Please try again.",
-        });
       }
     } catch (error) {
+      console.log(error);
       toast({
         title: "Error",
         variant: "destructive",

@@ -53,7 +53,7 @@ export default function Accounts({}) {
       <CreateAccountModal isOpen={isModalOpen} onClose={closeModal} />
     ),
     "Reset Account": (
-      <ResetAccountModal isOpen={isModalOpen} onClose={closeModal} />
+      <ResetAccountModal gids={selectedIds} isOpen={isModalOpen} onClose={closeModal} />
     ),
     "Delete Account": (
       <DeleteAccountModal

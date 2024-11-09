@@ -13,28 +13,36 @@ import {
 import Link from "next/link";
 import { useAuth } from "@/context/auth-provider"; // Adjust the import path based on your project structure
 import { LogOut } from "lucide-react";
+import LogoutModal from "./logout-modal";
+import { useState } from "react";
 
-// Define the menu items as an array of objects
-const menuItems = [
-  { href: "/", icon: LayoutDashboardIcon },
-  { href: "/devices", icon: WifiIcon },
-  { href: "/projects", icon: FolderIcon },
-  { href: "/maintainance", icon: ShieldAlertIcon },
-  { href: "/app-auth", icon: LockIcon },
-  // The Accounts link will be conditionally added
-];
+
 
 export default function Sidebar() {
   const pathname = usePathname();
   const { user } = useAuth(); // Assuming useAuth provides the user object
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Conditionally add the Accounts link based on the user's role
-  if (user && user.role === "vendor") {
-    const exists = menuItems.some(item => item.href === "/accounts");
-    if (!exists) {
-      menuItems.push({ href: "/accounts", icon: UsersIcon });
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const getMenuItems = (user) => {
+    const items = [
+      { href: "/", icon: LayoutDashboardIcon },
+      { href: "/devices", icon: WifiIcon },
+      { href: "/projects", icon: FolderIcon },
+      { href: "/maintainance", icon: ShieldAlertIcon },
+      { href: "/app-auth", icon: LockIcon },
+    ];
+    if (user && user.role === "vendor") {
+      items.push({ href: "/accounts", icon: UsersIcon });
     }
-  }
+    return items;
+  };
+  
+  const menuItems = getMenuItems(user);
+  
   
 
   return (
@@ -78,12 +86,12 @@ export default function Sidebar() {
           </div>
         </Link>
 
-        <Link href="/log-out">
-          <div className="icon p-4 w-full ">
-            <LogOut size={20} />
-          </div>
-        </Link>
+        <button onClick={() => {setIsModalOpen(true)}} className="icon p-4">
+          <LogOut size={20} />
+        </button>
       </div>
+
+      <LogoutModal isOpen={isModalOpen} onClose={closeModal} />
     </div>
   );
 }

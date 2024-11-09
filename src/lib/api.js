@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 
 // Axios instance for API calls
 const apiInstance = axios.create({
-  baseURL: "http://13.233.36.198:5000/api/",
+  baseURL: "http://13.233.36.198:5000/api",
   headers: {
     "Content-Type": "application/json",
   },
@@ -41,8 +41,11 @@ apiInstance.interceptors.response.use(
 
 export const fetchDashboardInfo = async (path, method = "GET", data = null) => {
   try {
+    const finalPath = path.startsWith("/cloudnet/portal/dashboard")
+      ? path
+      : "/cloudnet/portal/dashboard" + path;
     const response = await apiInstance({
-      url: "cloudnet/portal/dashboard" + path,
+      url: finalPath,
       method: method,
       data: data,
     });
@@ -52,6 +55,6 @@ export const fetchDashboardInfo = async (path, method = "GET", data = null) => {
       `Error ${method === "POST" ? "posting" : "fetching"} dashboard data:`,
       error
     );
-    // Additional error handling if needed
   }
 };
+
