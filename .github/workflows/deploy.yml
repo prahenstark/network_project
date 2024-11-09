@@ -20,14 +20,10 @@ jobs:
         node-version: '18' # Use the Node.js version you need
 
     - name: Install dependencies
-<<<<<<< HEAD
       run: pnpm install
-=======
-      run: pnpm i
->>>>>>> b73edd278f2bdd5c971a302107daf823001ce9fd
-
+      
     - name: Build Next.js project
-      run: npm run build
+      run: pnpm run build
 
     - name: Copy files via SSH
       uses: appleboy/scp-action@v0.1.2
@@ -47,5 +43,5 @@ jobs:
         script: |
           cd ${{ secrets.EC2_PATH }}
           pnpm install
-          npm run build
+          pnpm run build
           pm2 start npm --name "network_frontend" -- start
