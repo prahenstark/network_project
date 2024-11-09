@@ -30,6 +30,7 @@ export default function Accounts({}) {
     useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedIds, setSelectedIds] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const handleSelect = (option) => {
     setSelectediconDropdownOption(option);
@@ -52,10 +53,14 @@ export default function Accounts({}) {
       <CreateAccountModal isOpen={isModalOpen} onClose={closeModal} />
     ),
     "Reset Account": (
-      <ResetAccountModal isOpen={isModalOpen} onClose={closeModal} />
+      <ResetAccountModal gids={selectedIds} isOpen={isModalOpen} onClose={closeModal} />
     ),
     "Delete Account": (
-      <DeleteAccountModal gids={selectedIds} isOpen={isModalOpen} onClose={closeModal} />
+      <DeleteAccountModal
+        gids={selectedIds}
+        isOpen={isModalOpen}
+        onClose={closeModal}
+      />
     ),
   };
 
@@ -72,6 +77,7 @@ export default function Accounts({}) {
     const fetchData = async () => {
       const path = "/account?pageOffset=10&pageIndex=1&status=2";
       try {
+        setLoading(true); // Start loading
         const response = await fetchDashboardInfo(path);
         const transformedData = response.users.map((user, index) => ({
           id: user.uid,
@@ -86,6 +92,8 @@ export default function Accounts({}) {
         setData(transformedData);
       } catch (error) {
         console.log("Error transforming data:", error);
+      } finally {
+        setLoading(false); // Stop loading
       }
     };
 
@@ -126,7 +134,7 @@ export default function Accounts({}) {
       ),
       enableSorting: false,
       enableHiding: false,
-    },    
+    },
     {
       accessorKey: "sn",
       header: "SN",
@@ -278,8 +286,16 @@ export default function Accounts({}) {
     <div>
       <Navbar title="Accounts" />
       <ToggleHeader pageName="Account List" className=" p-6">
-        <SelectDropdown className="min-w-28" options={dropdownOptions} />
-        <SelectDropdown className="min-w-28" options={dropdownOptions} />
+        <SelectDropdown
+          className="min-w-28"
+          options={dropdownOptions}
+          disabled={true}
+        />
+        <SelectDropdown
+          className="min-w-28"
+          options={dropdownOptions}
+          disabled={true}
+        />
         <Searchbar displayText="🔍 Account/Email Address" />
         <IconDropdown
           className="border-green-500 min-w-20"
@@ -297,7 +313,7 @@ export default function Accounts({}) {
         </div>
       )}
 
-      <DataTable columns={columns} data={data} />
+      <DataTable columns={columns} data={data} loading={loading} />
     </div>
   );
 }

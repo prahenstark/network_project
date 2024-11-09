@@ -15,6 +15,18 @@ const ResetAccountModal = ({ isOpen, onClose, gids }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Check if UID is provided
+    if (!gids) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Please select an account to update the account.",
+      });
+      return;
+    }
+
+    console.log(gids);
+
     // Check if password is provided
     if (!password) {
       toast({
@@ -25,28 +37,30 @@ const ResetAccountModal = ({ isOpen, onClose, gids }) => {
       return;
     }
 
+    const postData = {
+      uids: gids, // Using gids prop to send multiple UIDs
+      password: password,
+    };
+    console.log(postData)
     try {
       // Send API call to reset the password with the provided gids and password
-      const result = await fetchDashboardInfo("/account/reset-passwords", "POST", {
-        uids: gids,  // Using gids prop to send multiple UIDs
-        password: password,
-      });
+      const result = await fetchDashboardInfo(
+        "/cloudnet/portal/dashboard/account/reset-passwords",
+        "PUT",
+        postData
+      );
 
       if (result) {
         toast({
           title: "Password reset successful!",
-          description: "Successfully reset the password for the selected account(s).",
+          description:
+            "Successfully reset the password for the selected account(s).",
         });
         onClose(); // Close the modal after successful reset
         window.location.reload(); // Refresh the page after successful reset
-      } else {
-        toast({
-          title: "Error",
-          variant: "destructive",
-          description: "Failed to reset the password. Please try again.",
-        });
       }
     } catch (error) {
+      console.log(error);
       toast({
         title: "Error",
         variant: "destructive",
@@ -78,11 +92,16 @@ const ResetAccountModal = ({ isOpen, onClose, gids }) => {
           onSubmit={handleSubmit}
           className="w-[30vw] h-[30vh] flex flex-col gap-6 items-center justify-center"
         >
-          <h1 className="w-full">Do you want to reset the password of the selected account(s)?</h1>
+          <h1 className="w-full">
+            Do you want to reset the password of the selected account(s)?
+          </h1>
 
           {/* Input field for password */}
           <div className=" w-full">
-            <Label htmlFor="password" className="block text-sm font-medium text-white mb-2">
+            <Label
+              htmlFor="password"
+              className="block text-sm font-medium text-white mb-2"
+            >
               Enter New Password:
             </Label>
             <Input
@@ -91,8 +110,7 @@ const ResetAccountModal = ({ isOpen, onClose, gids }) => {
               name="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-2 bg-gray-700 text-white rounded-md"
-              placeholder="Enter New Password"
+              className="w-full p-2 text-white bg-white bg-opacity-5 rounded-md"
             />
           </div>
 

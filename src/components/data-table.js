@@ -20,14 +20,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Loader } from "lucide-react";
 
 
-
-export default function DataTable({ columns = [], data }) {
+export default function DataTable({ columns = [], data, loading }) {
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
   const [rowSelection, setRowSelection] = useState({});
+  
 
   const table = useReactTable({
     data,
@@ -51,7 +52,7 @@ export default function DataTable({ columns = [], data }) {
   // console.log("Table Data:", table?.getRowModel()?.rows?.length);
 
   return (
-    <div className="w-full p-6">
+    <div className="max-w-full p-6">
       {/* <div className="flex items-center py-4">
         <Input
           placeholder="Filter emails..."
@@ -88,8 +89,8 @@ export default function DataTable({ columns = [], data }) {
           </DropdownMenuContent>
         </DropdownMenu>
       </div> */}
-      <div className="rounded-md border">
-        <Table>
+      <div  className="rounded-md border">
+        <Table suppressHydrationWarning>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -108,34 +109,36 @@ export default function DataTable({ columns = [], data }) {
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody>
-            {table.getRowModel()?.rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
+          {!loading && (
+            <TableBody>
+              {table.getRowModel()?.rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center"
+                  >
+                    No results.
+                  </TableCell>
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
+              )}
+            </TableBody>
+          )}
         </Table>
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">

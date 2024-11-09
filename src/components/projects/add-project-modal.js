@@ -1,8 +1,10 @@
+import { useToast } from "@/hooks/use-toast";
 import { fetchDashboardInfo } from "@/lib/api";
 import React, { useState } from "react";
 
 const AddProjectModal = ({ isOpen, onClose, id, name }) => {
   if (!isOpen) return null;
+  const { toast } = useToast();
 
   const [formData, setFormData] = useState({
     projectName: "",
@@ -27,23 +29,38 @@ const AddProjectModal = ({ isOpen, onClose, id, name }) => {
     try {
       // Use fetchDashboardInfo for POST request
       const response = await fetchDashboardInfo(
-        '/project/add',
-        'POST',
+        "/project/add",
+        "POST",
         apiData
       );
-      console.log("API Response:", response);
-      console.log("API DATA", apiData);
-      alert("Project Added Successfully!");
-
-      // Reset form after submission
+      if (response) {
+        toast({
+          title: "Project Created!",
+          description: "Successfully created the project.",
+        });
+        setFormData({
+          projectName: "",
+          projectNotes: "",
+        });
+        onClose(); // Close the modal after successful deletion
+      } else {
+        toast({
+          title: "Error",
+          variant: "destructive",
+          description: "Failed to create the project.",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        variant: "destructive",
+        description: "Something went wrong. Please try again later.",
+      });
       setFormData({
         projectName: "",
         projectNotes: "",
       });
       onClose();
-    } catch (error) {
-      console.error("Error creating account:", error);
-      alert("There was an error creating the account.");
     }
   };
 
@@ -94,7 +111,7 @@ const AddProjectModal = ({ isOpen, onClose, id, name }) => {
               name="projectName"
               value={formData.projectName}
               onChange={handleChange}
-              className="w-1/2 px-3 py-2 bg-white bg-opacity-5 border rounded focus:outline-none focus:ring focus:ring-blue-200 text-black"
+              className="w-1/2 px-3 py-2 text-white bg-white bg-opacity-5 border rounded focus:outline-none focus:ring focus:ring-blue-200 "
               required
             />
           </div>
@@ -104,7 +121,7 @@ const AddProjectModal = ({ isOpen, onClose, id, name }) => {
               name="projectNotes"
               value={formData.projectNotes}
               onChange={handleChange}
-              className="w-1/2 px-3 py-2 bg-white bg-opacity-5 border rounded focus:outline-none focus:ring focus:ring-blue-200 text-black"
+              className="w-1/2 px-3 py-2 text-white bg-white bg-opacity-5 border rounded focus:outline-none focus:ring focus:ring-blue-200 "
               rows="3"
               required
             />
