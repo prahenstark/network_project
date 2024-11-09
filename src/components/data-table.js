@@ -20,8 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import Loader from "./loader";
-
+import { Loader } from "lucide-react";
 
 
 export default function DataTable({ columns = [], data, loading }) {
@@ -90,8 +89,8 @@ export default function DataTable({ columns = [], data, loading }) {
           </DropdownMenuContent>
         </DropdownMenu>
       </div> */}
-      <div className="rounded-md border">
-        <Table>
+      <div  className="rounded-md border">
+        <Table suppressHydrationWarning>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -110,11 +109,7 @@ export default function DataTable({ columns = [], data, loading }) {
               </TableRow>
             ))}
           </TableHeader>
-          {loading ? (
-            <div className="flex justify-center items-center h-full w-full ml-[25rem]">
-              <Loader/> {/* Display your Loader component here */}
-            </div>
-          ) : (
+          {!loading && (
             <TableBody>
               {table.getRowModel()?.rows?.length ? (
                 table.getRowModel().rows.map((row) => (
