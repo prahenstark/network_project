@@ -58,6 +58,8 @@ const ProjectItem = ({ item, id }) => {
       <DeleteModal
         isOpen={isDeleteModalOpen}
         onClose={() => setDeleteModalOpen(false)}
+        name={item}
+        id={id}
       />
     </>
   );

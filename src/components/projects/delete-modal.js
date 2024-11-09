@@ -1,13 +1,49 @@
+import { fetchDashboardInfo } from "@/lib/api";
 import React, { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 
-const DeleteAccountModal = ({ isOpen, onClose }) => {
+const DeleteAccountModal = ({ isOpen, onClose, id, name }) => {
   if (!isOpen) return null;
+  const { toast } = useToast();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert("Submitted!");
-    onClose();
-    // onSubmit(formData);
+
+    // Prepare data for API
+    // const apiData = `gid=${id}`;
+
+    const apiData = {
+      gid: id,
+    };
+
+    try {
+      // Send API call to delete the user with the provided UID
+      const result = await fetchDashboardInfo(
+        "/project/delete",
+        "DELETE",
+        apiData
+      );
+
+      if (result) {
+        toast({
+          title: "Project deleted!",
+          description: "Successfully deleted the selected project.",
+        });
+        onClose(); // Close the modal after successful deletion
+      } else {
+        toast({
+          title: "Error",
+          variant: "destructive",
+          description: "Failed to delete the project.",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        variant: "destructive",
+        description: "Something went wrong. Please try again later.",
+      });
+    }
   };
 
   const handleOverlayClick = (e) => {

@@ -4,11 +4,9 @@ import { fetchDashboardInfo } from "@/lib/api";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 
-
 const DeleteModal = ({ isOpen, onClose, gids }) => {
   if (!isOpen) return null;
   const { toast } = useToast();
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,6 +14,7 @@ const DeleteModal = ({ isOpen, onClose, gids }) => {
     // Check if UID is provided
     if (!gids) {
       toast({
+        variant: "destructive",
         title: "Error",
         description: "Please select an account to delete the account.",
       });
@@ -24,9 +23,13 @@ const DeleteModal = ({ isOpen, onClose, gids }) => {
 
     try {
       // Send API call to delete the user with the provided UID
-      const result = await fetchDashboardInfo("/account/delete-users", "DELETE", {
-        uids: gids,
-      });
+      const result = await fetchDashboardInfo(
+        "/account/delete-users",
+        "DELETE",
+        {
+          uids: gids,
+        }
+      );
 
       if (result) {
         toast({
@@ -34,11 +37,13 @@ const DeleteModal = ({ isOpen, onClose, gids }) => {
           description: "Successfully deleted the selected account.",
         });
         onClose(); // Close the modal after successful deletion
+        window.location.reload();
       } else {
         toast({
           title: "Error",
           variant: "destructive",
-          description: "Failed to delete the account. Please provide correct gid.",
+          description:
+            "Failed to delete the account. Please provide correct gid.",
         });
       }
     } catch (error) {
@@ -73,7 +78,9 @@ const DeleteModal = ({ isOpen, onClose, gids }) => {
           onSubmit={handleSubmit}
           className="w-[30vw] h-[30vh] flex flex-col gap-6 items-center justify-center"
         >
-          <h1 className="w-full">Do you want to delete the selected account?</h1>
+          <h1 className="w-full">
+            Do you want to delete the selected account?
+          </h1>
           <div className="flex space-x-4 mt-4 justify-center">
             <button
               onClick={onClose}
