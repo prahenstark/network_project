@@ -5,8 +5,8 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 
 const DeleteModal = ({ isOpen, onClose, gids }) => {
-  if (!isOpen) return null;
   const { toast } = useToast();
+  if (!isOpen) return null;
 
   const handleSubmit = async (e) => {
     e.preventDefault();

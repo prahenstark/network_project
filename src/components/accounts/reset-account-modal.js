@@ -5,12 +5,10 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 
 const ResetAccountModal = ({ isOpen, onClose, gids }) => {
-  if (!isOpen) return null;
-
-  const { toast } = useToast();
-
   // State to hold the password input
   const [password, setPassword] = useState("");
+  const { toast } = useToast();
+  if (!isOpen) return null;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -41,7 +39,7 @@ const ResetAccountModal = ({ isOpen, onClose, gids }) => {
       uids: gids, // Using gids prop to send multiple UIDs
       password: password,
     };
-    console.log(postData)
+    console.log(postData);
     try {
       // Send API call to reset the password with the provided gids and password
       const result = await fetchDashboardInfo(

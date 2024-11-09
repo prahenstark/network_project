@@ -3,8 +3,8 @@ import React, { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 
 const DeleteAccountModal = ({ isOpen, onClose, id, name }) => {
-  if (!isOpen) return null;
   const { toast } = useToast();
+  if (!isOpen) return null;
 
   const handleSubmit = async (e) => {
     e.preventDefault();

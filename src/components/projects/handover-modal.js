@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 
 const HandoverModal = ({ isOpen, onClose }) => {
-  if (!isOpen) return null;
-
   const [formData, setFormData] = useState({
     field1: "",
     field2: "",
     textarea: "",
   });
+
+  if (!isOpen) return null;
 
   const handleChange = (e) => {
     const { name, value } = e.target;

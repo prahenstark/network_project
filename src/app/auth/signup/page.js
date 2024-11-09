@@ -8,13 +8,17 @@ import Image from "next/image"
 export default function SignupPage() {
   return (
     <div className="flex h-screen w-full flex-col items-center justify-center px-4">
-      <Image 
-        src="/assets/Logo.png" 
-        alt="Logo" 
+      <Image
+        src="/assets/Logo.png"
+        alt="Logo"
+        width={100}
+        height={100}
         className="mb-6 h-24 w-24" // Adjust size as needed
       />
       <div className="w-full max-w-md p-6 rounded-md">
-        <h1 className="text-4xl font-semibold text-center mb-2">Create an Account</h1>
+        <h1 className="text-4xl font-semibold text-center mb-2">
+          Create an Account
+        </h1>
         <p className="text-center text-muted-foreground text-sm mb-12">
           Sign up to get started with our platform
         </p>
@@ -22,21 +26,11 @@ export default function SignupPage() {
           <div className="grid grid-cols-2 gap-4">
             <div className="grid gap-2">
               <Label htmlFor="firstName">First Name</Label>
-              <Input
-                id="firstName"
-                type="text"
-                placeholder="John"
-                required
-              />
+              <Input id="firstName" type="text" placeholder="John" required />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="lastName">Last Name</Label>
-              <Input
-                id="lastName"
-                type="text"
-                placeholder="Doe"
-                required
-              />
+              <Input id="lastName" type="text" placeholder="Doe" required />
             </div>
           </div>
           <div className="grid gap-2">
@@ -76,5 +70,5 @@ export default function SignupPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }
