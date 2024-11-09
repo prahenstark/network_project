@@ -105,10 +105,10 @@ export default function Devices() {
   return (
     <div>
       <Navbar title="Devices" />
-      <div className="flex flex-1 overflow-y-clip">
+      <div className="flex flex-1">
         <ProjectList projects={allProjects} />
 
-        <div className="flex flex-col w-full">
+        <div className="flex flex-col w-full overflow-x-auto">
           {loading ? (
             <div className="flex justify-center items-center h-full">
               <Loader /> {/* Display your Loader component here */}
@@ -179,6 +179,7 @@ export default function Devices() {
                 <IconDropdown
                   className="border-green-500 min-w-20"
                   options={iconDropdownOptions}
+                  disabled={true}
                 >
                   <GitFork size={18} />
                   <ChevronDown size={18} />
@@ -186,15 +187,18 @@ export default function Devices() {
                 <SelectDropdown
                   className="min-w-28"
                   options={dropdownOptions}
+                  disabled={true}
                 />
                 <SelectDropdown
                   className="min-w-28"
                   options={dropdownOptions2}
+                  disabled={true}
                 />
                 <Searchbar displayText="🔍 Search" />
                 <IconDropdown
                   className="border-green-500 min-w-20"
                   options={iconDropdownOptions}
+                  disabled={true}
                 >
                   <FileInput size={18} />
                   <ChevronDown size={18} />
@@ -202,6 +206,7 @@ export default function Devices() {
                 <IconDropdown
                   className="border-green-500 min-w-20 "
                   options={iconDropdownOptions}
+                  disabled={true}
                 >
                   <Filter size={18} />
                   <ChevronDown size={18} />

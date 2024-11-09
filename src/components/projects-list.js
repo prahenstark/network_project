@@ -21,7 +21,15 @@ export default function ProjectList({ projects = [] }) {
   };
 
   return (
-    <div className="bg-[#21312A] min-w-60 h-[87.5vh] p-4 rounded-tr-3xl">
+    <div
+      className="bg-[#21312A] min-w-60 max-h-[calc(100vh-5rem)] p-4 rounded-tr-3xl overflow-y-auto [&::-webkit-scrollbar]:w-2
+  [&::-webkit-scrollbar-track]:rounded-full
+  [&::-webkit-scrollbar-track]:bg-white [&::-webkit-scrollbar-track]:bg-opacity-5
+  [&::-webkit-scrollbar-thumb]:rounded-full
+  [&::-webkit-scrollbar-thumb]:bg-gray-300
+  dark:[&::-webkit-scrollbar-track]:bg-neutral-700
+  dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500"
+    >
       <h2 className="text-xl font-semibold mb-4">Project List</h2>
       {/* <h2 className="text-lg underline underline-offset-4 font-semibold mb-4">
         Parent Project

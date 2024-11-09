@@ -1,8 +1,10 @@
+import { useToast } from "@/hooks/use-toast";
 import { fetchDashboardInfo } from "@/lib/api";
 import React, { useState } from "react";
 
 const AddProjectModal = ({ isOpen, onClose, id, name }) => {
   if (!isOpen) return null;
+  const { toast } = useToast();
 
   const [formData, setFormData] = useState({
     projectName: "",
@@ -109,7 +111,7 @@ const AddProjectModal = ({ isOpen, onClose, id, name }) => {
               name="projectName"
               value={formData.projectName}
               onChange={handleChange}
-              className="w-1/2 px-3 py-2 bg-white bg-opacity-5 border rounded focus:outline-none focus:ring focus:ring-blue-200 text-black"
+              className="w-1/2 px-3 py-2 text-white bg-white bg-opacity-5 border rounded focus:outline-none focus:ring focus:ring-blue-200 "
               required
             />
           </div>
@@ -119,7 +121,7 @@ const AddProjectModal = ({ isOpen, onClose, id, name }) => {
               name="projectNotes"
               value={formData.projectNotes}
               onChange={handleChange}
-              className="w-1/2 px-3 py-2 bg-white bg-opacity-5 border rounded focus:outline-none focus:ring focus:ring-blue-200 text-black"
+              className="w-1/2 px-3 py-2 text-white bg-white bg-opacity-5 border rounded focus:outline-none focus:ring focus:ring-blue-200 "
               rows="3"
               required
             />

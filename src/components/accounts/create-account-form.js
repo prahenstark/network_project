@@ -118,7 +118,7 @@ function CreateAccountForm({ onClose }) {
           name="account"
           value={formData.account}
           onChange={handleChange}
-          className="mt-1 block w-full bg-white bg-opacity-5 border border-gray-300 rounded-md shadow-sm p-2 focus:outline-none focus:ring focus:ring-blue-200 text-black"
+          className="mt-1 block w-full text-white bg-white bg-opacity-5 border rounded-md shadow-sm p-2 focus:outline-none focus:ring focus:ring-blue-200 "
           required
         />
       </div>
@@ -132,7 +132,7 @@ function CreateAccountForm({ onClose }) {
           name="nickName"
           value={formData.nickName}
           onChange={handleChange}
-          className="mt-1 block w-full bg-white bg-opacity-5 border border-gray-300 rounded-md shadow-sm p-2 focus:outline-none focus:ring focus:ring-blue-200 text-black"
+          className="mt-1 block w-full text-white bg-white bg-opacity-5 border rounded-md shadow-sm p-2 focus:outline-none focus:ring focus:ring-blue-200 "
           required
         />
       </div>
@@ -142,11 +142,11 @@ function CreateAccountForm({ onClose }) {
           Password
         </label>
         <input
-          type="text"
+          type="password"
           name="password"
           value={formData.password}
           onChange={handleChange}
-          className="mt-1 block w-full bg-white bg-opacity-5 border border-gray-300 rounded-md shadow-sm p-2 focus:outline-none focus:ring focus:ring-blue-200 text-black"
+          className="mt-1 block w-full text-white bg-white bg-opacity-5 border rounded-md shadow-sm p-2 focus:outline-none focus:ring focus:ring-blue-200 "
           required
         />
       </div>
@@ -158,7 +158,7 @@ function CreateAccountForm({ onClose }) {
           name="mobile"
           value={formData.mobile}
           onChange={handleChange}
-          className="mt-1 block w-full bg-white bg-opacity-5 border border-gray-300 rounded-md shadow-sm p-2 focus:outline-none focus:ring focus:ring-blue-200 text-black"
+          className="mt-1 block w-full text-white bg-white bg-opacity-5 border rounded-md shadow-sm p-2 focus:outline-none focus:ring focus:ring-blue-200 "
           required
         />
       </div>
@@ -169,7 +169,7 @@ function CreateAccountForm({ onClose }) {
           name="email"
           value={formData.email}
           onChange={handleChange}
-          className="mt-1 block w-full bg-white bg-opacity-5 border border-gray-300 rounded-md shadow-sm p-2 focus:outline-none focus:ring focus:ring-blue-200 text-black"
+          className="mt-1 block w-full text-white bg-white bg-opacity-5 border rounded-md shadow-sm p-2 focus:outline-none focus:ring focus:ring-blue-200 "
           required
         />
       </div>

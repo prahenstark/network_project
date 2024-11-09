@@ -78,7 +78,7 @@ export default function Sidebar() {
           </div>
         </Link>
 
-        <Link href="/settings">
+        <Link href="/log-out">
           <div className="icon p-4 w-full ">
             <LogOut size={20} />
           </div>

@@ -286,8 +286,16 @@ export default function Accounts({}) {
     <div>
       <Navbar title="Accounts" />
       <ToggleHeader pageName="Account List" className=" p-6">
-        <SelectDropdown className="min-w-28" options={dropdownOptions} />
-        <SelectDropdown className="min-w-28" options={dropdownOptions} />
+        <SelectDropdown
+          className="min-w-28"
+          options={dropdownOptions}
+          disabled={true}
+        />
+        <SelectDropdown
+          className="min-w-28"
+          options={dropdownOptions}
+          disabled={true}
+        />
         <Searchbar displayText="🔍 Account/Email Address" />
         <IconDropdown
           className="border-green-500 min-w-20"
@@ -305,7 +313,7 @@ export default function Accounts({}) {
         </div>
       )}
 
-      <DataTable columns={columns} data={data} loading={loading}/>
+      <DataTable columns={columns} data={data} loading={loading} />
     </div>
   );
 }

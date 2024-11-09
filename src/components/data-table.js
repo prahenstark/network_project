@@ -53,7 +53,7 @@ export default function DataTable({ columns = [], data, loading }) {
   // console.log("Table Data:", table?.getRowModel()?.rows?.length);
 
   return (
-    <div className="w-full p-6">
+    <div className="max-w-full p-6">
       {/* <div className="flex items-center py-4">
         <Input
           placeholder="Filter emails..."
