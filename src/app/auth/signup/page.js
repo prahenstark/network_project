@@ -3,11 +3,12 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import Image from "next/image"
 
 export default function SignupPage() {
   return (
     <div className="flex h-screen w-full flex-col items-center justify-center px-4">
-      <img 
+      <Image 
         src="/assets/Logo.png" 
         alt="Logo" 
         className="mb-6 h-24 w-24" // Adjust size as needed
