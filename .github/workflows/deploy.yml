@@ -50,9 +50,9 @@ jobs:
         ssh -i ~/.ssh/id_rsa $EC2_USER@$EC2_HOST "mkdir -p $DEPLOY_PATH"
 
         # Copy files using rsync, excluding node_modules
-    rsync -avz --delete --exclude 'node_modules' \
-      -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" \
-      ./ $EC2_USER@$EC2_HOST:$DEPLOY_PATH/
+        rsync -avz --delete --exclude 'node_modules' \
+           -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" \
+           ./ $EC2_USER@$EC2_HOST:$DEPLOY_PATH/
         
         # Copy files using rsync
         rsync -avz --delete \
