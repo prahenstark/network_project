@@ -49,7 +49,7 @@ const LogoutModal = ({ isOpen, onClose }) => {
           className="w-[30vw] h-[30vh] flex flex-col gap-6 items-center justify-center"
         >
           <h1 className="w-full">
-            Are you sure you want to logout of your account?
+            Are you sure you want to logout?
           </h1>
           <div className="flex space-x-4 mt-4 justify-center">
             <button
