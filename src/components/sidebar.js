@@ -15,6 +15,7 @@ import { useAuth } from "@/context/auth-provider"; // Adjust the import path bas
 import { LogOut } from "lucide-react";
 import LogoutModal from "./logout-modal";
 import { useState } from "react";
+import Image from "next/image";
 
 
 
@@ -50,7 +51,7 @@ export default function Sidebar() {
       <div className="w-full">
         <Link href="/">
           <div className="logo-container mx-auto flex size-16 items-center justify-center border-b">
-            <img src="/assets/Logo.png" alt="Logo" />
+            <Image src="/assets/Logo.png" alt="Logo" />
           </div>
         </Link>
 

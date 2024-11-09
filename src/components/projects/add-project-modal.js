@@ -3,13 +3,15 @@ import { fetchDashboardInfo } from "@/lib/api";
 import React, { useState } from "react";
 
 const AddProjectModal = ({ isOpen, onClose, id, name }) => {
-  if (!isOpen) return null;
+  
   const { toast } = useToast();
 
   const [formData, setFormData] = useState({
     projectName: "",
     projectNotes: "",
   });
+
+  if (!isOpen) return null;
 
   const handleChange = async (e) => {
     const { name, value } = e.target;

@@ -7,6 +7,7 @@ import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import Image from "next/image";
 
 export default function Page() {
   const [email, setEmail] = useState('');
@@ -47,7 +48,7 @@ export default function Page() {
 
   return (
     <div className="flex h-screen w-full flex-col items-center justify-center px-4">
-      <img
+      <Image
         src="/assets/Logo.png"
         alt="Logo"
         className="mb-6 h-24 w-24" // Adjust size as needed

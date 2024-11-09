@@ -7,6 +7,7 @@ import { Line, Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, ArcElement } from "chart.js";
 import { fetchDashboardInfo } from '@/lib/api';  // Import the fetch function
 import Loader from "@/components/loader";  // Import your loader component or create a simple one
+import Image from 'next/image';
 
 ChartJS.register(
   CategoryScale,
@@ -119,7 +120,7 @@ export default function Home() {
                   </div>
                 </div>
               ))}
-              <img src="assets/wifi.png" alt="WiFi icon" />
+              <Image src="assets/wifi.png" alt="WiFi icon" />
             </div>
           </div>
 
