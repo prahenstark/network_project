@@ -120,7 +120,7 @@ export default function Home() {
                   </div>
                 </div>
               ))}
-              <Image src="assets/wifi.png" alt="WiFi icon" />
+              <Image src="/assets/wifi.png" alt="WiFi icon" width={100} height={100}/>
             </div>
           </div>
 

@@ -51,7 +51,7 @@ export default function Sidebar() {
       <div className="w-full">
         <Link href="/">
           <div className="logo-container mx-auto flex size-16 items-center justify-center border-b">
-            <Image src="/assets/Logo.png" alt="Logo" />
+            <Image src="/assets/Logo.png" alt="Logo" width={100} height={100} />
           </div>
         </Link>
 
@@ -87,7 +87,12 @@ export default function Sidebar() {
           </div>
         </Link>
 
-        <button onClick={() => {setIsModalOpen(true)}} className="icon p-4">
+        <button
+          onClick={() => {
+            setIsModalOpen(true);
+          }}
+          className="icon p-4"
+        >
           <LogOut size={20} />
         </button>
       </div>

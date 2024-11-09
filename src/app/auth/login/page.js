@@ -51,6 +51,8 @@ export default function Page() {
       <Image
         src="/assets/Logo.png"
         alt="Logo"
+        width={100}
+        height={100}
         className="mb-6 h-24 w-24" // Adjust size as needed
       />
       <div className="w-full max-w-md p-6 rounded-md">
