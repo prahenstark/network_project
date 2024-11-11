@@ -2,7 +2,7 @@ import { useToast } from "@/hooks/use-toast";
 import { fetchDashboardInfo } from "@/lib/api";
 import React, { useState } from "react";
 
-const AddProjectModal = ({ isOpen, onClose, id, name }) => {
+const AddProjectModal = ({ isOpen, onClose, id, name, refreshAction }) => {
   
   const { toast } = useToast();
 
@@ -44,6 +44,7 @@ const AddProjectModal = ({ isOpen, onClose, id, name }) => {
           projectName: "",
           projectNotes: "",
         });
+        refreshAction()
         onClose(); // Close the modal after successful deletion
       } else {
         toast({

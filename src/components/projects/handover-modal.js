@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const HandoverModal = ({ isOpen, onClose }) => {
+const HandoverModal = ({ isOpen, onClose, refreshAction }) => {
   const [formData, setFormData] = useState({
     field1: "",
     field2: "",
@@ -17,6 +17,8 @@ const HandoverModal = ({ isOpen, onClose }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     alert("Submitted!");
+
+    refreshAction();
     closeModal();
     // onSubmit(formData);
   };
