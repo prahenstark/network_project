@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }) => {
       }
 
       try {
-        const response = await fetch("http://13.233.36.198:5000/middleware", {
+        const response = await fetch("http://65.2.169.172:5000/middleware", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
