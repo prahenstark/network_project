@@ -60,21 +60,21 @@ const Projects = () => {
   const projectNames = getProjectNames(projectData);
   // console.log("all data", projectNames);
   
+  const getData = async () => {
+    try {
+      setLoading(true); // Start loading
+      const data = await fetchDashboardInfo("/project"); // Adjust the API path as necessary
+      // console.log("all data", data);
+      setprojectData(data?.workgroupInfo || []); // Use optional chaining and default to an empty array
+      // console.log("workgroupInfo", data);
+    } catch (error) {
+      console.log("Failed to fetch devices data:", error);
+    } finally {
+      setLoading(false); // Stop loading
+    }
+  };
 
   useEffect(() => {
-    const getData = async () => {
-      try {
-        setLoading(true); // Start loading
-        const data = await fetchDashboardInfo("/project"); // Adjust the API path as necessary
-        // console.log("all data", data);
-        setprojectData(data?.workgroupInfo || []); // Use optional chaining and default to an empty array
-        // console.log("workgroupInfo", data);
-      } catch (error) {
-        console.log("Failed to fetch devices data:", error);
-      } finally {
-        setLoading(false); // Stop loading
-      }
-    };
 
     getData();
   }, []);
@@ -119,7 +119,7 @@ const Projects = () => {
               <>
                 {/* <h3 className="font-semibold mb-3">Project List</h3> */}
                 <ul className="space-y-2">
-                    { projectNames.map(project => (<ProjectItem key={project.id} item={project.name} id={project.id}/>))}
+                    { projectNames.map(project => (<ProjectItem key={project.id} refreshAction={getData} item={project.name} id={project.id}/>))}
                 </ul>
               </>
             )}
