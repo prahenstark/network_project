@@ -31,6 +31,7 @@ export default function Accounts({}) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedIds, setSelectedIds] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handleSelect = (option) => {
     setSelectediconDropdownOption(option);
@@ -53,7 +54,11 @@ export default function Accounts({}) {
       <CreateAccountModal isOpen={isModalOpen} onClose={closeModal} />
     ),
     "Reset Account": (
-      <ResetAccountModal gids={selectedIds} isOpen={isModalOpen} onClose={closeModal} />
+      <ResetAccountModal
+        gids={selectedIds}
+        isOpen={isModalOpen}
+        onClose={closeModal}
+      />
     ),
     "Delete Account": (
       <DeleteAccountModal
@@ -99,6 +104,13 @@ export default function Accounts({}) {
 
     fetchData();
   }, []);
+
+  const filteredData = data.filter(
+    (item) =>
+      item.account.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.nickName.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const columns = [
     {
@@ -296,7 +308,10 @@ export default function Accounts({}) {
           options={dropdownOptions}
           disabled={true}
         />
-        <Searchbar displayText="🔍 Account/Email Address" />
+        <Searchbar
+          onChange={(e) => setSearchQuery(e.target.value)}
+          displayText="🔍 Account/Email Address"
+        />
         <IconDropdown
           className="border-green-500 min-w-20"
           options={iconDropdownOptions}
@@ -313,7 +328,7 @@ export default function Accounts({}) {
         </div>
       )}
 
-      <DataTable columns={columns} data={data} loading={loading} />
+      <DataTable columns={columns} data={filteredData} loading={loading} />
     </div>
   );
 }
