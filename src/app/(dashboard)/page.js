@@ -1,13 +1,23 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 import Navbar from "@/components/navbar";
 import { InfoIcon, Wifi } from "lucide-react";
 import { Line, Doughnut } from "react-chartjs-2";
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, ArcElement } from "chart.js";
-import { fetchDashboardInfo } from '@/lib/api';  // Import the fetch function
-import Loader from "@/components/loader";  // Import your loader component or create a simple one
-import Image from 'next/image';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement,
+} from "chart.js";
+import { fetchDashboardInfo } from "@/lib/api"; // Import the fetch function
+import Loader from "@/components/loader"; // Import your loader component or create a simple one
+import Image from "next/image";
 
 ChartJS.register(
   CategoryScale,
@@ -31,7 +41,7 @@ export default function Home() {
         const data = await fetchDashboardInfo("/info"); // Call the fetch function
         setDashboardData(data?.dashboardData);
       } catch (error) {
-        console.log('Failed to fetch dashboard data:', error);
+        console.log("Failed to fetch dashboard data:", error);
       } finally {
         setLoading(false); // Stop loading
       }
@@ -98,14 +108,26 @@ export default function Home() {
       ) : (
         <>
           {/* Resource Statistics */}
-          <div className="px-12 mt-6 space-y-2">
+          <div className="px-12 mt-6 space-y-6 sm:space-y-2">
             <h1 className="text-2xl">Resource Statistics</h1>
-            <div className="flex items-center px-6 gap-4">
-              {[ 
-                { label: "Total Device", value: dashboardData?.deviceStatistics?.all ?? 0 },
-                { label: "Online Total", value: dashboardData?.deviceStatistics?.online ?? 0 },
-                { label: "Alarm Total", value: dashboardData?.deviceStatistics?.alarm ?? 0 },
-                { label: "Offline Total", value: dashboardData?.deviceStatistics?.offline ?? 0 },
+            <div className="flex items-center flex-wrap px-6 gap-4">
+              {[
+                {
+                  label: "Total Device",
+                  value: dashboardData?.deviceStatistics?.all ?? 0,
+                },
+                {
+                  label: "Online Total",
+                  value: dashboardData?.deviceStatistics?.online ?? 0,
+                },
+                {
+                  label: "Alarm Total",
+                  value: dashboardData?.deviceStatistics?.alarm ?? 0,
+                },
+                {
+                  label: "Offline Total",
+                  value: dashboardData?.deviceStatistics?.offline ?? 0,
+                },
                 { label: "Inspection Report", value: 6 }, // Hardcoded or from another source
               ].map((item, index) => (
                 <div key={index} className="flex-1 flex items-center gap-6">
@@ -120,33 +142,47 @@ export default function Home() {
                   </div>
                 </div>
               ))}
-              <Image src="/assets/wifi.png" alt="WiFi icon" width={100} height={100}/>
+              <Image
+                src="/assets/wifi.png"
+                alt="WiFi icon"
+                width={100}
+                height={100}
+              />
             </div>
           </div>
 
           {/* Project and Pending Info Sections */}
-          <div className="px-12 flex gap-6">
+          <div className="px-6 sm:px-12 mt-6 flex flex-col sm:flex-row gap-6">
             {/* Project Info Section */}
-            <div className="space-y-6 flex flex-col flex-[1.5]">
+            <div className="space-y-6 flex-1 sm:flex-[1.5]">
               <h1 className="text-2xl py-6">Project Info</h1>
               <div className="flex gap-4">
                 {/* My Project Card */}
                 {dashboardData?.projectInfo?.length > 0 ? (
                   <div className="project-card flex-1 p-6 bg-white/5 border rounded-xl hover:bg-white/10 transition">
                     <div className="text-xl flex items-center">
-                      <Wifi className="mr-4" /> 
+                      <Wifi className="mr-4" />
                       <h1>{dashboardData.projectInfo[0].name}</h1>
                     </div>
                     <p className="text-xs mt-2 text-muted-foreground">
                       Creation time: {dashboardData.projectInfo[0].created_at}
                     </p>
                     <div className="flex items-center mt-6">
-                      {dashboardData.projectInfo[0].dev_statistic.map((item, index) => (
-                        <div key={index} className="flex-1 flex items-center gap-2">
-                          <div className="text-4xl font-semibold">{item.devnums}</div>
-                          <div className="text-lg font-medium leading-6">{item.type}</div>
-                        </div>
-                      ))}
+                      {dashboardData.projectInfo[0].dev_statistic.map(
+                        (item, index) => (
+                          <div
+                            key={index}
+                            className="flex-1 flex items-center gap-2"
+                          >
+                            <div className="text-4xl font-semibold">
+                              {item.devnums}
+                            </div>
+                            <div className="text-lg font-medium leading-6">
+                              {item.type}
+                            </div>
+                          </div>
+                        )
+                      )}
                     </div>
                   </div>
                 ) : (
@@ -159,16 +195,16 @@ export default function Home() {
             </div>
 
             {/* Pending Info Section */}
-            <div className="space-y-6 flex flex-col flex-1">
+            <div className="space-y-6 flex-1 sm:flex-[1]">
               <div className="flex justify-between items-center">
                 <h1 className="text-2xl py-6">Pending Info</h1>
                 <InfoIcon />
               </div>
-              <div className="flex gap-4">
+              <div className="flex flex-wrap gap-4">
                 {/* Pending Project Card */}
                 <div className="project-card flex-1 p-6 bg-white/5 border rounded-xl hover:bg-white/10 transition">
                   <div className="text-xl gap-4 flex items-center">
-                    <span className="text-5xl font-semibold">02</span> 
+                    <span className="text-5xl font-semibold">02</span>
                     <h1>Pending Project</h1>
                   </div>
                   <div className="flex justify-end mt-6">
@@ -181,7 +217,7 @@ export default function Home() {
                 {/* Account Changes Card */}
                 <div className="project-card flex-1 p-6 bg-white/5 border rounded-xl hover:bg-white/10 transition">
                   <div className="text-xl gap-4 flex items-center">
-                    <span className="text-5xl font-semibold">0</span> 
+                    <span className="text-5xl font-semibold">0</span>
                     <h1>Account Changes</h1>
                   </div>
                   <div className="flex justify-end mt-6">
@@ -195,25 +231,23 @@ export default function Home() {
           </div>
 
           {/* Chart Sections */}
-          <div className="px-12 mt-12 flex gap-6">
+          <div className="px-6 sm:px-12 mt-12 lg:flex gap-6">
             {/* User Activity Section */}
-            <div className="space-y-6 flex flex-col flex-[1.5]">
+            <div className="space-y-6 flex-1 lg:flex-[1.5]">
               <h1 className="text-2xl py-6">User Activity</h1>
-              <div className="project-card flex-1 p-6 bg-white/5 border rounded-xl hover:bg-white/10 transition">
+              <div className="project-card flex justify-center items-center flex-1 p-6 bg-white/5 border rounded-xl hover:bg-white/10 transition">
                 <Line data={userActivityData} options={userActivityOptions} />
               </div>
             </div>
 
             {/* Device Statistics Section */}
-            <div className="space-y-6 flex flex-col flex-1">
+            <div className="space-y-6 flex-1 sm:flex-[1]">
               <div className="flex justify-between items-center">
                 <h1 className="text-2xl py-6">Device Statistics</h1>
                 <InfoIcon />
               </div>
-              <div className="project-card flex-1 p-6 bg-white/5 border rounded-xl hover:bg-white/10 transition">
-                <div className="w-10/12 m-auto">
-                  <Doughnut data={deviceStatisticsData} />
-                </div>
+              <div className="project-card flex justify-center items-center flex-1 p-6 bg-white/5 border rounded-xl hover:bg-white/10 transition">
+                <Doughnut data={deviceStatisticsData} />
               </div>
             </div>
           </div>
