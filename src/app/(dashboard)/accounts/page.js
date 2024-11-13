@@ -24,6 +24,7 @@ import { fetchDashboardInfo } from "@/lib/api";
 import CreateAccountModal from "@/components/accounts/create-account-modal";
 import ResetAccountModal from "@/components/accounts/reset-account-modal";
 import DeleteAccountModal from "@/components/accounts/delete-account-modal";
+import Loader from "@/components/loader";
 
 export default function Accounts({}) {
   const [selectediconDropdownOption, setSelectediconDropdownOption] =
@@ -336,7 +337,13 @@ export default function Accounts({}) {
         </div>
       )}
 
-      <DataTable columns={columns} data={filteredData} loading={loading} />
+      {loading ? (
+        <div className="flex justify-center items-center h-full">
+          <Loader /> {/* Display your Loader component here */}
+        </div>
+      ) : (
+        <DataTable columns={columns} data={filteredData} loading={loading} />
+      )}
     </div>
   );
 }
