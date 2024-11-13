@@ -4,17 +4,13 @@ import React from "react";
 const ToggleHeader = ({ pageName, children, className }) => {
   return (
     <div
-      className={`flex items-center justify-between rounded-md shadow-sm max-h-16 w-full ${className}`}
+      className={`flex max-lg:flex-wrap items-center justify-between rounded-md shadow-sm max-h-16 w-full ${className}`}
     >
       {/* Left: Page Name */}
       <h2 className="text-lg font-semibold ">{pageName}</h2>
 
       {/* Right: Placeholder for Control Buttons */}
-      <div className="">
-        <div className="flex flex-grow mx-auto w-full space-x-4 h-9">
-          {children}
-        </div>
-      </div>
+      <div className="flex max-lg:mt-4 flex-wrap gap-4">{children}</div>
     </div>
   );
 };

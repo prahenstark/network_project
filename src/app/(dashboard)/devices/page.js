@@ -102,11 +102,21 @@ export default function Devices() {
     "Delete Account",
   ];
 
+  // to show or hide project list in small screens
+  const [toggleProjectList, setToggleProjectList] = useState(false);
+
+  const toggleProjectListFunction = () => {
+    setToggleProjectList(!toggleProjectList);
+  };
+
   return (
     <div>
-      <Navbar title="Devices" />
+      <Navbar title="Devices" onClickAction={toggleProjectListFunction} />
+
       <div className="flex flex-1">
-        <ProjectList projects={allProjects} />
+        <div className={toggleProjectList ? "max-md:hidden" : ""}>
+          <ProjectList projects={allProjects} />
+        </div>
 
         <div className="flex flex-col w-full overflow-x-auto">
           {loading ? (
@@ -115,7 +125,7 @@ export default function Devices() {
             </div>
           ) : (
             <>
-              <div className="flex items-center p-6">
+              <div className="flex items-center p-6 flex-wrap gap-4">
                 <div className="flex-1 flex items-center gap-2 text-primary">
                   <div className="text-5xl font-bold">
                     {selectedDevice?.deviceStatistics?.all ?? 0}
@@ -176,42 +186,47 @@ export default function Devices() {
                 </div>
               </div>
               <ToggleHeader pageName="Device List" className="px-6">
-                <IconDropdown
-                  className="border-green-500 min-w-20"
-                  options={iconDropdownOptions}
-                  disabled={true}
-                >
-                  <GitFork size={18} />
-                  <ChevronDown size={18} />
-                </IconDropdown>
-                <SelectDropdown
-                  className="min-w-28"
-                  options={dropdownOptions}
-                  disabled={true}
-                />
-                <SelectDropdown
-                  className="min-w-28"
-                  options={dropdownOptions2}
-                  disabled={true}
-                />
-                <Searchbar displayText="🔍 Search" />
-                <IconDropdown
-                  className="border-green-500 min-w-20"
-                  options={iconDropdownOptions}
-                  disabled={true}
-                >
-                  <FileInput size={18} />
-                  <ChevronDown size={18} />
-                </IconDropdown>
-                <IconDropdown
-                  className="border-green-500 min-w-20 "
-                  options={iconDropdownOptions}
-                  disabled={true}
-                >
-                  <Filter size={18} />
-                  <ChevronDown size={18} />
-                </IconDropdown>
+                <div className="flex items-center gap-4">
+                  <IconDropdown
+                    className="border-green-500 min-w-20"
+                    options={iconDropdownOptions}
+                    disabled={true}
+                  >
+                    <GitFork size={18} />
+                    <ChevronDown size={18} />
+                  </IconDropdown>
+                  <SelectDropdown
+                    className="min-w-28"
+                    options={dropdownOptions}
+                    disabled={true}
+                  />
+                  <SelectDropdown
+                    className="min-w-28"
+                    options={dropdownOptions2}
+                    disabled={true}
+                  />
+                </div>
+                <div><Searchbar displayText="🔍 Search" /></div>
+                <div className="flex items-center gap-4">
+                  <IconDropdown
+                    className="border-green-500 min-w-20"
+                    options={iconDropdownOptions}
+                    disabled={true}
+                  >
+                    <FileInput size={18} />
+                    <ChevronDown size={18} />
+                  </IconDropdown>
+                  <IconDropdown
+                    className="border-green-500 min-w-20 "
+                    options={iconDropdownOptions}
+                    disabled={true}
+                  >
+                    <Filter size={18} />
+                    <ChevronDown size={18} />
+                  </IconDropdown>
+                </div>
               </ToggleHeader>
+              <div className="max-lg:h-20"></div>
               <DeviceTable data={selectedDevice} />
               {/* Pass devicesData to DeviceTable */}
             </>
