@@ -14,6 +14,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import DataTable from "@/components/data-table";
 import { Button } from "../ui/button";
+import { CircleCheck } from "lucide-react";
+import { CircleX } from "lucide-react";
 
 function DeviceTable({data }) {
   // Transform the data as needed for the table
@@ -34,7 +36,7 @@ useEffect(() => {
       mode: deviceListData?.mode || "N/A",
       version: deviceListData?.version || "N/A",
       accessTime: deviceListData?.access_time || "N/A", // Or any other relevant field
-      status: deviceListData?.status === "1" ? "Success" : "Failed",
+      status: deviceListData?.status === "1" ? <CircleCheck/> : <CircleX/>,
     }));
     setTableData(formattedData);
   }

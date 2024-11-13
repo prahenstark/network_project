@@ -206,7 +206,9 @@ export default function Devices() {
                     disabled={true}
                   />
                 </div>
-                <div><Searchbar displayText="🔍 Search" /></div>
+                <div>
+                  <Searchbar displayText="🔍 Search" />
+                </div>
                 <div className="flex items-center gap-4">
                   <IconDropdown
                     className="border-green-500 min-w-20"

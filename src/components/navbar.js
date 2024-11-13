@@ -6,7 +6,7 @@ export default function Navbar({title="Dashboard", onClickAction}) {
   return (
     <nav className="h-20 px-6 py-4 flex justify-between items-center">
       <div className="gap-x-2 justify-center items-center flex">
-        <button onClick={() => { onClickAction && onClickAction()}}><AlignLeft size={28} /></button>{" "}
+        {/* <button onClick={() => { onClickAction && onClickAction()}}><AlignLeft size={28} /></button>{" "} */}
         <h1 className="text-2xl font-semibold">{title}</h1>
       </div>
       <div className="gap-x-2 justify-center items-center flex">

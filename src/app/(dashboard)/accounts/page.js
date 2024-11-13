@@ -91,7 +91,7 @@ export default function Accounts({}) {
           nickName: user.nickname,
           email: user.email,
           role: "User", // Assuming role is "User"; adjust if role data is available
-          status: user.status === "1" ? "Success" : "Failed", // Assuming status mapping
+          status: user.status === "1" ? <CircleCheck /> : <CircleX />, // Assuming status mapping
           creationTime: user.created_at,
         }));
         setData(transformedData);
@@ -272,10 +272,10 @@ export default function Accounts({}) {
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
+              {/* <Button variant="ghost" className="h-8 w-8 p-0">
                 <span className="sr-only">Open menu</span>
                 <MoreHorizontal className="h-4 w-4" />
-              </Button>
+              </Button> */}
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>config</DropdownMenuLabel>

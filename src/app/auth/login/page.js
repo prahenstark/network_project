@@ -56,7 +56,9 @@ export default function Page() {
         className="mb-6 h-24 w-24" // Adjust size as needed
       />
       <div className="w-full max-w-md p-6 rounded-md">
-        <h1 className="text-4xl font-semibold text-center mb-2">Login to Continue</h1>
+        <h1 className="text-4xl font-semibold text-center mb-2">
+          Login to Continue
+        </h1>
         <p className="text-center text-muted-foreground text-sm mb-12">
           Enter your email below to login to your account
         </p>
@@ -76,9 +78,6 @@ export default function Page() {
           <div className="grid gap-2">
             <div className="flex items-center">
               <Label htmlFor="password">Password</Label>
-              <Link href="#" className="ml-auto inline-block text-sm underline">
-                Forgot your password?
-              </Link>
             </div>
             <Input
               id="password"
@@ -91,8 +90,11 @@ export default function Page() {
           <Button type="submit" className="w-full">
             Login
           </Button>
+          <Link href="#" className="ml-auto inline-block text-sm underline">
+            Forgot your password?
+          </Link>
         </form>
-        <div className="mt-4 text-center text-sm">
+        <div className="mt-10 text-center text-sm">
           Don&apos;t have an account?{" "}
           <Link href="/auth/signup" className="underline hover:text-primary">
             Sign up
