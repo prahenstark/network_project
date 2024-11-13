@@ -298,29 +298,37 @@ export default function Accounts({}) {
     <div>
       <Navbar title="Accounts" />
       <ToggleHeader pageName="Account List" className=" p-6">
-        <SelectDropdown
-          className="min-w-28"
-          options={dropdownOptions}
-          disabled={true}
-        />
-        <SelectDropdown
-          className="min-w-28"
-          options={dropdownOptions}
-          disabled={true}
-        />
-        <Searchbar
-          onChange={(e) => setSearchQuery(e.target.value)}
-          displayText="🔍 Account/Email Address"
-        />
-        <IconDropdown
-          className="border-green-500 min-w-20"
-          options={iconDropdownOptions}
-          onSelect={handleSelect}
-        >
-          <FileInput size={18} />
-          <ChevronDown size={18} />
-        </IconDropdown>
+        <div className="flex items-center max-md:flex-col gap-4">
+          <div className="flex items-center gap-4">
+            <SelectDropdown
+              className="min-w-28"
+              options={dropdownOptions}
+              disabled={true}
+            />
+            <SelectDropdown
+              className="min-w-28"
+              options={dropdownOptions}
+              disabled={true}
+            />
+          </div>
+          <div className="flex items-center gap-4">
+            <Searchbar
+              onChange={(e) => setSearchQuery(e.target.value)}
+              displayText="🔍 Account/Email Address"
+            />
+            <IconDropdown
+              className="border-green-500 min-w-20"
+              options={iconDropdownOptions}
+              onSelect={handleSelect}
+            >
+              <FileInput size={18} />
+              <ChevronDown size={18} />
+            </IconDropdown>
+          </div>
+        </div>
       </ToggleHeader>
+
+      <div className="max-md:h-24"></div>
 
       {selectediconDropdownOption && (
         <div className="">

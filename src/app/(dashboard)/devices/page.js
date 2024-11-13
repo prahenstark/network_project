@@ -114,7 +114,7 @@ export default function Devices() {
       <Navbar title="Devices" onClickAction={toggleProjectListFunction} />
 
       <div className="flex flex-1">
-        <div className={toggleProjectList ? "max-md:hidden" : ""}>
+        <div className={toggleProjectList ? "hidden" : ""}>
           <ProjectList projects={allProjects} />
         </div>
 
