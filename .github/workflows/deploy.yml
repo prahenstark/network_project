@@ -1,51 +1,100 @@
 name: Deploy to EC2
-
 on:
   push:
     branches:
       - master
-
 jobs:
   deploy:
     name: Deploy to EC2
     runs-on: ubuntu-latest
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
-
+      
     - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '18' # Use the Node.js version you need
-
+        node-version: '18'
+        
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v2
+      with:
+        version: 8
+        
     - name: Install dependencies
-<<<<<<< HEAD
       run: pnpm install
-=======
-      run: pnpm i
->>>>>>> b73edd278f2bdd5c971a302107daf823001ce9fd
-
+      
     - name: Build Next.js project
-      run: npm run build
+      run: pnpm run build
 
-    - name: Copy files via SSH
-      uses: appleboy/scp-action@v0.1.2
-      with:
-        host: ${{ secrets.EC2_HOST }}
-        username: ${{ secrets.EC2_USER }}
-        key: ${{ secrets.EC2_SSH_KEY }}
-        source: "./"
-        target: "${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:${{ secrets.EC2_PATH }}"
+    - name: Set up SSH
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
+        SSH_KNOWN_HOSTS: ${{ secrets.EC2_HOST }}
+      run: |
+        mkdir -p ~/.ssh
+        echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
-    - name: Execute remote SSH commands
-      uses: appleboy/ssh-action@v0.1.2
-      with:
-        host: ${{ secrets.EC2_HOST }}
-        username: ${{ secrets.EC2_USER }}
-        key: ${{ secrets.EC2_SSH_KEY }}
-        script: |
-          cd ${{ secrets.EC2_PATH }}
+    - name: Deploy to EC2
+      env:
+        EC2_HOST: ${{ secrets.EC2_HOST }}
+        EC2_USER: ${{ secrets.EC2_USER }}
+        DEPLOY_PATH: /home/${{ secrets.EC2_USER }}/${{ secrets.EC2_PATH }}
+      run: |
+        # Test SSH connection
+        ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} 'echo "SSH connection successful"'
+        
+        # Create directory if it doesn't exist
+        ssh -i ~/.ssh/id_rsa $EC2_USER@$EC2_HOST "mkdir -p $DEPLOY_PATH"
+
+        # Copy files using rsync, excluding node_modules
+        rsync -avz --delete --exclude 'node_modules' \
+           -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" \
+           ./ $EC2_USER@$EC2_HOST:$DEPLOY_PATH/
+        
+        # Copy files using rsync
+        rsync -avz --delete \
+          -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" \
+          ./ $EC2_USER@$EC2_HOST:$DEPLOY_PATH/
+        
+        # Execute deployment commands
+        ssh -i ~/.ssh/id_rsa $EC2_USER@$EC2_HOST "
+          # Set up environment
+          export PATH=\$PATH:/home/$EC2_USER/.local/share/pnpm
+          export PNPM_HOME=/home/$EC2_USER/.local/share/pnpm
+          
+          # Navigate to project directory
+          cd $DEPLOY_PATH
+          
+          # Install Node.js if needed
+          if ! command -v node &> /dev/null; then
+            curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+            sudo apt-get install -y nodejs
+          fi
+          
+          # Install pnpm if needed
+          if ! command -v pnpm &> /dev/null; then
+            curl -fsSL https://get.pnpm.io/install.sh | sh -
+            export PNPM_HOME=/home/$EC2_USER/.local/share/pnpm
+            export PATH=\$PNPM_HOME:\$PATH
+          fi
+          
+          # Install dependencies and build
           pnpm install
-          npm run build
-          pm2 start npm --name "network_frontend" -- start
+          pnpm run build
+          
+          # Install PM2 if needed
+          if ! command -v pm2 &> /dev/null; then
+            sudo npm install -g pm2
+          fi
+          
+          # Start/restart the application
+          pm2 describe network_frontend > /dev/null
+          if [ \$? -eq 0 ]; then
+            pm2 restart network_frontend
+          else
+            pm2 start pnpm --name \"network_frontend\" -- start
+          fi
+        "
