@@ -7,6 +7,7 @@ import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import Image from "next/image";
 
 export default function Page() {
   const [email, setEmail] = useState('');
@@ -19,7 +20,7 @@ export default function Page() {
     setError(null); // Clear any existing errors
 
     try {
-      const response = await axios.post('http://13.233.36.198:5000/api/auth/login', {
+      const response = await axios.post('http://65.2.169.172:5000/api/auth/login', {
         email,
         password,
       });
@@ -47,13 +48,17 @@ export default function Page() {
 
   return (
     <div className="flex h-screen w-full flex-col items-center justify-center px-4">
-      <img
+      <Image
         src="/assets/Logo.png"
         alt="Logo"
+        width={100}
+        height={100}
         className="mb-6 h-24 w-24" // Adjust size as needed
       />
       <div className="w-full max-w-md p-6 rounded-md">
-        <h1 className="text-4xl font-semibold text-center mb-2">Login to Continue</h1>
+        <h1 className="text-4xl font-semibold text-center mb-2">
+          Login to Continue
+        </h1>
         <p className="text-center text-muted-foreground text-sm mb-12">
           Enter your email below to login to your account
         </p>
@@ -73,9 +78,6 @@ export default function Page() {
           <div className="grid gap-2">
             <div className="flex items-center">
               <Label htmlFor="password">Password</Label>
-              <Link href="#" className="ml-auto inline-block text-sm underline">
-                Forgot your password?
-              </Link>
             </div>
             <Input
               id="password"
@@ -88,8 +90,11 @@ export default function Page() {
           <Button type="submit" className="w-full">
             Login
           </Button>
+          <Link href="#" className="ml-auto inline-block text-sm underline">
+            Forgot your password?
+          </Link>
         </form>
-        <div className="mt-4 text-center text-sm">
+        <div className="mt-10 text-center text-sm">
           Don&apos;t have an account?{" "}
           <Link href="/auth/signup" className="underline hover:text-primary">
             Sign up

@@ -5,15 +5,15 @@ import CreateAccountForm from "./create-account-form";
 import RegisterAccountForm from "./register-account-form";
 
 const CreateAccountModal = ({ isOpen, onClose }) => {
-  if (!isOpen) return null;
-
   const tabs = ["Create Account", "Registered Account"];
 
   const [activeTab, setActiveTab] = useState("Create Account");
 
+  if (!isOpen) return null;
+
   const tabsContent = {
     "Create Account": <CreateAccountForm onClose={onClose} />,
-    "Registered Account": <RegisterAccountForm onClose={onClose}/>,
+    "Registered Account": <RegisterAccountForm onClose={onClose} />,
   };
 
   const handleOverlayClick = (e) => {

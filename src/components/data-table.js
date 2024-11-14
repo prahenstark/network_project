@@ -22,13 +22,11 @@ import {
 } from "@/components/ui/table";
 import { Loader } from "lucide-react";
 
-
 export default function DataTable({ columns = [], data, loading }) {
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
   const [rowSelection, setRowSelection] = useState({});
-  
 
   const table = useReactTable({
     data,
@@ -89,7 +87,7 @@ export default function DataTable({ columns = [], data, loading }) {
           </DropdownMenuContent>
         </DropdownMenu>
       </div> */}
-      <div  className="rounded-md border">
+      <div className="rounded-md border">
         <Table suppressHydrationWarning>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -148,7 +146,7 @@ export default function DataTable({ columns = [], data, loading }) {
         </div>
         <div className="space-x-2">
           <Button
-            variant="outline"
+            className="border-2 border-green-500 bg-transparent"
             size="sm"
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
@@ -156,7 +154,7 @@ export default function DataTable({ columns = [], data, loading }) {
             Previous
           </Button>
           <Button
-            variant="outline"
+            className="border-2 border-green-500 bg-green-500"
             size="sm"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}

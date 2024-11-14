@@ -60,21 +60,21 @@ const Projects = () => {
   const projectNames = getProjectNames(projectData);
   // console.log("all data", projectNames);
   
+  const getData = async () => {
+    try {
+      setLoading(true); // Start loading
+      const data = await fetchDashboardInfo("/project"); // Adjust the API path as necessary
+      // console.log("all data", data);
+      setprojectData(data?.workgroupInfo || []); // Use optional chaining and default to an empty array
+      // console.log("workgroupInfo", data);
+    } catch (error) {
+      console.log("Failed to fetch devices data:", error);
+    } finally {
+      setLoading(false); // Stop loading
+    }
+  };
 
   useEffect(() => {
-    const getData = async () => {
-      try {
-        setLoading(true); // Start loading
-        const data = await fetchDashboardInfo("/project"); // Adjust the API path as necessary
-        // console.log("all data", data);
-        setprojectData(data?.workgroupInfo || []); // Use optional chaining and default to an empty array
-        // console.log("workgroupInfo", data);
-      } catch (error) {
-        console.log("Failed to fetch devices data:", error);
-      } finally {
-        setLoading(false); // Stop loading
-      }
-    };
 
     getData();
   }, []);
@@ -92,16 +92,16 @@ const Projects = () => {
           {/* Top Horizontal Section */}
           <div className="flex items-center justify-between p-4 text-white rounded-lg">
             {/* Left: Static Page Name */}
-            <h2 className="text-lg font-semibold">Project</h2>
+            <h2 className="text-lg font-semibold">Projects List</h2>
 
             {/* Right: Button */}
-            <Link className="my-2" href={""} onClick={openModal}>
+            {/* <Link className="my-2" href={""} onClick={openModal}>
               <div className="icon p-2 border w-full bg-green-500 hover:bg-white hover:text-black border-transparent hover:border-border rounded-sm transition">
                 <Plus size={20} />
               </div>
             </Link>
 
-            <CreateAccountModal isOpen={isModalOpen} onClose={closeModal} />
+            <CreateAccountModal isOpen={isModalOpen} onClose={closeModal} /> */}
 
             {/* <AddProjectModal
               isOpen={isModalOpen}
@@ -117,9 +117,9 @@ const Projects = () => {
               </div>
             ) : (
               <>
-                <h3 className="font-semibold mb-3">Project List</h3>
+                {/* <h3 className="font-semibold mb-3">Project List</h3> */}
                 <ul className="space-y-2">
-                    { projectNames.map(project => (<ProjectItem key={project.id} item={project.name} id={project.id}/>))}
+                    { projectNames.map(project => (<ProjectItem key={project.id} refreshAction={getData} item={project.name} id={project.id}/>))}
                 </ul>
               </>
             )}

@@ -3,12 +3,12 @@
 import { FolderUp } from "lucide-react";
 import { FolderIcon } from "lucide-react";
 import { useDevice } from "@/context/device-context";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function ProjectList({ projects = [] }) {
   const [mainProject, ...subProjects] = projects;
-  const { setSelectedDeviceProject } = useDevice(); // Get the setSelectedProject function from context
   const [selectedProject, setSelected] = useState(null);
+  const { setSelectedDeviceProject } = useDevice(); // Get the setSelectedProject function from context
 
   const handleSelectProject = (project) => {
     setSelected(project);
@@ -18,7 +18,12 @@ export default function ProjectList({ projects = [] }) {
 
   const isSelected = (project) => {
     return selectedProject?.gid === project?.gid;
-  };
+  }; // for styling
+
+  useEffect(() => {
+    setSelected(mainProject);
+    setSelectedDeviceProject(mainProject);
+  }, [mainProject]);
 
   return (
     <div

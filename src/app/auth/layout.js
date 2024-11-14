@@ -1,3 +1,4 @@
+import Image from "next/image";
 
 const AuthLayout = ({children}) => {
 
@@ -10,9 +11,11 @@ const AuthLayout = ({children}) => {
 
       {/* Right section (static image and text) */}
       <div className="w-2/3 hidden lg:grid h-dvh place-content-center sticky top-0 right-0">
-        <img
+        <Image
           src="/assets/authBG.jpg"
           alt="Auth Background"
+          height={100}
+          width={100}
           className="w-full h-full object-cover object-center absolute inset-0"
         />
         <div className="bg-white/5 backdrop-blur-sm border leading-[1.2] border-white/50 rounded-md text-white py-8 relative max-w-[600px] p-4 text-5xl text-center">

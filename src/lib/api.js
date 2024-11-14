@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 
 // Axios instance for API calls
 const apiInstance = axios.create({
-  baseURL: "http://13.233.36.198:5000/api",
+  baseURL: "http://65.2.169.172:5000/api",
   headers: {
     "Content-Type": "application/json",
   },

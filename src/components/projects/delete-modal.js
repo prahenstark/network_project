@@ -2,9 +2,9 @@ import { fetchDashboardInfo } from "@/lib/api";
 import React, { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 
-const DeleteAccountModal = ({ isOpen, onClose, id, name }) => {
-  if (!isOpen) return null;
+const DeleteAccountModal = ({ isOpen, onClose, id, name, refreshAction }) => {
   const { toast } = useToast();
+  if (!isOpen) return null;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,6 +29,7 @@ const DeleteAccountModal = ({ isOpen, onClose, id, name }) => {
           title: "Project deleted!",
           description: "Successfully deleted the selected project.",
         });
+        refreshAction()
         onClose(); // Close the modal after successful deletion
       } else {
         toast({

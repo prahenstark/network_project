@@ -2,14 +2,16 @@ import { useToast } from "@/hooks/use-toast";
 import { fetchDashboardInfo } from "@/lib/api";
 import React, { useState } from "react";
 
-const AddProjectModal = ({ isOpen, onClose, id, name }) => {
-  if (!isOpen) return null;
+const AddProjectModal = ({ isOpen, onClose, id, name, refreshAction }) => {
+  
   const { toast } = useToast();
 
   const [formData, setFormData] = useState({
     projectName: "",
     projectNotes: "",
   });
+
+  if (!isOpen) return null;
 
   const handleChange = async (e) => {
     const { name, value } = e.target;
@@ -42,6 +44,7 @@ const AddProjectModal = ({ isOpen, onClose, id, name }) => {
           projectName: "",
           projectNotes: "",
         });
+        refreshAction()
         onClose(); // Close the modal after successful deletion
       } else {
         toast({

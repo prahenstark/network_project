@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import ToggleHeader from "../toggle-header";
 import ToggleDisplay from "../toggle-display";
 import { Button } from "../ui/button";
@@ -20,6 +20,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Menu } from "lucide-react";
 
 function Upgrade() {
   const dropdownOptions = [
@@ -192,21 +193,34 @@ function Upgrade() {
     },
   ];
 
+  const [listOpen, setListOpen] = useState(true);
+
   return (
     <div className="flex h-full w-full">
-      <ProjectList />
+      <div className={`${listOpen && "hidden"}`}>
+        <ProjectList />
+      </div>
 
       <div className="w-full">
         <ToggleHeader pageName="Upgrade" className="px-6">
-          <SelectDropdown className="min-w-28" options={dropdownOptions} />
-          <Searchbar displayText="🔍 Search" />
-          <IconDropdown
-            className="border-green-500 min-w-20"
-            options={iconDropdownOptions}
-          >
-            <FileInput size={18} />
-            <ChevronDown size={18} />
-          </IconDropdown>
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => {
+                setListOpen(!listOpen);
+              }}
+            >
+              <Menu />
+            </button>
+            <SelectDropdown className="min-w-28" options={dropdownOptions} />
+            <Searchbar displayText="🔍 Search" />
+            <IconDropdown
+              className="border-green-500 min-w-20"
+              options={iconDropdownOptions}
+            >
+              <FileInput size={18} />
+              <ChevronDown size={18} />
+            </IconDropdown>
+          </div>
         </ToggleHeader>
         <DataTable columns={columns} data={data} />
       </div>

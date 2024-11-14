@@ -5,8 +5,8 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 
 const DeleteModal = ({ isOpen, onClose, gids }) => {
-  if (!isOpen) return null;
   const { toast } = useToast();
+  if (!isOpen) return null;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -69,14 +69,14 @@ const DeleteModal = ({ isOpen, onClose, gids }) => {
       <div className="bg-[#303531] p-8 rounded-lg relative shadow-lg">
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 hover:text-gray-800"
+          className="absolute top-3 right-4 hover:text-gray-800"
         >
           &times;
         </button>
-        <h2 className="text-lg font-semibold mb-4">System Tips</h2>
+        <h2 className="text-lg font-semibold ">System Tips</h2>
         <form
           onSubmit={handleSubmit}
-          className="w-[30vw] h-[30vh] flex flex-col gap-6 items-center justify-center"
+          className="w-[30vw] h-[20vh] flex flex-col gap-4 items-center justify-center"
         >
           <h1 className="w-full">
             Do you want to delete the selected account?

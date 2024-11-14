@@ -6,7 +6,7 @@ import HandoverModal from "./projects/handover-modal";
 import DeleteModal from "./projects/delete-modal";
 import { useProject } from "@/context/project-provider";
 
-const ProjectItem = ({ item, id }) => {
+const ProjectItem = ({ item, id, refreshAction }) => {
   const [isAddModalOpen, setAddModalOpen] = useState(false);
   const [isHandoverModalOpen, setHandoverModalOpen] = useState(false);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -15,12 +15,12 @@ const ProjectItem = ({ item, id }) => {
 
   return (
     <>
-      <li className="flex items-center justify-between p-3 rounded-md shadow-sm font-medium">
+      <li className="sm:flex items-center justify-between p-3 rounded-md shadow-sm border-b font-medium">
         {/* Left: Item name */}
-        <span>{item}</span>
+        <div>{item}</div>
 
         {/* Right: Action Buttons */}
-        <div className="flex space-x-2">
+        <div className="flex space-x-2 max-sm:mt-2">
           <button
             onClick={() => setHandoverModalOpen(true)}
             className="px-3 py-1 font-medium text-blue-500 rounded-sm hover:text-blue-600 transition"
@@ -47,16 +47,19 @@ const ProjectItem = ({ item, id }) => {
         isOpen={isAddModalOpen}
         onClose={() => setAddModalOpen(false)}
         name={item}
+        refreshAction={refreshAction}
         id={id}
       />
 
       <HandoverModal
         isOpen={isHandoverModalOpen}
+        refreshAction={refreshAction}
         onClose={() => setHandoverModalOpen(false)}
       />
 
       <DeleteModal
         isOpen={isDeleteModalOpen}
+        refreshAction={refreshAction}
         onClose={() => setDeleteModalOpen(false)}
         name={item}
         id={id}
