@@ -7,7 +7,7 @@ function Searchbar({displayText, className, onChange }) {
       onChange={onChange}
       type="text"
       placeholder={displayText}
-      className={`min-h-9 min-w-80 bg-white bg-opacity-5  ${className}`}
+      className={`bg-white bg-opacity-5  ${className}`}
     />
   );
 }

@@ -24,6 +24,7 @@ import { fetchDashboardInfo } from "@/lib/api";
 import CreateAccountModal from "@/components/accounts/create-account-modal";
 import ResetAccountModal from "@/components/accounts/reset-account-modal";
 import DeleteAccountModal from "@/components/accounts/delete-account-modal";
+import Loader from "@/components/loader";
 
 export default function Accounts({}) {
   const [selectediconDropdownOption, setSelectediconDropdownOption] =
@@ -91,7 +92,7 @@ export default function Accounts({}) {
           nickName: user.nickname,
           email: user.email,
           role: "User", // Assuming role is "User"; adjust if role data is available
-          status: user.status === "1" ? "Success" : "Failed", // Assuming status mapping
+          status: user.status === "1" ? <CircleCheck /> : <CircleX />, // Assuming status mapping
           creationTime: user.created_at,
         }));
         setData(transformedData);
@@ -272,10 +273,10 @@ export default function Accounts({}) {
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
+              {/* <Button variant="ghost" className="h-8 w-8 p-0">
                 <span className="sr-only">Open menu</span>
                 <MoreHorizontal className="h-4 w-4" />
-              </Button>
+              </Button> */}
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>config</DropdownMenuLabel>
@@ -298,29 +299,37 @@ export default function Accounts({}) {
     <div>
       <Navbar title="Accounts" />
       <ToggleHeader pageName="Account List" className=" p-6">
-        <SelectDropdown
-          className="min-w-28"
-          options={dropdownOptions}
-          disabled={true}
-        />
-        <SelectDropdown
-          className="min-w-28"
-          options={dropdownOptions}
-          disabled={true}
-        />
-        <Searchbar
-          onChange={(e) => setSearchQuery(e.target.value)}
-          displayText="🔍 Account/Email Address"
-        />
-        <IconDropdown
-          className="border-green-500 min-w-20"
-          options={iconDropdownOptions}
-          onSelect={handleSelect}
-        >
-          <FileInput size={18} />
-          <ChevronDown size={18} />
-        </IconDropdown>
+        <div className="flex items-center max-md:flex-col gap-4">
+          <div className="flex items-center gap-4">
+            <SelectDropdown
+              className="min-w-28"
+              options={dropdownOptions}
+              disabled={true}
+            />
+            <SelectDropdown
+              className="min-w-28"
+              options={dropdownOptions}
+              disabled={true}
+            />
+          </div>
+          <div className="flex items-center gap-4">
+            <Searchbar
+              onChange={(e) => setSearchQuery(e.target.value)}
+              displayText="🔍 Account/Email Address"
+            />
+            <IconDropdown
+              className="border-green-500 min-w-20"
+              options={iconDropdownOptions}
+              onSelect={handleSelect}
+            >
+              <FileInput size={18} />
+              <ChevronDown size={18} />
+            </IconDropdown>
+          </div>
+        </div>
       </ToggleHeader>
+
+      <div className="max-md:h-24"></div>
 
       {selectediconDropdownOption && (
         <div className="">
@@ -328,7 +337,13 @@ export default function Accounts({}) {
         </div>
       )}
 
-      <DataTable columns={columns} data={filteredData} loading={loading} />
+      {loading ? (
+        <div className="flex justify-center items-center h-full">
+          <Loader /> {/* Display your Loader component here */}
+        </div>
+      ) : (
+        <DataTable columns={columns} data={filteredData} loading={loading} />
+      )}
     </div>
   );
 }

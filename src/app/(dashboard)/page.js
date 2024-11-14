@@ -155,18 +155,21 @@ export default function Home() {
           <div className="px-6 sm:px-12 mt-6 flex flex-col sm:flex-row gap-6">
             {/* Project Info Section */}
             <div className="space-y-6 flex-1 sm:flex-[1.5]">
-              <h1 className="text-2xl py-6">Project Info</h1>
+              <h1 className="text-2xl py-2">Project Info</h1>
               <div className="flex gap-4">
                 {/* My Project Card */}
                 {dashboardData?.projectInfo?.length > 0 ? (
                   <div className="project-card flex-1 p-6 bg-white/5 border rounded-xl hover:bg-white/10 transition">
-                    <div className="text-xl flex items-center">
-                      <Wifi className="mr-4" />
-                      <h1>{dashboardData.projectInfo[0].name}</h1>
+                    <div className="flex gap-6">
+                      <div className="text-xl flex items-center">
+                        <Wifi className="mr-4" />
+                        <h1>{dashboardData.projectInfo[0].name}</h1>
+                      </div>
+                      <p className="text-xs mt-2 text-muted-foreground">
+                        Creation time: {dashboardData.projectInfo[0].created_at}
+                      </p>
                     </div>
-                    <p className="text-xs mt-2 text-muted-foreground">
-                      Creation time: {dashboardData.projectInfo[0].created_at}
-                    </p>
+
                     <div className="flex items-center mt-6">
                       {dashboardData.projectInfo[0].dev_statistic.map(
                         (item, index) => (
@@ -197,7 +200,7 @@ export default function Home() {
             {/* Pending Info Section */}
             <div className="space-y-6 flex-1 sm:flex-[1]">
               <div className="flex justify-between items-center">
-                <h1 className="text-2xl py-6">Pending Info</h1>
+                <h1 className="text-2xl py-2">Pending Info</h1>
                 <InfoIcon />
               </div>
               <div className="flex flex-wrap gap-4">
@@ -231,10 +234,10 @@ export default function Home() {
           </div>
 
           {/* Chart Sections */}
-          <div className="px-6 sm:px-12 mt-12 lg:flex gap-6">
+          <div className="px-6 sm:px-12 mt-10 lg:flex gap-6">
             {/* User Activity Section */}
             <div className="space-y-6 flex-1 lg:flex-[1.5]">
-              <h1 className="text-2xl py-6">User Activity</h1>
+              <h1 className="text-2xl py-2">User Activity</h1>
               <div className="project-card flex justify-center items-center flex-1 p-6 bg-white/5 border rounded-xl hover:bg-white/10 transition">
                 <Line data={userActivityData} options={userActivityOptions} />
               </div>
@@ -243,7 +246,7 @@ export default function Home() {
             {/* Device Statistics Section */}
             <div className="space-y-6 flex-1 sm:flex-[1]">
               <div className="flex justify-between items-center">
-                <h1 className="text-2xl py-6">Device Statistics</h1>
+                <h1 className="text-2xl py-2">Device Statistics</h1>
                 <InfoIcon />
               </div>
               <div className="project-card flex justify-center items-center flex-1 p-6 bg-white/5 border rounded-xl hover:bg-white/10 transition">
