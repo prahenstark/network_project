@@ -197,7 +197,7 @@ function Upgrade() {
 
   return (
     <div className="flex h-full w-full">
-      <div className={`${listOpen && "hidden"}`}>
+      <div className={`${!listOpen && "hidden"}`}>
         <ProjectList />
       </div>
 

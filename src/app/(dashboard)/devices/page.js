@@ -14,6 +14,7 @@ import { fetchDashboardInfo } from "@/lib/api"; // Adjust import as necessary
 import { GitFork } from "lucide-react";
 import { Filter } from "lucide-react";
 import { useDevice } from "@/context/device-context";
+import { Menu } from "lucide-react";
 
 export default function Devices() {
   const [loading, setLoading] = useState(true);
@@ -111,7 +112,7 @@ export default function Devices() {
 
   return (
     <div>
-      <Navbar title="Devices" onClickAction={toggleProjectListFunction} />
+      <Navbar title="Devices" />
 
       <div className="flex flex-1">
         <div className={toggleProjectList ? "hidden" : ""}>
@@ -187,6 +188,13 @@ export default function Devices() {
               </div>
               <ToggleHeader pageName="Device List" className="px-6">
                 <div className="flex items-center gap-4">
+                  <button
+                    onClick={() => {
+                      toggleProjectListFunction();
+                    }}
+                  >
+                    <Menu />
+                  </button>
                   <IconDropdown
                     className="border-green-500 min-w-20"
                     options={iconDropdownOptions}
