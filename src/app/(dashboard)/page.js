@@ -154,13 +154,13 @@ export default function Home() {
           {/* Project and Pending Info Sections */}
           <div className="px-6 sm:px-12 mt-6 flex flex-col sm:flex-row gap-6">
             {/* Project Info Section */}
-            <div className="space-y-6 flex-1 sm:flex-[1.5]">
+            <div className="space-y-6 flex-1 flex-col flex sm:flex-[1.5]">
               <h1 className="text-2xl py-2">Project Info</h1>
-              <div className="flex gap-4">
+              <div className="flex flex-1 gap-4">
                 {/* My Project Card */}
                 {dashboardData?.projectInfo?.length > 0 ? (
                   <div className="project-card flex-1 p-6 bg-white/5 border rounded-xl hover:bg-white/10 transition">
-                    <div className="flex gap-6">
+                    <div className="flex gap-6 items-center justify-between">
                       <div className="text-xl flex items-center">
                         <Wifi className="mr-4" />
                         <h1>{dashboardData.projectInfo[0].name}</h1>
@@ -236,7 +236,7 @@ export default function Home() {
           {/* Chart Sections */}
           <div className="px-6 sm:px-12 mt-10 lg:flex gap-6">
             {/* User Activity Section */}
-            <div className="space-y-6 flex-1 lg:flex-[1.5]">
+            <div className="space-y-6 flex-1 flex flex-col lg:flex-[1.5]">
               <h1 className="text-2xl py-2">User Activity</h1>
               <div className="project-card flex justify-center items-center flex-1 p-6 bg-white/5 border rounded-xl hover:bg-white/10 transition">
                 <Line data={userActivityData} options={userActivityOptions} />
