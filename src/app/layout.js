@@ -2,6 +2,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { AuthProvider } from "@/context/auth-provider";
 import { UIStateProvider } from "@/hooks/use-uiState";
 import "@/theme/globals.css";
+import "@/theme/fonts.css";
+
 
 export const metadata = {
   title: "Create Next App",
