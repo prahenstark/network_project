@@ -114,12 +114,12 @@ export default function Devices() {
     <div>
       <Navbar title="Devices" />
 
-      <div className="flex flex-1">
+      <div className="md:flex flex-1">
         <div className={toggleProjectList ? "hidden" : ""}>
           <ProjectList projects={devicesData?.projectList} />
         </div>
 
-        <div className="flex flex-col w-full overflow-x-auto">
+        <div className="flex flex-col w-full overflow-x-auto max-md:mt-6">
           {loading ? (
             <div className="flex justify-center items-center h-full">
               <Loader /> {/* Display your Loader component here */}
