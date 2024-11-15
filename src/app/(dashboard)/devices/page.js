@@ -115,7 +115,7 @@ export default function Devices() {
 
       <div className="flex flex-1">
         <div className={toggleProjectList ? "hidden" : ""}>
-          <ProjectList projects={allProjects} />
+          <ProjectList projects={devicesData?.projectList} />
         </div>
 
         <div className="flex flex-col w-full overflow-x-auto">
