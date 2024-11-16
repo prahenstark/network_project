@@ -16,8 +16,7 @@ import { LogOut } from "lucide-react";
 import LogoutModal from "./logout-modal";
 import { useState } from "react";
 import Image from "next/image";
-
-
+import { useUIState } from "@/hooks/use-uiState";
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -41,63 +40,70 @@ export default function Sidebar() {
     }
     return items;
   };
-  
+
   const menuItems = getMenuItems(user);
-  
-  
 
-  return (
-    <div className="w-20 bg-background border-r flex flex-col justify-between items-center">
-      <div className="w-full">
-        <Link href="/">
-          <div className="logo-container mx-auto flex size-16 items-center justify-center border-b">
-            <Image src="/assets/Logo.png" alt="Logo" width={100} height={100} />
-          </div>
-        </Link>
+  const { sidebarOpen } = useUIState();
 
-        <div className="icon-list flex flex-col mt-4 items-center">
-          {menuItems.map((item, index) => (
-            <div className="my-2 flex items-center w-full" key={index}>
-              <div className="flex-1 flex justify-center items-center">
-                <Link href={item.href}>
-                  <div
-                    className={`icon p-2 border w-full border-transparent hover:border-border rounded-sm transition ${
-                      pathname === item.href ? "bg-primary" : ""
-                    }`}
-                  >
-                    <item.icon size={20} />
-                  </div>
-                </Link>
-              </div>
-              {/* Change bg color if active */}
-              <div
-                className={`h-10 w-1 ml-auto rounded-tl-md rounded-bl-md ${
-                  pathname === item.href ? "bg-primary" : ""
-                }`}
+  if (sidebarOpen) {
+    return (
+      <div className="w-20 bg-background border-r flex flex-col justify-between items-center">
+        <div className="w-full">
+          <Link href="/">
+            <div className="logo-container mx-auto flex size-16 items-center justify-center border-b">
+              <Image
+                src="/assets/Logo.png"
+                alt="Logo"
+                width={100}
+                height={100}
               />
             </div>
-          ))}
-        </div>
-      </div>
+          </Link>
 
-      <div className="w-full lower-container flex flex-col size-16 items-center justify-center border-b pb-16">
-        <Link href="/settings">
-          <div className="icon p-4 w-full ">
-            <SettingsIcon size={20} />
+          <div className="icon-list flex flex-col mt-4 items-center">
+            {menuItems.map((item, index) => (
+              <div className="my-2 flex items-center w-full" key={index}>
+                <div className="flex-1 flex justify-center items-center">
+                  <Link href={item.href}>
+                    <div
+                      className={`icon p-2 border w-full border-transparent hover:border-border rounded-sm transition ${
+                        pathname === item.href ? "bg-primary" : ""
+                      }`}
+                    >
+                      <item.icon size={20} />
+                    </div>
+                  </Link>
+                </div>
+                {/* Change bg color if active */}
+                <div
+                  className={`h-10 w-1 ml-auto rounded-tl-md rounded-bl-md ${
+                    pathname === item.href ? "bg-primary" : ""
+                  }`}
+                />
+              </div>
+            ))}
           </div>
-        </Link>
+        </div>
 
-        <button
-          onClick={() => {
-            setIsModalOpen(true);
-          }}
-          className="icon p-4"
-        >
-          <LogOut size={20} />
-        </button>
+        <div className="w-full lower-container flex flex-col size-16 items-center justify-center border-b pb-16">
+          <Link href="/settings">
+            <div className="icon p-4 w-full ">
+              <SettingsIcon size={20} />
+            </div>
+          </Link>
+
+          <button
+            onClick={() => {
+              setIsModalOpen(true);
+            }}
+            className="icon p-4"
+          >
+            <LogOut size={20} />
+          </button>
+        </div>
+
+        <LogoutModal isOpen={isModalOpen} onClose={closeModal} />
       </div>
-
-      <LogoutModal isOpen={isModalOpen} onClose={closeModal} />
-    </div>
-  );
+    );
+  }
 }

@@ -1,46 +1,77 @@
-// src/components/ListItem.js
-"use-client";
+"use client";
 import React, { useState } from "react";
 import AddProjectModal from "./projects/add-project-modal";
 import HandoverModal from "./projects/handover-modal";
 import DeleteModal from "./projects/delete-modal";
+import { ChevronRight } from "lucide-react";
 import { useProject } from "@/context/project-provider";
 
-const ProjectItem = ({ item, id, refreshAction }) => {
+const ProjectItem = ({ item, id, refreshAction, children = [] }) => {
   const [isAddModalOpen, setAddModalOpen] = useState(false);
   const [isHandoverModalOpen, setHandoverModalOpen] = useState(false);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
-  const { setSelectedProject } = useProject();
-  const [selectedProject, setSelected] = useState(null);
+  const [isExpanded, setIsExpanded] = useState(false); // For dropdown state
+
+  const toggleDropdown = () => setIsExpanded((prev) => !prev);
 
   return (
     <>
-      <li className="sm:flex items-center justify-between p-3 rounded-md shadow-sm border-b font-medium">
-        {/* Left: Item name */}
-        <div>{item}</div>
+      <li className="sm:flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 rounded-md shadow-sm border-b font-medium">
+        {/* Main Project Row */}
+        <div
+          className={`flex items-center gap-2 cursor-pointer ${
+            children.length > 0 ? "hover:text-green-500" : ""
+          }`}
+          onClick={children.length > 0 ? toggleDropdown : undefined}
+        >
+          {children.length > 0 && (
+            <ChevronRight
+              size={16}
+              className={`transition-transform ${
+                isExpanded ? "rotate-90" : ""
+              }`}
+            />
+          )}
+          <span>{item}</span>
+        </div>
 
-        {/* Right: Action Buttons */}
+        {/* Action Buttons */}
         <div className="flex space-x-2 max-sm:mt-2">
           <button
             onClick={() => setHandoverModalOpen(true)}
-            className="px-3 py-1 font-medium text-blue-500 rounded-sm hover:text-blue-600 transition"
+            className="px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition"
           >
             Handover
           </button>
           <button
             onClick={() => setAddModalOpen(true)}
-            className="px-3 py-1 font-medium text-green-500 rounded-sm hover:text-green-600 transition"
+            className="px-4 py-2 text-sm font-medium text-white bg-green-500 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 transition"
           >
             Add
           </button>
           <button
             onClick={() => setDeleteModalOpen(true)}
-            className="px-3 py-1 font-medium text-red-500 rounded-sm hover:text-red-600 transition"
+            className="px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 transition"
           >
             Delete
           </button>
         </div>
       </li>
+
+      {/* Dropdown for Children */}
+      {isExpanded && children.length > 0 && (
+        <ul className="ml-6 space-y-2">
+          {children.map((child) => (
+            <ProjectItem
+              key={child.gid}
+              item={child.name}
+              id={child.gid}
+              refreshAction={refreshAction}
+              children={child.child}
+            />
+          ))}
+        </ul>
+      )}
 
       {/* Modals */}
       <AddProjectModal

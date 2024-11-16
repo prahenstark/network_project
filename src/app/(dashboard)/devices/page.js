@@ -14,6 +14,7 @@ import { fetchDashboardInfo } from "@/lib/api"; // Adjust import as necessary
 import { GitFork } from "lucide-react";
 import { Filter } from "lucide-react";
 import { useDevice } from "@/context/device-context";
+import { Menu } from "lucide-react";
 
 export default function Devices() {
   const [loading, setLoading] = useState(true);
@@ -21,37 +22,37 @@ export default function Devices() {
   const { selectedDeviceProject } = useDevice();
 
   // Flatten the project list to get all projects regardless of hierarchy
-  const flattenDeviceProjects = (data) => {
-    let projects = data?.projectList ?? [];
-    let flatList = [];
+  // const flattenDeviceProjects = (data) => {
+  //   let projects = data?.projectList ?? [];
+  //   let flatList = [];
 
-    const recurse = (project) => {
-      if (!project || typeof project !== "object") {
-        console.warn("Invalid project structure:", project);
-        return;
-      }
+  //   const recurse = (project) => {
+  //     if (!project || typeof project !== "object") {
+  //       console.warn("Invalid project structure:", project);
+  //       return;
+  //     }
 
-      flatList.push(project);
+  //     flatList.push(project);
 
-      // Ensure child is an array before iterating
-      if (Array.isArray(project.child)) {
-        project.child.forEach(recurse);
-      } else {
-        console.warn("Expected child to be an array, got:", project.child);
-      }
-    };
+  //     // Ensure child is an array before iterating
+  //     if (Array.isArray(project.child)) {
+  //       project.child.forEach(recurse);
+  //     } else {
+  //       console.warn("Expected child to be an array, got:", project.child);
+  //     }
+  //   };
 
-    // Check if projects is an array
-    if (Array.isArray(projects)) {
-      projects.forEach(recurse);
-    } else {
-      console.warn("Expected projects to be an array, got:", projects);
-    }
+  //   // Check if projects is an array
+  //   if (Array.isArray(projects)) {
+  //     projects.forEach(recurse);
+  //   } else {
+  //     console.warn("Expected projects to be an array, got:", projects);
+  //   }
 
-    return flatList;
-  };
+  //   return flatList;
+  // };
 
-  const allProjects = flattenDeviceProjects(devicesData);
+  // const allProjects = flattenDeviceProjects(devicesData);
 
   useEffect(() => {
     const getData = async () => {
@@ -111,14 +112,14 @@ export default function Devices() {
 
   return (
     <div>
-      <Navbar title="Devices" onClickAction={toggleProjectListFunction} />
+      <Navbar title="Devices" />
 
-      <div className="flex flex-1">
+      <div className="md:flex flex-1">
         <div className={toggleProjectList ? "hidden" : ""}>
-          <ProjectList projects={allProjects} />
+          <ProjectList projects={devicesData?.projectList} />
         </div>
 
-        <div className="flex flex-col w-full overflow-x-auto">
+        <div className="flex flex-col w-full overflow-x-auto max-md:mt-6">
           {loading ? (
             <div className="flex justify-center items-center h-full">
               <Loader /> {/* Display your Loader component here */}
@@ -187,6 +188,13 @@ export default function Devices() {
               </div>
               <ToggleHeader pageName="Device List" className="px-6">
                 <div className="flex items-center gap-4">
+                  <button
+                    onClick={() => {
+                      toggleProjectListFunction();
+                    }}
+                  >
+                    <Menu />
+                  </button>
                   <IconDropdown
                     className="border-green-500 min-w-20"
                     options={iconDropdownOptions}

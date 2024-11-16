@@ -17,30 +17,30 @@ import { Button } from "../ui/button";
 import { CircleCheck } from "lucide-react";
 import { CircleX } from "lucide-react";
 
-function DeviceTable({data }) {
+function DeviceTable({ data }) {
   // Transform the data as needed for the table
-  
-const [tableData, setTableData] = useState([]);
 
-// Update tableData whenever the data prop changes
-useEffect(() => {
-  if (data) {
-    const deviceList = data?.deviceList;
-    const formattedData = deviceList?.map((deviceListData, index) => ({
-      id: index,
-      name: deviceListData?.name || "N/A", // Provide a default
-      type: deviceListData?.type || "N/A", // Provide a default
-      sn: index + 1,
-      mac: deviceListData?.mac || "N/A", // Provide a fallback if MAC isn't in the data
-      ip: deviceListData?.ip || "N/A", // Same for IP
-      mode: deviceListData?.mode || "N/A",
-      version: deviceListData?.version || "N/A",
-      accessTime: deviceListData?.access_time || "N/A", // Or any other relevant field
-      status: deviceListData?.status === "1" ? <CircleCheck/> : <CircleX/>,
-    }));
-    setTableData(formattedData);
-  }
-}, [data]);
+  const [tableData, setTableData] = useState([]);
+
+  // Update tableData whenever the data prop changes
+  useEffect(() => {
+    if (data) {
+      const deviceList = data?.deviceList;
+      const formattedData = deviceList?.map((deviceListData, index) => ({
+        id: index,
+        name: deviceListData?.name || "N/A", // Provide a default
+        type: deviceListData?.type || "N/A", // Provide a default
+        sn: index + 1,
+        mac: deviceListData?.mac || "N/A", // Provide a fallback if MAC isn't in the data
+        ip: deviceListData?.ip || "N/A", // Same for IP
+        mode: deviceListData?.mode || "N/A",
+        version: deviceListData?.version || "N/A",
+        accessTime: deviceListData?.access_time || "N/A", // Or any other relevant field
+        status: deviceListData?.status === "1" ? <CircleCheck /> : <CircleX />,
+      }));
+      setTableData(formattedData);
+    }
+  }, [data]);
 
   const columns = [
     {
@@ -170,32 +170,32 @@ useEffect(() => {
         const payment = row.original;
 
         return (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Config</DropdownMenuLabel>
-              <DropdownMenuItem
-                onClick={() => navigator.clipboard.writeText(payment.id)}
-              >
-                Copy payment ID
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>View customer</DropdownMenuItem>
-              <DropdownMenuItem>View payment details</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <></>
+          // <DropdownMenu>
+          //   <DropdownMenuTrigger asChild>
+          //     <Button variant="ghost" className="h-8 w-8 p-0">
+          //       <span className="sr-only">Open menu</span>
+          //       <MoreHorizontal className="h-4 w-4" />
+          //     </Button>
+          //   </DropdownMenuTrigger>
+          //   <DropdownMenuContent align="end">
+          //     <DropdownMenuLabel>Config</DropdownMenuLabel>
+          //     <DropdownMenuItem
+          //       onClick={() => navigator.clipboard.writeText(payment.id)}
+          //     >
+          //       Copy payment ID
+          //     </DropdownMenuItem>
+          //     <DropdownMenuSeparator />
+          //     <DropdownMenuItem>View customer</DropdownMenuItem>
+          //     <DropdownMenuItem>View payment details</DropdownMenuItem>
+          //   </DropdownMenuContent>
+          // </DropdownMenu>
         );
       },
     },
   ];
 
   return <DataTable columns={columns} data={tableData} />;
-  
 }
 
 export default DeviceTable;

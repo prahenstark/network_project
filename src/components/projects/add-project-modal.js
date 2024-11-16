@@ -35,6 +35,7 @@ const AddProjectModal = ({ isOpen, onClose, id, name, refreshAction }) => {
         "POST",
         apiData
       );
+      console.log("api data", apiData);
       if (response) {
         toast({
           title: "Project Created!",

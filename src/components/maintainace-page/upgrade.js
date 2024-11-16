@@ -196,12 +196,12 @@ function Upgrade() {
   const [listOpen, setListOpen] = useState(true);
 
   return (
-    <div className="flex h-full w-full">
-      <div className={`${listOpen && "hidden"}`}>
+    <div className="md:flex h-full w-full">
+      <div className={`${!listOpen && "hidden"}`}>
         <ProjectList />
       </div>
 
-      <div className="w-full">
+      <div className="w-full max-md:mt-6">
         <ToggleHeader pageName="Upgrade" className="px-6">
           <div className="flex items-center gap-4">
             <button
