@@ -22,37 +22,37 @@ export default function Devices() {
   const { selectedDeviceProject } = useDevice();
 
   // Flatten the project list to get all projects regardless of hierarchy
-  const flattenDeviceProjects = (data) => {
-    let projects = data?.projectList ?? [];
-    let flatList = [];
+  // const flattenDeviceProjects = (data) => {
+  //   let projects = data?.projectList ?? [];
+  //   let flatList = [];
 
-    const recurse = (project) => {
-      if (!project || typeof project !== "object") {
-        console.warn("Invalid project structure:", project);
-        return;
-      }
+  //   const recurse = (project) => {
+  //     if (!project || typeof project !== "object") {
+  //       console.warn("Invalid project structure:", project);
+  //       return;
+  //     }
 
-      flatList.push(project);
+  //     flatList.push(project);
 
-      // Ensure child is an array before iterating
-      if (Array.isArray(project.child)) {
-        project.child.forEach(recurse);
-      } else {
-        console.warn("Expected child to be an array, got:", project.child);
-      }
-    };
+  //     // Ensure child is an array before iterating
+  //     if (Array.isArray(project.child)) {
+  //       project.child.forEach(recurse);
+  //     } else {
+  //       console.warn("Expected child to be an array, got:", project.child);
+  //     }
+  //   };
 
-    // Check if projects is an array
-    if (Array.isArray(projects)) {
-      projects.forEach(recurse);
-    } else {
-      console.warn("Expected projects to be an array, got:", projects);
-    }
+  //   // Check if projects is an array
+  //   if (Array.isArray(projects)) {
+  //     projects.forEach(recurse);
+  //   } else {
+  //     console.warn("Expected projects to be an array, got:", projects);
+  //   }
 
-    return flatList;
-  };
+  //   return flatList;
+  // };
 
-  const allProjects = flattenDeviceProjects(devicesData);
+  // const allProjects = flattenDeviceProjects(devicesData);
 
   useEffect(() => {
     const getData = async () => {

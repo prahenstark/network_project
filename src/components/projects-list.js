@@ -4,6 +4,7 @@ import { useDevice } from "@/context/device-context";
 import { useEffect, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { ChevronUp } from "lucide-react";
+import { CornerDownRight } from "lucide-react";
 
 export default function ProjectList({ projects = [] }) {
   const [selectedProject, setSelected] = useState(null);
@@ -42,7 +43,7 @@ export default function ProjectList({ projects = [] }) {
                 isSelected(project) ? "bg-primary" : ""
               }`}
             >
-              {/* <CornerDownRight size={16}/> */}
+              <CornerDownRight size={16}/>
               <FolderIcon size={16} />
               <span className="text-sm text-white">{project.name}</span>
             </div>

@@ -1,9 +1,12 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { fetchDashboardInfo } from "@/lib/api";
 
 function CreateAccountForm({ onClose }) {
+  const [loading, setLoading] = useState(true);
+  const [projectData, setProjectData] = useState(null);
+
   const [formData, setFormData] = useState({
     account: "",
     nickName: "",
@@ -12,23 +15,28 @@ function CreateAccountForm({ onClose }) {
     email: "",
     role: "",
     status: "",
-    bindingProject: {
-      proj1: false,
-      proj2: false,
-      proj3: false,
-    },
+    gid: [],
   });
 
   const handleChange = (e) => {
     const { name, type, value, checked } = e.target;
-    if (type === "checkbox") {
+
+    if (type === "radio") {
       setFormData((prevData) => ({
         ...prevData,
-        bindingProject: {
-          ...prevData.bindingProject,
-          [name]: checked,
-        },
+        [name]: value,
       }));
+    } else if (type === "checkbox") {
+      setFormData((prevData) => {
+        const updatedGid = checked
+          ? [...prevData.gid, value] // Add value if checked
+          : prevData.gid.filter((gid) => gid !== value); // Remove value if unchecked
+
+        return {
+          ...prevData,
+          gid: updatedGid,
+        };
+      });
     } else {
       setFormData((prevData) => ({
         ...prevData,
@@ -40,12 +48,10 @@ function CreateAccountForm({ onClose }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
-    // Prepare data for API
     const apiData = {
       role: formData.role === "admin" ? "2" : "1",
       enable: formData.status === "enable" ? "1" : "0",
-      gids: ["cnldryoqwrevzxjkywpjnapgkdbm"],
+      gids: formData.gid,
       nickname: formData.nickName,
       country: "IN",
       phone: formData.mobile,
@@ -53,32 +59,16 @@ function CreateAccountForm({ onClose }) {
       username: formData.account,
       password: formData.password,
     };
-  
+
     try {
-      // Use fetchDashboardInfo for POST request
       const response = await fetchDashboardInfo(
-        '/account/add-users',
-        'POST',
+        "/account/add-users",
+        "POST",
         apiData
       );
+      console.log("api data", apiData);
       console.log("API Response:", response);
       alert("Account created successfully!");
-  
-      // Reset form after submission
-      setFormData({
-        account: "",
-        nickName: "",
-        password: "",
-        mobile: "",
-        email: "",
-        role: "",
-        status: "",
-        bindingProject: {
-          proj1: false,
-          proj2: false,
-          proj3: false,
-        },
-      });
       onClose();
     } catch (error) {
       console.error("Error creating account:", error);
@@ -87,28 +77,56 @@ function CreateAccountForm({ onClose }) {
   };
 
   const handleCancel = () => {
-    setFormData({
-      account: "",
-      nickName: "",
-      password: "",
-      mobile: "",
-      email: "",
-      role: "",
-      status: "",
-      bindingProject: {
-        proj1: false,
-        proj2: false,
-        proj3: false,
-      },
-    });
     onClose();
+  };
+
+  const getProjectData = async () => {
+    try {
+      setLoading(true);
+      const data = await fetchDashboardInfo("/project");
+      setProjectData(data?.workgroupInfo || []);
+    } catch (error) {
+      console.error("Failed to fetch project data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getProjectData();
+  }, []);
+
+  // Recursive component for rendering projects and their children
+  const ProjectHierarchy = ({ projects }) => {
+    return (
+      <ul className="ml-4 border-l border-gray-600 pl-4">
+        {projects.map((project) => (
+          <li key={project.gid} className="my-2">
+            <label className="flex items-center">
+              <input
+                type="checkbox"
+                name="gid" // Same name for all checkboxes
+                value={project.gid} // Unique value for each checkbox
+                checked={formData.gid.includes(project.gid)}
+                onChange={handleChange}
+                className="mr-2"
+              />
+              {project.name}
+            </label>
+            {project.child?.length > 0 && (
+              <ProjectHierarchy projects={project.child} />
+            )}
+          </li>
+        ))}
+      </ul>
+    );
   };
 
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="w-full h-[80vh] flex flex-col gap-4 items-center justify-center p-10 text-white"
+      className="w-full h-[80vh] flex flex-col gap-3 items-center justify-between p-8 text-white"
     >
       {/* Text Field */}
       <div className="w-full flex items-center justify-center">
@@ -232,14 +250,13 @@ function CreateAccountForm({ onClose }) {
       </div>
 
       {/* Checklist (Checkboxes) */}
-      <div className="w-full flex items-start justify-center mt-2">
+      {/* <div className="w-full flex items-start justify-center mt-2">
         <span className="w-1/2 block text-sm font-medium">Binding Project</span>
         <div className="w-full flex flex-col items-start">
           <label className="flex items-center">
             <input
               type="checkbox"
               name="proj1"
-              checked={formData.bindingProject.proj1}
               onChange={handleChange}
               className="mr-2"
             />
@@ -249,7 +266,6 @@ function CreateAccountForm({ onClose }) {
             <input
               type="checkbox"
               name="proj2"
-              checked={formData.bindingProject.proj2}
               onChange={handleChange}
               className="mr-2"
             />
@@ -259,17 +275,33 @@ function CreateAccountForm({ onClose }) {
             <input
               type="checkbox"
               name="proj3"
-              checked={formData.bindingProject.proj3}
               onChange={handleChange}
               className="mr-2"
             />
             Proj 3
           </label>
         </div>
+      </div> */}
+
+      <div className="w-full flex items-start justify-center mt-2">
+        <span className="w-1/2 block text-sm font-medium">Binding Project</span>
+        <div className="w-full flex flex-col items-start">
+          <div className="w-full flex items-start justify-center mt-2">
+            <div className="w-full max-h-20 flex flex-col items-start overflow-y-auto">
+              {loading ? (
+                <p>Loading projects...</p>
+              ) : projectData?.length > 0 ? (
+                <ProjectHierarchy projects={projectData} />
+              ) : (
+                <p className="text-gray-400">No Projects Available</p>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Buttons */}
-      <div className={`flex space-x-4 mt-auto`}>
+      <div className={`flex space-x-6 mt-4`}>
         <button
           onClick={handleCancel}
           className="min-w-32 px-4 py-2 bg-transparent border-2 border-white border-opacity-5 rounded hover:bg-white hover:bg-opacity-5"
