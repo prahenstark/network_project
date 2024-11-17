@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import ToggleNav from "../toggle-nav";
-import Image from "next/image";
 
 export default function BeforeAuthComponent({}) {
   const devices = ["Mobile", "Desktop"];
@@ -145,15 +144,13 @@ export default function BeforeAuthComponent({}) {
       <div className="flex-1">
         <h1 className="text-2xl font-bold">Auth Page Set</h1>
         <div className="justify-center flex items-center">
-          <Image
+          <img
             src={
               activeDevice === "Mobile"
                 ? "/assets/MobileImage.svg"
                 : "/assets/laptop_realistic.svg"
             }
             alt=""
-            width={100}
-            height={100}
           />
         </div>
       </div>
