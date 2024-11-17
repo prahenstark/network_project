@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
+import { PasswordInput } from "@/components/ui/password";
 
 export default function Page() {
   const [email, setEmail] = useState('');
@@ -79,9 +80,9 @@ export default function Page() {
             <div className="flex items-center">
               <Label htmlFor="password">Password</Label>
             </div>
-            <Input
+            <PasswordInput
+              passwordScore={null}
               id="password"
-              type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required

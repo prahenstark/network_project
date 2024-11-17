@@ -1,17 +1,18 @@
-"use client"
+"use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation"; // Import for routing
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Image from "next/image";
+import { PasswordInput, checkPasswordStrength } from "@/components/ui/password";
 
 export default function SignupPage() {
-  // State hooks for each form field
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const router = useRouter();
+
   const [nickname, setNickname] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -19,12 +20,41 @@ export default function SignupPage() {
   const [role, setRole] = useState("vendor");
   const [country, setCountry] = useState("US");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-  // Handle form submit
-  const handleSubmit = (e) => {
+  let passswordStrength = checkPasswordStrength(password)
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // You can handle the form submission here (e.g., send data to an API)
-    console.log({ firstName, lastName, nickname, username, email, phone, role, country, password });
+    setError("");
+
+    const payload = {
+      nickname,
+      username,
+      email,
+      phone,
+      country,
+      password,
+    };
+
+    try {
+      const response = await fetch("http://65.2.169.172:5000/api/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (response.ok) {
+        router.push("/auth/login");
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message || "Failed to sign up. Please try again.");
+      }
+    } catch (err) {
+      setError("An error occurred. Please try again later.");
+    }
   };
 
   return (
@@ -43,30 +73,33 @@ export default function SignupPage() {
         <p className="text-center text-muted-foreground text-sm mb-12">
           Sign up to get started with our platform
         </p>
+        {error && (
+          <div className="mb-4 text-red-600 text-center">
+            {error}
+          </div>
+        )}
         <form onSubmit={handleSubmit} className="grid gap-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="firstName">First Name</Label>
-              <Input
-                id="firstName"
-                type="text"
-                placeholder="John"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                required
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="lastName">Last Name</Label>
-              <Input
-                id="lastName"
-                type="text"
-                placeholder="Doe"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                required
-              />
-            </div>
+          <div className="grid gap-2">
+            <Label htmlFor="nickname">Nickname</Label>
+            <Input
+              id="nickname"
+              type="text"
+              placeholder="Johnny"
+              value={nickname}
+              onChange={(e) => setNickname(e.target.value)}
+              required
+            />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="username">Username</Label>
+            <Input
+              id="username"
+              type="text"
+              placeholder="johnny123"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
           </div>
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
@@ -78,30 +111,6 @@ export default function SignupPage() {
               onChange={(e) => setEmail(e.target.value)}
               required
             />
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="nickname">Nickname</Label>
-              <Input
-                id="nickname"
-                type="text"
-                placeholder="Johnny"
-                value={nickname}
-                onChange={(e) => setNickname(e.target.value)}
-                required
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="username">Username</Label>
-              <Input
-                id="username"
-                type="text"
-                placeholder="johnny123"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required
-              />
-            </div>
           </div>
           <div className="grid gap-2">
             <Label htmlFor="phone">Phone</Label>
@@ -152,9 +161,9 @@ export default function SignupPage() {
           </div>
           <div className="grid gap-2">
             <Label htmlFor="password">Password</Label>
-            <Input
+            <PasswordInput
               id="password"
-              type="password"
+              passwordScore={passswordStrength}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
