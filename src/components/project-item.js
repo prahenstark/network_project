@@ -6,7 +6,7 @@ import DeleteModal from "./projects/delete-modal";
 import { ChevronRight } from "lucide-react";
 import { useProject } from "@/context/project-provider";
 
-const ProjectItem = ({ item, id, refreshAction, children = [] }) => {
+const ProjectItem = ({ item, id, refreshAction, child = [] }) => {
   const [isAddModalOpen, setAddModalOpen] = useState(false);
   const [isHandoverModalOpen, setHandoverModalOpen] = useState(false);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -20,11 +20,11 @@ const ProjectItem = ({ item, id, refreshAction, children = [] }) => {
         {/* Main Project Row */}
         <div
           className={`flex items-center gap-2 cursor-pointer ${
-            children.length > 0 ? "hover:text-green-500" : ""
+            child.length > 0 ? "hover:text-green-500" : ""
           }`}
-          onClick={children.length > 0 ? toggleDropdown : undefined}
+          onClick={child.length > 0 ? toggleDropdown : undefined}
         >
-          {children.length > 0 && (
+          {child.length > 0 && (
             <ChevronRight
               size={16}
               className={`transition-transform ${
@@ -58,16 +58,16 @@ const ProjectItem = ({ item, id, refreshAction, children = [] }) => {
         </div>
       </li>
 
-      {/* Dropdown for Children */}
-      {isExpanded && children.length > 0 && (
+      {/* Dropdown for Child */}
+      {isExpanded && child.length > 0 && (
         <ul className="ml-6 space-y-2">
-          {children.map((child) => (
+          {child.map((child) => (
             <ProjectItem
               key={child.gid}
               item={child.name}
               id={child.gid}
               refreshAction={refreshAction}
-              children={child.child}
+              child={child.child}
             />
           ))}
         </ul>
