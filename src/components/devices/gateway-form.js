@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { fetchDashboardInfo } from "@/lib/api";
+import { fetchDashboardInfo, fetchProtectedInfo } from "@/lib/api";
 
 function GatewayForm({ onClose }) {
   const [formData, setFormData] = useState({
@@ -36,15 +36,16 @@ function GatewayForm({ onClose }) {
     };
 
     try {
-      const response = await fetchDashboardInfo(
-        "/device/bind",
+      const response = await fetchProtectedInfo(
+        "/cloudnet/device/bind",
         "POST",
         apiData
       );
       console.log("gateway api data", apiData);
       console.log("API Response:", response);
       alert("Device added successfully!");
-      onClose();
+      window.location.reload();
+      
     } catch (error) {
       console.error("Error adding device:", error);
       alert("There was an error adding the device.");
@@ -55,21 +56,21 @@ function GatewayForm({ onClose }) {
     onClose();
   };
 
-//   const getProjectData = async () => {
-//     try {
-//       setLoading(true);
-//       const data = await fetchDashboardInfo("/project");
-//       setProjectData(data?.workgroupInfo || []);
-//     } catch (error) {
-//       console.error("Failed to fetch project data:", error);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
+  //   const getProjectData = async () => {
+  //     try {
+  //       setLoading(true);
+  //       const data = await fetchDashboardInfo("/project");
+  //       setProjectData(data?.workgroupInfo || []);
+  //     } catch (error) {
+  //       console.error("Failed to fetch project data:", error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-//   useEffect(() => {
-//     getProjectData();
-//   }, []);
+  //   useEffect(() => {
+  //     getProjectData();
+  //   }, []);
 
   // Recursive component for rendering projects and their children
   const ProjectHierarchy = ({ projects }) => {
@@ -104,8 +105,6 @@ function GatewayForm({ onClose }) {
     >
       {/* Input Fields */}
 
-
-
       <div className="w-full flex items-center justify-center">
         <label className="w-1/2 block text-sm font-medium mb-1">Location</label>
         <input
@@ -124,7 +123,7 @@ function GatewayForm({ onClose }) {
         </label>
         <input
           type="text"
-          name="deviceName"
+          name="deviceId"
           value={formData.deviceId}
           onChange={handleChange}
           className="mt-1 block w-full text-white bg-white bg-opacity-5 border rounded-md shadow-sm p-2 focus:outline-none focus:ring focus:ring-blue-200"
