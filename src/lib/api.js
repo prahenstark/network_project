@@ -39,16 +39,19 @@ apiInstance.interceptors.response.use(
   }
 );
 
-export const fetchDashboardInfo = async (path, method = "GET", data = null) => {
+export const fetchDashboardInfo = async (path, method = "GET", data = null, createFinalPath = true) => {
   try {
-    const finalPath = path.startsWith("/cloudnet/portal/dashboard")
-      ? path
-      : "/cloudnet/portal/dashboard" + path;
+    // If createFinalPath is true, append the base path, otherwise use the provided path as is
+    const finalPath = createFinalPath 
+      ? (path.startsWith("/cloudnet/portal/dashboard") ? path : "/cloudnet/portal/dashboard" + path) 
+      : path;
+
     const response = await apiInstance({
       url: finalPath,
       method: method,
       data: data,
     });
+
     return response.data;
   } catch (error) {
     console.log(
@@ -58,3 +61,22 @@ export const fetchDashboardInfo = async (path, method = "GET", data = null) => {
   }
 };
 
+export const fetchProtectedInfo = async (path, method = "GET", data = null) => {
+  try {
+    // If createFinalPath is true, append the base path, otherwise use the provided path as is
+    const finalPath = path
+
+    const response = await apiInstance({
+      url: finalPath,
+      method: method,
+      data: data,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.log(
+      `Error ${method === "POST" ? "posting" : "fetching"} dashboard data:`,
+      error
+    );
+  }
+};

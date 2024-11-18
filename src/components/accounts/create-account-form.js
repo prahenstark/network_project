@@ -69,6 +69,7 @@ function CreateAccountForm({ onClose }) {
       console.log("api data", apiData);
       console.log("API Response:", response);
       alert("Account created successfully!");
+      window.location.reload();
       onClose();
     } catch (error) {
       console.error("Error creating account:", error);
