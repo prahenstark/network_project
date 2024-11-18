@@ -2,20 +2,19 @@
 import { useState } from "react";
 import Navbar from "@/components/navbar";
 import ToggleNav from "@/components/toggle-nav";
-import BeforeAuthComponent from "@/components/auth-page/beforeAuth";
-import Strategy from "@/components/auth-page/strategy";
-import AuthMethods from "@/components/auth-page/auth-methods";
-import AuthDetails from "@/components/auth-page/auth-details";
+import AuthBasedForm from "@/components/app-auth/AuthBased";
+import TokenBasedForm from "@/components/app-auth/tokenBased";
+import SMSBasedForm from "@/components/app-auth/smsBased";
+
 
 export default function Auth() {
-  const tabs = ["Auth", "Strategy", "Auth Methods", "Auth Details"];
-  const [activeTab, setActiveTab] = useState("Auth");
+  const tabs = ["Auth Based", "Token Based", "SMS Based"];
+  const [activeTab, setActiveTab] = useState("Auth Based");
 
   const tabsContent = {
-    Auth: <BeforeAuthComponent />,
-    Strategy: <Strategy />,
-    "Auth Methods": <AuthMethods/>,
-    "Auth Details": <AuthDetails/>,
+    "Auth Based": <AuthBasedForm />,
+    "Token Based": <TokenBasedForm />,
+    "SMS Based": <SMSBasedForm />,
   };
 
   return (
