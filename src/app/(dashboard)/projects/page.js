@@ -75,7 +75,7 @@ const Projects = () => {
                   item={project.name}
                   id={project.gid}
                   refreshAction={getData}
-                  children={project.child}
+                  child={project.child}
                 />
               ))}
             </ul>
