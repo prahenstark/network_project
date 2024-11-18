@@ -3,24 +3,40 @@
 import React, { useEffect, useState } from "react";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import DataTable from "@/components/data-table";
 import { Button } from "../ui/button";
 import { CircleCheck } from "lucide-react";
 import { CircleX } from "lucide-react";
+import { formatDate } from "date-fns";
 
 function DeviceTable({ data }) {
   // Transform the data as needed for the table
 
   const [tableData, setTableData] = useState([]);
+
+  const handleUnbind = async (device) => {
+    console.log("Device Id", device.mac);
+    // e.preventDefault();
+    // const apiData = {
+    //   gids: formData.gid,
+    // };
+
+    // try {
+    //   const response = await fetchDashboardInfo(
+    //     "/account/add-users",
+    //     "POST",
+    //     apiData
+    //   );
+    //   console.log("api data", apiData);
+    //   console.log("API Response:", response);
+    //   alert("Account created successfully!");
+    //   window.location.reload();
+    //   onClose();
+    // } catch (error) {
+    //   console.error("Error creating account:", error);
+    //   alert("There was an error creating the account.");
+    // }
+  };
 
   // Update tableData whenever the data prop changes
   useEffect(() => {
@@ -39,6 +55,7 @@ function DeviceTable({ data }) {
         status: deviceListData?.status === "1" ? <CircleCheck /> : <CircleX />,
       }));
       setTableData(formattedData);
+      console.log("Device data", formattedData);
     }
   }, [data]);
 
@@ -167,29 +184,15 @@ function DeviceTable({ data }) {
       enableHiding: false,
       header: "Config",
       cell: ({ row }) => {
-        const payment = row.original;
 
         return (
-          <></>
-          // <DropdownMenu>
-          //   <DropdownMenuTrigger asChild>
-          //     <Button variant="ghost" className="h-8 w-8 p-0">
-          //       <span className="sr-only">Open menu</span>
-          //       <MoreHorizontal className="h-4 w-4" />
-          //     </Button>
-          //   </DropdownMenuTrigger>
-          //   <DropdownMenuContent align="end">
-          //     <DropdownMenuLabel>Config</DropdownMenuLabel>
-          //     <DropdownMenuItem
-          //       onClick={() => navigator.clipboard.writeText(payment.id)}
-          //     >
-          //       Copy payment ID
-          //     </DropdownMenuItem>
-          //     <DropdownMenuSeparator />
-          //     <DropdownMenuItem>View customer</DropdownMenuItem>
-          //     <DropdownMenuItem>View payment details</DropdownMenuItem>
-          //   </DropdownMenuContent>
-          // </DropdownMenu>
+          <Button
+            variant="destructive"
+            size="sm"
+            onClick={() => handleUnbind(row.original)}
+          >
+            Unbind
+          </Button>
         );
       },
     },
