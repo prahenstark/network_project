@@ -16,6 +16,7 @@ import AddDeviceModal from "@/components/devices/add-device-modal";
 export default function Devices() {
   const [loading, setLoading] = useState(true);
   const [devicesData, setDevicesData] = useState(null);
+  const [projectData, setProjectData] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { selectedDeviceProject } = useDevice();
 
@@ -25,6 +26,7 @@ export default function Devices() {
         setLoading(true);
         const data = await fetchDashboardInfo("/device");
         setDevicesData(data?.DevicePageData || []);
+        setProjectData(data?.DevicePageData?.projectList || []);
       } catch (error) {
         console.log("Failed to fetch devices data:", error);
       } finally {
@@ -183,7 +185,7 @@ export default function Devices() {
       </div>
 
       {isModalOpen && (
-        <AddDeviceModal isOpen={isModalOpen} onClose={handleCloseModal} />
+        <AddDeviceModal isOpen={isModalOpen} onClose={handleCloseModal} projectData={projectData}/>
       )}
     </div>
   );

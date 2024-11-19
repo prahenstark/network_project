@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { fetchDashboardInfo, fetchProtectedInfo } from "@/lib/api";
 
-function GatewayForm({ onClose }) {
+function GatewayForm({ onClose, projectData }) {
   const [formData, setFormData] = useState({
     location: "",
     deviceId: "",
@@ -45,7 +45,6 @@ function GatewayForm({ onClose }) {
       console.log("API Response:", response);
       alert("Device added successfully!");
       window.location.reload();
-      
     } catch (error) {
       console.error("Error adding device:", error);
       alert("There was an error adding the device.");
@@ -73,7 +72,7 @@ function GatewayForm({ onClose }) {
   //   }, []);
 
   // Recursive component for rendering projects and their children
-  const ProjectHierarchy = ({ projects }) => {
+  const DeviceProjectHierarchy = ({ projects }) => {
     return (
       <ul className="ml-4 border-l border-gray-600 pl-4">
         {projects.map((project) => (
@@ -90,7 +89,7 @@ function GatewayForm({ onClose }) {
               {project.name}
             </label>
             {project.child?.length > 0 && (
-              <ProjectHierarchy projects={project.child} />
+              <DeviceProjectHierarchy projects={project.child} />
             )}
           </li>
         ))}
@@ -133,14 +132,13 @@ function GatewayForm({ onClose }) {
 
       <div className="w-full flex items-center justify-center">
         <label className="w-1/2 block text-sm font-medium mb-1">Gid</label>
-        <input
-          type="text"
-          name="gid"
-          value={formData.gid}
-          onChange={handleChange}
-          className="mt-1 block w-full text-white bg-white bg-opacity-5 border rounded-md shadow-sm p-2 focus:outline-none focus:ring focus:ring-blue-200"
-          required
-        />
+        <div className="w-full max-h-36 flex flex-col items-start overflow-y-auto">
+          {projectData?.length > 0 ? (
+            <DeviceProjectHierarchy projects={projectData} />
+          ) : (
+            <p className="text-gray-400">No Projects Available</p>
+          )}
+        </div>
       </div>
 
       {/* Binding Projects */}

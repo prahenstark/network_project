@@ -5,14 +5,14 @@ import RegisterAccountForm from "../accounts/register-account-form";
 import AccessPointForm from "./access-point-form";
 import GatewayForm from "./gateway-form";
 
-const AddDeviceModal = ({ isOpen, onClose }) => {
+const AddDeviceModal = ({ isOpen, onClose, projectData }) => {
   const [selectedForm, setSelectedForm] = useState("Access Point");
 
   if (!isOpen) return null;
 
   const types = {
-    "Access Point": <AccessPointForm />,
-    Gateway: <GatewayForm />,
+    "Access Point": <AccessPointForm projectData={projectData} />,
+    Gateway: <GatewayForm projectData={projectData} />,
   };
 
   const handleOverlayClick = (e) => {
