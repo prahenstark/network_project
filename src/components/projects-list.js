@@ -58,7 +58,7 @@ export default function ProjectList({ projects = [] }) {
   };
 
   return (
-    <div className="bg-[#21312A] min-w-60 max-h-[calc(100vh-5rem)] p-4 rounded-tr-3xl max-md:rounded-3xl max-md:mx-6 overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-white [&::-webkit-scrollbar-track]:bg-opacity-5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500">
+    <div className="bg-[#21312A] min-w-60 min-h-svh p-4 rounded-tr-3xl max-md:rounded-3xl max-md:mx-6 overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-white [&::-webkit-scrollbar-track]:bg-opacity-5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500">
       <div className={`flex items-center justify-between md:pb-6 ${showDropdown && "max-md:pb-6"}`}>
         <h2 className="text-xl font-semibold">Project List</h2>
         <button className="md:hidden" onClick={() => {setShowDropdown(!showDropdown)}}>{showDropdown ? <ChevronUp /> : <ChevronDown />}</button>
