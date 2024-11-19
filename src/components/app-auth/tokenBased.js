@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { fetchProtectedInfo } from "@/lib/api"; // Import the fetchProtectedInfo function
+import { useToast } from "@/hooks/use-toast";
 
 export default function TokenBasedForm() {
   const [devices, setDevices] = useState([]);
@@ -19,6 +20,7 @@ export default function TokenBasedForm() {
   const [useHour, setUseHour] = useState(""); // State for use hour
   const [expiryDate, setExpiryDate] = useState(""); // State for expiry date
   const [selectedDevice, setSelectedDevice] = useState(""); // State for selected device
+  const { toast } = useToast();
 
   // Fetch devices on component mount
   useEffect(() => {
@@ -53,7 +55,11 @@ export default function TokenBasedForm() {
       const response = await fetchProtectedInfo(`/devices/add-guest/${selectedDevice}`, 'PUT', payload);
 
       if (response) {
-        alert("Guest added successfully");
+        toast("Guest added successfully");
+        setUsername("");
+        setSelectedDevice("");
+        setExpiryDate("");
+        setUseHour("");
       } else {
         console.error("Error adding guest");
       }

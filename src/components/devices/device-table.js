@@ -15,27 +15,27 @@ function DeviceTable({ data }) {
   const [tableData, setTableData] = useState([]);
 
   const handleUnbind = async (device) => {
-    console.log("Device Id", device.mac);
-    // e.preventDefault();
-    // const apiData = {
-    //   gids: formData.gid,
-    // };
+    console.log("Device Id", device.deviceId);
 
-    // try {
-    //   const response = await fetchDashboardInfo(
-    //     "/account/add-users",
-    //     "POST",
-    //     apiData
-    //   );
-    //   console.log("api data", apiData);
-    //   console.log("API Response:", response);
-    //   alert("Account created successfully!");
-    //   window.location.reload();
-    //   onClose();
-    // } catch (error) {
-    //   console.error("Error creating account:", error);
-    //   alert("There was an error creating the account.");
-    // }
+    const apiData = {
+      deviceId: device.deviceId,
+    };
+
+    try {
+      const response = await fetchDashboardInfo(
+        "/cloudnet/device/unbind",
+        "POST",
+        apiData
+      );
+      console.log("api data", apiData);
+      console.log("API Response:", response);
+      alert("Device unbound successfully!");
+      window.location.reload();
+      onClose();
+    } catch (error) {
+      console.error("Error creating account:", error);
+      alert("There was an error unbinding device.");
+    }
   };
 
   // Update tableData whenever the data prop changes
@@ -44,6 +44,7 @@ function DeviceTable({ data }) {
       const deviceList = data?.deviceList;
       const formattedData = deviceList?.map((deviceListData, index) => ({
         id: index,
+        deviceId: deviceListData?.deviceId || "N/A",
         name: deviceListData?.name || "N/A", // Provide a default
         type: deviceListData?.type || "N/A", // Provide a default
         sn: index + 1,
@@ -184,7 +185,6 @@ function DeviceTable({ data }) {
       enableHiding: false,
       header: "Config",
       cell: ({ row }) => {
-
         return (
           <Button
             variant="destructive"

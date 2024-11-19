@@ -12,11 +12,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { fetchProtectedInfo } from "@/lib/api"; // Import the fetchProtectedInfo function
+import { useToast } from "@/hooks/use-toast";
 
 export default function SMSBasedForm() {
   const [devices, setDevices] = useState([]);
   const [mobile, setMobile] = useState(""); // State for mobile number
   const [selectedDevice, setSelectedDevice] = useState(""); // State for selected device
+  const { toast } = useToast();
 
   // Fetch devices on component mount
   useEffect(() => {
@@ -46,7 +48,9 @@ export default function SMSBasedForm() {
       const response = await fetchProtectedInfo(`/devices/add-guest/${selectedDevice}`, 'PUT', payload);
 
       if (response) {
-        alert("Guest added successfully");
+        toast("Guest added successfully");
+        setMobile("");
+        setSelectedDevice("");
       } else {
         console.error("Error adding guest");
       }
