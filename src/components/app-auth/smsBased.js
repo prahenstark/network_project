@@ -48,7 +48,7 @@ export default function SMSBasedForm() {
       const response = await fetchProtectedInfo(`/devices/add-guest/${selectedDevice}`, 'PUT', payload);
 
       if (response) {
-        toast("Guest added successfully");
+        toast({description: "Guest added successfully"});
         setMobile("");
         setSelectedDevice("");
       } else {
@@ -61,7 +61,7 @@ export default function SMSBasedForm() {
 
   return (
     <div className="flex flex-col items-center justify-center">
-      <div className="p-6 border rounded-md shadow-md w-96 space-y-4 bg-background">
+      <div className="p-6 border rounded-lg shadow-md w-96 space-y-4 bg-background">
         <h2 className="text-center text-lg font-bold">SMS Based Login Method</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
