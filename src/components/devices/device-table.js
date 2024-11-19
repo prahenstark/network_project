@@ -8,6 +8,7 @@ import { Button } from "../ui/button";
 import { CircleCheck } from "lucide-react";
 import { CircleX } from "lucide-react";
 import { formatDate } from "date-fns";
+import { fetchProtectedInfo } from "@/lib/api";
 
 function DeviceTable({ data }) {
   // Transform the data as needed for the table
@@ -22,7 +23,7 @@ function DeviceTable({ data }) {
     };
 
     try {
-      const response = await fetchDashboardInfo(
+      const response = await fetchProtectedInfo(
         "/cloudnet/device/unbind",
         "POST",
         apiData

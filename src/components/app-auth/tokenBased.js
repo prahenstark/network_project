@@ -111,6 +111,7 @@ export default function TokenBasedForm() {
               value={expiryDate}
               onChange={(e) => setExpiryDate(e.target.value)}
               placeholder="Enter expiry date"
+              className="text-white"
             />
           </div>
           <Button className="w-full" type="submit">
