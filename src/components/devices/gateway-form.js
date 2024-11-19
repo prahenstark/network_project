@@ -1,8 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { fetchDashboardInfo, fetchProtectedInfo } from "@/lib/api";
+import { useToast } from "@/hooks/use-toast";
 
 function GatewayForm({ onClose, projectData }) {
+  const { toast } = useToast();
+
   const [formData, setFormData] = useState({
     location: "",
     deviceId: "",
@@ -43,11 +46,11 @@ function GatewayForm({ onClose, projectData }) {
       );
       console.log("gateway api data", apiData);
       console.log("API Response:", response);
-      alert("Device added successfully!");
+      toast({description: "Device added successfully!"});
       window.location.reload();
     } catch (error) {
       console.error("Error adding device:", error);
-      alert("There was an error adding the device.");
+      toast({description: "There was an error adding device.", variant: "destructive"});
     }
   };
 
