@@ -178,6 +178,7 @@ export default function Devices() {
                   </button>
                 </div>
               </ToggleHeader>
+              <div className="md:hidden h-32"></div>
               <DeviceTable data={selectedDevice} />
             </>
           )}
