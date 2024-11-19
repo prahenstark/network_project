@@ -82,7 +82,7 @@ export default function Devices() {
   };
 
   return (
-    <div>
+    <div className="">
       <Navbar title="Devices" />
 
       <div className="md:flex flex-1">
@@ -90,7 +90,7 @@ export default function Devices() {
           <ProjectList projects={devicesData?.projectList} />
         </div>
 
-        <div className="flex flex-col w-full overflow-x-auto max-md:mt-6">
+        <div className="flex flex-col max-w-full overflow-x-auto max-md:mt-6">
           {loading ? (
             <div className="flex justify-center items-center h-full">
               <Loader />
@@ -98,40 +98,40 @@ export default function Devices() {
           ) : (
             <>
               <div className="flex items-center p-6 flex-wrap gap-4">
-                <div className="flex-1 flex items-center gap-2 text-primary">
+                <div className="flex-1 flex items-center gap-2 text-primary justify-center md:justify-start">
                   <div className="text-5xl font-bold">
                     {selectedDevice?.deviceStatistics?.all ?? 0}
                   </div>
                   <div className="text-lg font-medium">All</div>
                 </div>
 
-                <div className="flex-1 flex items-center gap-2">
+                <div className="flex-1 flex items-center gap-2 justify-center md:justify-start">
                   <div className="text-5xl font-bold">N/A</div>
                   <div className="text-lg font-medium">AP</div>
                 </div>
 
-                <div className="flex-1 flex items-center gap-2">
+                <div className="flex-1 flex items-center gap-2  justify-center md:justify-start">
                   <div className="text-5xl font-bold">N/A</div>
                   <div className="text-lg font-medium">CPE</div>
                 </div>
 
-                <div className="flex-1 flex items-center gap-2">
+                <div className="flex-1 flex items-center gap-2  justify-center md:justify-start">
                   <div className="text-5xl font-bold">N/A</div>
                   <div className="text-lg font-medium">4G</div>
                 </div>
 
-                <div className="flex-1 flex items-center gap-2">
+                <div className="flex-1 flex items-center gap-2  justify-center md:justify-start">
                   <div className="text-5xl font-bold">N/A</div>
                   <div className="text-lg font-medium">5G</div>
                 </div>
               </div>
-              <ToggleHeader pageName="Device List" className="px-6">
-                <div className="flex items-center gap-4">
-                  <button onClick={toggleProjectListFunction}>
+              <ToggleHeader pageName="Device List" className="px-6 ">
+                <div className="flex items-center justify-between gap-4 max-w-full">
+                  {/* <button onClick={toggleProjectListFunction}>
                     <Menu />
-                  </button>
+                  </button> */}
                   <IconDropdown
-                    className="border-green-500 min-w-20"
+                    className="border-green-500 min-w-16 md:min-w-20"
                     options={iconDropdownOptions}
                     disabled={true}
                   >
@@ -139,7 +139,7 @@ export default function Devices() {
                     <ChevronDown size={18} />
                   </IconDropdown>
                   <SelectDropdown
-                    className="min-w-28"
+                    className="min-w-20 md:min-w-28"
                     options={dropdownOptions}
                     disabled={true}
                   />
@@ -172,7 +172,7 @@ export default function Devices() {
                   <button
                     type="button"
                     onClick={handleAddDeviceClick}
-                    className="min-w-20 max-h-9 px-4 py-2 bg-green-600 text-white font-medium rounded hover:bg-green-300"
+                    className="min-w-20 max-h-9 px-4 py-2 bg-green-600 text-white font-medium rounded hover:bg-green-300 text-xs md:text-base"
                   >
                     Add Device
                   </button>
@@ -186,7 +186,11 @@ export default function Devices() {
       </div>
 
       {isModalOpen && (
-        <AddDeviceModal isOpen={isModalOpen} onClose={handleCloseModal} projectData={projectData}/>
+        <AddDeviceModal
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          projectData={projectData}
+        />
       )}
     </div>
   );
