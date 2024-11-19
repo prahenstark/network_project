@@ -11,7 +11,7 @@ const AddDeviceModal = ({ isOpen, onClose, projectData }) => {
   if (!isOpen) return null;
 
   const types = {
-    "Access Point": <AccessPointForm projectData={projectData} />,
+    "Access Point": <AccessPointForm onClose={onClose} projectData={projectData} />,
     Gateway: <GatewayForm projectData={projectData} />,
   };
 

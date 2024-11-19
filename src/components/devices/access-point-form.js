@@ -1,9 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { fetchProtectedInfo } from "@/lib/api";
+import { useToast } from "@/hooks/use-toast";
 
 function AccessPointForm({ onClose, projectData }) {
   const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
   const [formData, setFormData] = useState({
     location: "",
     mac: "",
@@ -50,7 +52,7 @@ function AccessPointForm({ onClose, projectData }) {
       );
       console.log("access point api data", apiData);
       console.log("API Response:", response);
-      alert("Device added successfully!");
+      toast({description: "Device added successfully!"});
       window.location.reload();
     } catch (error) {
       console.error("Error adding device:", error);
