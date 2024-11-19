@@ -4,7 +4,6 @@ import { XIcon } from "lucide-react";
 import React, { useState } from "react";
 
 const AddProjectModal = ({ isOpen, onClose, id, name, refreshAction }) => {
-  
   const { toast } = useToast();
 
   const [formData, setFormData] = useState({
@@ -46,7 +45,7 @@ const AddProjectModal = ({ isOpen, onClose, id, name, refreshAction }) => {
           projectName: "",
           projectNotes: "",
         });
-        refreshAction()
+        refreshAction();
         onClose(); // Close the modal after successful deletion
       } else {
         toast({
@@ -94,17 +93,16 @@ const AddProjectModal = ({ isOpen, onClose, id, name, refreshAction }) => {
       onClick={handleOverlayClick}
       className=" fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
     >
-      <div className="bg-[#303531] p-8 rounded-lg relative shadow-lg">
-        <button
-          onClick={onClose}
-          className=" absolute top-3 right-3  hover:text-gray-400"
-        >
-          <XIcon />
-        </button>
-        <h2 className="text-lg font-semibold mb-4">Add Project</h2>
+      <div className="bg-[#303531] mx-6 p-8 rounded-lg relative shadow-lg">
+        <div className="flex item-center justify-between mb-6">
+          <h2 className="text-xl font-semibold">System Tips</h2>
+          <button onClick={onClose} className=" hover:text-gray-400">
+            <XIcon />
+          </button>
+        </div>
         <form
           onSubmit={handleSubmit}
-          className="w-[40vw] h-[40vh] flex flex-col gap-4 items-center justify-center"
+          className="flex flex-col gap-4 items-center justify-center"
         >
           <div className="w-full flex items-center justify-center">
             <label className="w-1/2">Superior Project</label>

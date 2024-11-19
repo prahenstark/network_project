@@ -33,12 +33,15 @@ const AddDeviceModal = ({ isOpen, onClose, projectData }) => {
       className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
     >
       <div className="bg-[#303531] p-8 rounded-lg relative shadow-lg w-full max-w-2xl">
-        <button
-          onClick={onClose}
-          className="absolute top-3 right-4 text-white hover:text-gray-400"
-        >
-          <XIcon />
-        </button>
+        {/* Header Modal */}
+        <div className="flex item-center justify-between mb-6">
+          <button
+            onClick={onClose}
+            className=" hover:text-gray-400"
+          >
+            <XIcon />
+          </button>
+        </div>
 
         {/* Dropdown for selecting the form */}
         <div className="">
