@@ -16,7 +16,7 @@ const HandoverModal = ({ isOpen, onClose, refreshAction }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert("Submitted!");
+    console.log("Submitted!");
 
     refreshAction();
     closeModal();
