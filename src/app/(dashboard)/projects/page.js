@@ -54,7 +54,7 @@ const Projects = () => {
 
       {/* Page Info */}
       <div className="px-4 space-y-6 w-full mx-auto">
-        <div className="p-4 mx-6 space-y-6">
+        <div className="p-4 md:mx-6 space-y-6">
           {/* Top Section for Parent Project */}
           <div className="flex items-center justify-between py-4 text-white rounded-lg h-10">
             <h2 className="text-lg font-semibold">{parentProject?.name}</h2>

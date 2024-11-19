@@ -39,19 +39,19 @@ const ProjectItem = ({ item, id, refreshAction, child = [] }) => {
         <div className="flex space-x-2 max-sm:mt-2">
           <button
             onClick={() => setHandoverModalOpen(true)}
-            className="px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition"
+            className="md:px-4 md:py-2 px-2 py-1 text-xs md:text-sm font-medium text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition"
           >
             Handover
           </button>
           <button
             onClick={() => setAddModalOpen(true)}
-            className="px-4 py-2 text-sm font-medium text-white bg-green-500 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 transition"
+            className="md:px-4 md:py-2 px-2 py-1 text-xs md:text-sm font-medium text-white bg-green-500 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 transition"
           >
             Add
           </button>
           <button
             onClick={() => setDeleteModalOpen(true)}
-            className="px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 transition"
+            className="md:px-4 md:py-2 px-2 py-1 text-xs md:text-sm font-medium text-white bg-red-500 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 transition"
           >
             Delete
           </button>
