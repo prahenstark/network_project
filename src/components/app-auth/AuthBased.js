@@ -13,12 +13,14 @@ import {
 import { useState, useEffect } from "react";
 import { fetchProtectedInfo } from "@/lib/api"; // Import your fetchDashboardInfo function
 import { PasswordInput } from "../ui/password";
+import { useToast } from "@/hooks/use-toast";
 
 export default function AuthBasedForm() {
   const [devices, setDevices] = useState([]);
-  const [username, setUsername] = useState("");  // State for username
-  const [password, setPassword] = useState("");  // State for password
+  const [username, setUsername] = useState(""); // State for username
+  const [password, setPassword] = useState(""); // State for password
   const [selectedDevice, setSelectedDevice] = useState(""); // State for selected device
+  const { toast } = useToast();
 
   // Fetch devices on component mount
   useEffect(() => {
@@ -46,10 +48,17 @@ export default function AuthBasedForm() {
     };
 
     try {
-      const response = await fetchProtectedInfo(`/devices/add-guest/${selectedDevice}`, 'PUT', payload);
+      const response = await fetchProtectedInfo(
+        `/devices/add-guest/${selectedDevice}`,
+        "PUT",
+        payload
+      );
 
       if (response) {
-        alert("Guest added successfully");
+        toast("Guest added successfully");
+        setUsername("");
+        setPassword("");
+        setSelectedDevice("");
       } else {
         console.error("Error adding guest");
       }
@@ -61,7 +70,9 @@ export default function AuthBasedForm() {
   return (
     <div className="flex flex-col items-center justify-center">
       <div className="p-6 border rounded-md shadow-md w-96 space-y-4 bg-background">
-        <h2 className="text-center text-lg font-bold">Auth Based Login Method</h2>
+        <h2 className="text-center text-lg font-bold">
+          Auth Based Login Method
+        </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <Label className="block mb-2">Select Device</Label>
