@@ -304,6 +304,7 @@ function CreateAccountForm({ onClose }) {
       {/* Buttons */}
       <div className={`flex space-x-6 mt-4`}>
         <button
+          type="button"
           onClick={handleCancel}
           className="min-w-32 px-4 py-2 bg-transparent border-2 border-white border-opacity-5 rounded hover:bg-white hover:bg-opacity-5"
         >

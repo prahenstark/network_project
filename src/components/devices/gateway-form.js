@@ -163,6 +163,7 @@ function GatewayForm({ onClose, projectData }) {
       <div className={`flex space-x-6 mt-4`}>
         <button
           onClick={handleCancel}
+          type="button"
           className="min-w-32 px-4 py-2 bg-transparent border-2 border-white border-opacity-5 rounded hover:bg-white hover:bg-opacity-5"
         >
           Cancel

@@ -61,6 +61,7 @@ const HandoverModal = ({ isOpen, onClose, refreshAction }) => {
           <div className={`flex space-x-4 mt-4 justify-center`}>
             <button
               onClick={onClose}
+              type="button"
               className="min-w-32 px-4 py-2 bg-transparent border-2 border-white border-opacity-5 rounded hover:bg-white hover:bg-opacity-5"
             >
               Cancel
