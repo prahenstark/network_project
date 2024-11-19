@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { fetchDashboardInfo } from "@/lib/api";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
+import { XIcon } from "lucide-react";
 
 const DeleteModal = ({ isOpen, onClose, gids }) => {
   const { toast } = useToast();
@@ -61,6 +62,7 @@ const DeleteModal = ({ isOpen, onClose, gids }) => {
     }
   };
 
+  // Modal
   return (
     <div
       onClick={handleOverlayClick}
@@ -69,9 +71,9 @@ const DeleteModal = ({ isOpen, onClose, gids }) => {
       <div className="bg-[#303531] p-8 rounded-lg relative shadow-lg">
         <button
           onClick={onClose}
-          className="absolute top-3 right-4 hover:text-gray-800"
+          className="absolute top-3 right-4 hover:text-gray-400"
         >
-          &times;
+          <XIcon />
         </button>
         <h2 className="text-lg font-semibold ">System Tips</h2>
         <form

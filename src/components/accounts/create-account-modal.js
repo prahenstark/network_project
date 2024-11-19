@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import ToggleNav from "../toggle-nav";
 import CreateAccountForm from "./create-account-form";
 import RegisterAccountForm from "./register-account-form";
+import { XIcon } from "lucide-react";
 
 const CreateAccountModal = ({ isOpen, onClose }) => {
   const tabs = ["Create Account", "Registered Account"];
@@ -22,6 +23,7 @@ const CreateAccountModal = ({ isOpen, onClose }) => {
     }
   };
 
+  // Modal
   return (
     <div
       onClick={handleOverlayClick}
@@ -30,9 +32,9 @@ const CreateAccountModal = ({ isOpen, onClose }) => {
       <div className="bg-[#303531] p-8 rounded-lg relative shadow-lg">
         <button
           onClick={onClose}
-          className=" absolute top-3 right-3  hover:text-gray-800"
+          className=" absolute top-3 right-3  hover:text-gray-400"
         >
-          &times;
+          <XIcon />
         </button>
         <ToggleNav
           className="h-12 min-w-[50vw]"

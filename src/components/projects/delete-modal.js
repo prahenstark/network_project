@@ -1,6 +1,7 @@
 import { fetchDashboardInfo } from "@/lib/api";
 import React, { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { XIcon } from "lucide-react";
 
 const DeleteAccountModal = ({ isOpen, onClose, id, name, refreshAction }) => {
   const { toast } = useToast();
@@ -53,6 +54,7 @@ const DeleteAccountModal = ({ isOpen, onClose, id, name, refreshAction }) => {
     }
   };
 
+  // Modal
   return (
     <div
       onClick={handleOverlayClick}
@@ -61,9 +63,9 @@ const DeleteAccountModal = ({ isOpen, onClose, id, name, refreshAction }) => {
       <div className="bg-[#303531] p-8 rounded-lg relative shadow-lg">
         <button
           onClick={onClose}
-          className=" absolute top-3 right-3  hover:text-gray-800"
+          className=" absolute top-3 right-3  hover:text-gray-400"
         >
-          &times;
+          <XIcon />
         </button>
         <h2 className="text-lg font-semibold mb-4">System Tips</h2>
         <form

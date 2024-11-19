@@ -4,6 +4,7 @@ import CreateAccountForm from "../accounts/create-account-form";
 import RegisterAccountForm from "../accounts/register-account-form";
 import AccessPointForm from "./access-point-form";
 import GatewayForm from "./gateway-form";
+import { XIcon } from "lucide-react";
 
 const AddDeviceModal = ({ isOpen, onClose, projectData }) => {
   const [selectedForm, setSelectedForm] = useState("Access Point");
@@ -25,6 +26,7 @@ const AddDeviceModal = ({ isOpen, onClose, projectData }) => {
     setSelectedForm(e.target.value);
   };
 
+  // Modal
   return (
     <div
       onClick={handleOverlayClick}
@@ -33,9 +35,9 @@ const AddDeviceModal = ({ isOpen, onClose, projectData }) => {
       <div className="bg-[#303531] p-8 rounded-lg relative shadow-lg w-full max-w-2xl">
         <button
           onClick={onClose}
-          className="absolute top-3 right-4 text-white hover:text-gray-800"
+          className="absolute top-3 right-4 text-white hover:text-gray-400"
         >
-          &times;
+          <XIcon />
         </button>
 
         {/* Dropdown for selecting the form */}

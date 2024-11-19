@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { fetchDashboardInfo } from "@/lib/api"; // Adjust the path accordingly
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
+import { XIcon } from "lucide-react";
 
 const ResetAccountModal = ({ isOpen, onClose, gids }) => {
   // State to hold the password input
@@ -73,6 +74,7 @@ const ResetAccountModal = ({ isOpen, onClose, gids }) => {
     }
   };
 
+  // Modal
   return (
     <div
       onClick={handleOverlayClick}
@@ -81,9 +83,9 @@ const ResetAccountModal = ({ isOpen, onClose, gids }) => {
       <div className="bg-[#303531] p-8 rounded-lg relative shadow-lg">
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 hover:text-gray-800"
+          className="absolute top-3 right-3 hover:text-gray-400"
         >
-          &times;
+          <XIcon />
         </button>
         <h2 className="text-lg font-semibold mb-4">System Tips</h2>
         <form

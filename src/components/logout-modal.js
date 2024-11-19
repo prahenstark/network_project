@@ -1,7 +1,10 @@
 "use client";
 import { useToast } from "@/hooks/use-toast";
+import { XIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 
+
+// Modal
 const LogoutModal = ({ isOpen, onClose }) => {
   const { toast } = useToast();
   const router = useRouter();
@@ -32,6 +35,7 @@ const LogoutModal = ({ isOpen, onClose }) => {
     }
   };
 
+  // Modal
   return (
     <div
       onClick={handleOverlayClick}
@@ -40,16 +44,16 @@ const LogoutModal = ({ isOpen, onClose }) => {
       <div className="bg-[#303531] p-8 rounded-lg relative shadow-lg">
         <button
           onClick={onClose}
-          className="absolute top-3 right-4 hover:text-gray-800"
+          className="absolute top-3 right-4 hover:text-gray-400"
         >
-          &times;
+          <XIcon />
         </button>
         <h2 className="text-lg font-semibold mb-4">Warning</h2>
         <form
           onSubmit={handleLogout}
           className="w-[30vw] h-[20vh] flex flex-col gap-4 items-center justify-center"
         >
-          <h1 className="w-full">Are you sure you want to logout?</h1>
+          <h1 className="w-full text-center">Are you sure you want to logout?</h1>
           <div className="flex space-x-4 mt-4 justify-center">
             <button
               onClick={onClose}

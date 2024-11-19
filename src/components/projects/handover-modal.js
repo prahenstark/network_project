@@ -1,3 +1,4 @@
+import { XIcon } from "lucide-react";
 import React, { useState } from "react";
 
 const HandoverModal = ({ isOpen, onClose, refreshAction }) => {
@@ -29,6 +30,7 @@ const HandoverModal = ({ isOpen, onClose, refreshAction }) => {
     }
   };
 
+  // Modal
   return (
     <div
       onClick={handleOverlayClick}
@@ -37,9 +39,9 @@ const HandoverModal = ({ isOpen, onClose, refreshAction }) => {
       <div className="bg-[#303531] p-8 rounded-lg relative shadow-lg">
         <button
           onClick={onClose}
-          className=" absolute top-3 right-3  hover:text-gray-800"
+          className=" absolute top-3 right-3  hover:text-gray-400"
         >
-          &times;
+          <XIcon />
         </button>
         <h2 className="text-lg font-semibold mb-4">Handover Project</h2>
         <form
