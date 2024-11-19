@@ -32,7 +32,7 @@ const CreateAccountModal = ({ isOpen, onClose }) => {
       <div className="bg-[#303531] p-8 rounded-lg relative shadow-lg">
         {/* Header Modal */}
         <div className="flex item-center justify-between mb-6">
-          <button onClick={onClose} className=" hover:text-gray-400">
+          <button onClick={onClose} className=" hover:text-gray-400 ml-auto">
             <XIcon />
           </button>
         </div>

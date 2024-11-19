@@ -20,20 +20,20 @@ export default function Devices() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { selectedDeviceProject } = useDevice();
 
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        setLoading(true);
-        const data = await fetchDashboardInfo("/device");
-        setDevicesData(data?.DevicePageData || []);
-        setProjectData(data?.DevicePageData?.projectList || []);
-      } catch (error) {
-        console.log("Failed to fetch devices data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const getData = async () => {
+    try {
+      setLoading(true);
+      const data = await fetchDashboardInfo("/device");
+      setDevicesData(data?.DevicePageData || []);
+      setProjectData(data?.DevicePageData?.projectList || []);
+    } catch (error) {
+      console.log("Failed to fetch devices data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     getData();
   }, []);
 
@@ -179,7 +179,7 @@ export default function Devices() {
                 </div>
               </ToggleHeader>
               <div className="md:hidden h-32"></div>
-              <DeviceTable data={selectedDevice} />
+              <DeviceTable data={selectedDevice} refreshAction={getData} />
             </>
           )}
         </div>
@@ -190,6 +190,7 @@ export default function Devices() {
           isOpen={isModalOpen}
           onClose={handleCloseModal}
           projectData={projectData}
+          refreshAction={getData}
         />
       )}
     </div>
