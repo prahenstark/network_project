@@ -44,7 +44,7 @@ function RegisterAccountForm({ onClose }) {
       },
     });
 
-    alert("Submitted");
+    console.log("Submitted");
   };
 
   const handleCancel = () => {

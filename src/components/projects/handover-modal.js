@@ -1,3 +1,4 @@
+import { XIcon } from "lucide-react";
 import React, { useState } from "react";
 
 const HandoverModal = ({ isOpen, onClose, refreshAction }) => {
@@ -16,7 +17,7 @@ const HandoverModal = ({ isOpen, onClose, refreshAction }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert("Submitted!");
+    console.log("Submitted!");
 
     refreshAction();
     closeModal();
@@ -29,22 +30,22 @@ const HandoverModal = ({ isOpen, onClose, refreshAction }) => {
     }
   };
 
+  // Modal
   return (
     <div
       onClick={handleOverlayClick}
       className=" fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
     >
-      <div className="bg-[#303531] p-8 rounded-lg relative shadow-lg">
-        <button
-          onClick={onClose}
-          className=" absolute top-3 right-3  hover:text-gray-800"
-        >
-          &times;
-        </button>
-        <h2 className="text-lg font-semibold mb-4">Handover Project</h2>
+      <div className="bg-[#303531] mx-6 p-8 rounded-lg relative shadow-lg">
+        <div className="flex item-center justify-between mb-6">
+          <h2 className="text-xl font-semibold">Handover Project</h2>
+          <button onClick={onClose} className=" hover:text-gray-400">
+            <XIcon />
+          </button>
+        </div>
         <form
           onSubmit={handleSubmit}
-          className="w-[40vw] h-[40vh] flex flex-col gap-6 items-center justify-center"
+          className="flex flex-col gap-6 items-center justify-center"
         >
           <div className="w-full flex items-center justify-center">
             <label className="w-1/2">Account</label>
@@ -58,7 +59,7 @@ const HandoverModal = ({ isOpen, onClose, refreshAction }) => {
             />
           </div>
 
-          <div className={`flex space-x-4 mt-4 justify-center`}>
+          <div className={`flex flex-wrap gap-4 mt-4 justify-center`}>
             <button
               onClick={onClose}
               type="button"

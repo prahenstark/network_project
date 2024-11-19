@@ -14,13 +14,6 @@ input[type="date"] {
   -moz-appearance: textfield; /* For Firefox */
 }
 
-/* Optional: Style the input to look cleaner */
-input[type="date"] {
-  padding: 8px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
 
 
 @layer base {

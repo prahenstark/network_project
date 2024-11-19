@@ -9,10 +9,11 @@ import { CircleCheck } from "lucide-react";
 import { CircleX } from "lucide-react";
 import { formatDate } from "date-fns";
 import { fetchProtectedInfo } from "@/lib/api";
+import { useToast } from "@/hooks/use-toast";
 
 function DeviceTable({ data }) {
   // Transform the data as needed for the table
-
+  const { toast } = useToast();
   const [tableData, setTableData] = useState([]);
 
   const handleUnbind = async (device) => {
@@ -30,12 +31,12 @@ function DeviceTable({ data }) {
       );
       console.log("api data", apiData);
       console.log("API Response:", response);
-      alert("Device unbound successfully!");
+      toast({description: "Device unbound successfully!"});
       window.location.reload();
       onClose();
     } catch (error) {
       console.error("Error creating account:", error);
-      alert("There was an error unbinding device.");
+      toast({description: "There was an error unbinding device.", variant: "destructive"});
     }
   };
 

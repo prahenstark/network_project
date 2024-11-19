@@ -1,7 +1,9 @@
 "use client";
 import { useToast } from "@/hooks/use-toast";
+import { XIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 
+// Modal
 const LogoutModal = ({ isOpen, onClose }) => {
   const { toast } = useToast();
   const router = useRouter();
@@ -32,25 +34,32 @@ const LogoutModal = ({ isOpen, onClose }) => {
     }
   };
 
+  // Modal
   return (
     <div
       onClick={handleOverlayClick}
       className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
     >
-      <div className="bg-[#303531] p-8 rounded-lg relative shadow-lg">
-        <button
-          onClick={onClose}
-          className="absolute top-3 right-4 hover:text-gray-800"
-        >
-          &times;
-        </button>
-        <h2 className="text-lg font-semibold mb-4">Warning</h2>
+      <div className="bg-[#303531] w-[80%] max-w-lg p-8 rounded-lg relative shadow-lg">
+        {/* Header Modal */}
+        <div className="flex item-center justify-between mb-6">
+          <h2 className="text-xl font-semibold">Warning</h2>
+          <button
+            onClick={onClose}
+            className=" hover:text-gray-400"
+          >
+            <XIcon />
+          </button>
+        </div>
+
         <form
           onSubmit={handleLogout}
-          className="w-[30vw] h-[20vh] flex flex-col gap-4 items-center justify-center"
+          className="flex flex-col gap-4 items-center justify-center"
         >
-          <h1 className="w-full">Are you sure you want to logout?</h1>
-          <div className="flex space-x-4 mt-4 justify-center">
+          <h1 className="w-full text-center">
+            Are you sure you want to logout?
+          </h1>
+          <div className="flex flex-wrap gap-4 mt-4 justify-center">
             <button
               onClick={onClose}
               className="min-w-32 px-4 py-2 bg-transparent border-2 border-white border-opacity-5 rounded hover:bg-white hover:bg-opacity-5"
