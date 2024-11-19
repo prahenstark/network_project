@@ -2,10 +2,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { fetchDashboardInfo } from "@/lib/api";
+import { useToast } from "@/hooks/use-toast";
 
 function CreateAccountForm({ onClose }) {
   const [loading, setLoading] = useState(true);
   const [projectData, setProjectData] = useState(null);
+  const { toast } = useToast();
 
   const [formData, setFormData] = useState({
     account: "",
@@ -68,12 +70,12 @@ function CreateAccountForm({ onClose }) {
       );
       console.log("api data", apiData);
       console.log("API Response:", response);
-      alert("Account created successfully!");
+      toast({description: "Account created successfully!"});
       window.location.reload();
       onClose();
     } catch (error) {
       console.error("Error creating account:", error);
-      alert("There was an error creating the account.");
+      toast({description: "There was an error creating device.", variant: "destructive"});
     }
   };
 
@@ -304,6 +306,7 @@ function CreateAccountForm({ onClose }) {
       {/* Buttons */}
       <div className={`flex space-x-6 mt-4`}>
         <button
+          type="button"
           onClick={handleCancel}
           className="min-w-32 px-4 py-2 bg-transparent border-2 border-white border-opacity-5 rounded hover:bg-white hover:bg-opacity-5"
         >
