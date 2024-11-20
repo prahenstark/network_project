@@ -2,16 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Remove the default date icon */
-input[type="date"]::-webkit-calendar-picker-indicator {
-  display: none;
-  -webkit-appearance: none;
-}
 
-/* For other browsers like Firefox */
-input[type="date"] {
-  appearance: none;
-  -moz-appearance: textfield; /* For Firefox */
+input {
+  color-scheme: dark;
 }
 
 
