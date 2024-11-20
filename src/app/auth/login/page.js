@@ -21,10 +21,13 @@ export default function Page() {
     setError(null); // Clear any existing errors
 
     try {
-      const response = await axios.post('http://65.2.169.172:5000/api/auth/login', {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        "http://65.1.1.229:5000/api/auth/login",
+        {
+          email,
+          password,
+        }
+      );
 
       // Handle response
       if (response.data.token) {

@@ -4,9 +4,14 @@ import AddProjectModal from "./projects/add-project-modal";
 import HandoverModal from "./projects/handover-modal";
 import DeleteModal from "./projects/delete-modal";
 import { ChevronRight } from "lucide-react";
-import { useProject } from "@/context/project-provider";
 
-const ProjectItem = ({ item, id, refreshAction, child = [] }) => {
+const ProjectItem = ({
+  item,
+  id,
+  refreshAction,
+  child = [],
+  isSubChild = false,
+}) => {
   const [isAddModalOpen, setAddModalOpen] = useState(false);
   const [isHandoverModalOpen, setHandoverModalOpen] = useState(false);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -43,12 +48,15 @@ const ProjectItem = ({ item, id, refreshAction, child = [] }) => {
           >
             Handover
           </button>
-          <button
-            onClick={() => setAddModalOpen(true)}
-            className="md:px-4 md:py-2 px-2 py-1 text-xs md:text-sm font-medium text-white bg-green-500 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 transition"
-          >
-            Add
-          </button>
+          {/* Only show the Add button if this is not a subchild */}
+          {!isSubChild && (
+            <button
+              onClick={() => setAddModalOpen(true)}
+              className="md:px-4 md:py-2 px-2 py-1 text-xs md:text-sm font-medium text-white bg-green-500 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 transition"
+            >
+              Add
+            </button>
+          )}
           <button
             onClick={() => setDeleteModalOpen(true)}
             className="md:px-4 md:py-2 px-2 py-1 text-xs md:text-sm font-medium text-white bg-red-500 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 transition"
@@ -68,6 +76,7 @@ const ProjectItem = ({ item, id, refreshAction, child = [] }) => {
               id={child.gid}
               refreshAction={refreshAction}
               child={child.child}
+              isSubChild={true} // Mark as subchild
             />
           ))}
         </ul>

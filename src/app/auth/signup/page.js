@@ -43,7 +43,7 @@ export default function SignupPage() {
     };
 
     try {
-      const response = await fetch("http://65.2.169.172:5000/api/auth/signup", {
+      const response = await fetch("http://65.1.1.229:5000/api/auth/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
