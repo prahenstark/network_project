@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 
 // Axios instance for API calls
 const apiInstance = axios.create({
-  baseURL: "http://65.2.169.172:5000/api",
+  baseURL: "http://65.1.1.229:5000/api",
   headers: {
     "Content-Type": "application/json",
   },
@@ -39,11 +39,18 @@ apiInstance.interceptors.response.use(
   }
 );
 
-export const fetchDashboardInfo = async (path, method = "GET", data = null, createFinalPath = true) => {
+export const fetchDashboardInfo = async (
+  path,
+  method = "GET",
+  data = null,
+  createFinalPath = true
+) => {
   try {
     // If createFinalPath is true, append the base path, otherwise use the provided path as is
-    const finalPath = createFinalPath 
-      ? (path.startsWith("/cloudnet/portal/dashboard") ? path : "/cloudnet/portal/dashboard" + path) 
+    const finalPath = createFinalPath
+      ? path.startsWith("/cloudnet/portal/dashboard")
+        ? path
+        : "/cloudnet/portal/dashboard" + path
       : path;
 
     const response = await apiInstance({
@@ -64,7 +71,7 @@ export const fetchDashboardInfo = async (path, method = "GET", data = null, crea
 export const fetchProtectedInfo = async (path, method = "GET", data = null) => {
   try {
     // If createFinalPath is true, append the base path, otherwise use the provided path as is
-    const finalPath = path
+    const finalPath = path;
 
     const response = await apiInstance({
       url: finalPath,

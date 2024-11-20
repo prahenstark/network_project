@@ -3,9 +3,10 @@ import React, { useEffect, useState } from "react";
 import { fetchProtectedInfo } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 
-function AccessPointForm({ onClose, projectData }) {
+function AccessPointForm({ onClose, projectData, refreshAction }) {
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+
   const [formData, setFormData] = useState({
     location: "",
     mac: "",
@@ -50,12 +51,44 @@ function AccessPointForm({ onClose, projectData }) {
         "POST",
         apiData
       );
-      console.log("access point api data", apiData);
-      console.log("API Response:", response);
-      toast({description: "Device added successfully!"});
-      window.location.reload();
+      console.log("api data", apiData);
+      if (response) {
+        toast({
+          title: "Device Added!",
+          description: "Successfully added Device.",
+        });
+        setFormData({
+          location: "",
+          mac: "",
+          username: "",
+          password: "",
+          gid: "",
+          name: "",
+        });
+        refreshAction();
+        onClose(); // Close the modal after successful deletion
+      } else {
+        toast({
+          title: "Error",
+          variant: "destructive",
+          description: "Failed to add device.",
+        });
+      }
     } catch (error) {
-      console.error("Error adding device:", error);
+      toast({
+        title: "Error",
+        variant: "destructive",
+        description: "Something went wrong. Please try again later.",
+      });
+      setFormData({
+        location: "",
+        mac: "",
+        username: "",
+        password: "",
+        gid: "",
+        name: "",
+      });
+      onClose();
     }
   };
 

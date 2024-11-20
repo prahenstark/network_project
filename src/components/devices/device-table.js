@@ -11,10 +11,11 @@ import { formatDate } from "date-fns";
 import { fetchProtectedInfo } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 
-function DeviceTable({ data }) {
+function DeviceTable({ data, refreshAction }) {
   // Transform the data as needed for the table
   const { toast } = useToast();
   const [tableData, setTableData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const handleUnbind = async (device) => {
     console.log("Device Id", device.deviceId);
@@ -30,13 +31,25 @@ function DeviceTable({ data }) {
         apiData
       );
       console.log("api data", apiData);
-      console.log("API Response:", response);
-      toast({description: "Device unbound successfully!"});
-      window.location.reload();
-      onClose();
+      if (response) {
+        toast({
+          title: "Device unbound!",
+          description: "Successfully unbound Device.",
+        });
+      } else {
+        toast({
+          title: "Error",
+          variant: "destructive",
+          description: "Failed to unbind device.",
+        });
+      }
+      refreshAction();
     } catch (error) {
-      console.error("Error creating account:", error);
-      toast({description: "There was an error unbinding device.", variant: "destructive"});
+      toast({
+        title: "Error",
+        variant: "destructive",
+        description: "Something went wrong. Please try again later.",
+      });
     }
   };
 

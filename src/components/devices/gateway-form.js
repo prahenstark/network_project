@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { fetchDashboardInfo, fetchProtectedInfo } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 
-function GatewayForm({ onClose, projectData }) {
+function GatewayForm({ onClose, projectData, refreshAction }) {
   const { toast } = useToast();
 
   const [formData, setFormData] = useState({
@@ -44,13 +44,38 @@ function GatewayForm({ onClose, projectData }) {
         "POST",
         apiData
       );
-      console.log("gateway api data", apiData);
-      console.log("API Response:", response);
-      toast({description: "Device added successfully!"});
-      window.location.reload();
+      console.log("api data", apiData);
+      if (response) {
+        toast({
+          title: "Device Added!",
+          description: "Successfully added Device.",
+        });
+        setFormData({
+          location: "",
+          deviceId: "",
+          gid: "",
+        });
+        refreshAction();
+        onClose(); // Close the modal after successful deletion
+      } else {
+        toast({
+          title: "Error",
+          variant: "destructive",
+          description: "Failed to add device.",
+        });
+      }
     } catch (error) {
-      console.error("Error adding device:", error);
-      toast({description: "There was an error adding device.", variant: "destructive"});
+      toast({
+        title: "Error",
+        variant: "destructive",
+        description: "Something went wrong. Please try again later.",
+      });
+      setFormData({
+        location: "",
+        deviceId: "",
+        gid: "",
+      });
+      onClose();
     }
   };
 

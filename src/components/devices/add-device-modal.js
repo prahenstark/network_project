@@ -6,14 +6,26 @@ import AccessPointForm from "./access-point-form";
 import GatewayForm from "./gateway-form";
 import { XIcon } from "lucide-react";
 
-const AddDeviceModal = ({ isOpen, onClose, projectData }) => {
+const AddDeviceModal = ({ isOpen, onClose, projectData, refreshAction }) => {
   const [selectedForm, setSelectedForm] = useState("Access Point");
 
   if (!isOpen) return null;
 
   const types = {
-    "Access Point": <AccessPointForm onClose={onClose} projectData={projectData} />,
-    Gateway: <GatewayForm projectData={projectData} />,
+    "Access Point": (
+      <AccessPointForm
+        onClose={onClose}
+        projectData={projectData}
+        refreshAction={refreshAction}
+      />
+    ),
+    Gateway: (
+      <GatewayForm
+        onClose={onClose}
+        projectData={projectData}
+        refreshAction={refreshAction}
+      />
+    ),
   };
 
   const handleOverlayClick = (e) => {
@@ -35,22 +47,19 @@ const AddDeviceModal = ({ isOpen, onClose, projectData }) => {
       <div className="bg-[#303531] p-8 rounded-lg relative shadow-lg w-full max-w-2xl">
         {/* Header Modal */}
         <div className="flex item-center justify-between mb-6">
-          <button
-            onClick={onClose}
-            className=" hover:text-gray-400"
-          >
-            <XIcon />
-          </button>
-        </div>
-
-        {/* Dropdown for selecting the form */}
-        <div className="">
           <label
             htmlFor="formSelect"
             className="block text-xl font-medium text-white mb-4"
           >
             Select Type
           </label>
+          <button onClick={onClose} className=" hover:text-gray-400 ml-auto">
+            <XIcon />
+          </button>
+        </div>
+
+        {/* Dropdown for selecting the form */}
+        <div className="">
           <select
             id="formSelect"
             value={selectedForm}
