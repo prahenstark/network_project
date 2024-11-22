@@ -17,6 +17,7 @@ import LogoutModal from "./logout-modal";
 import { useState } from "react";
 import Image from "next/image";
 import { useUIState } from "@/hooks/use-uiState";
+import { MonitorSmartphoneIcon } from "lucide-react";
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -31,6 +32,7 @@ export default function Sidebar() {
     const items = [
       { href: "/", icon: LayoutDashboardIcon },
       { href: "/devices", icon: WifiIcon },
+      { href: "/all-devices", icon: MonitorSmartphoneIcon },
       { href: "/projects", icon: FolderIcon },
       { href: "/maintainance", icon: ShieldAlertIcon },
       { href: "/app-auth", icon: LockIcon },

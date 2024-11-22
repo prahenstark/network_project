@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/table";
 import { Loader } from "lucide-react";
 
-export default function DataTable({ columns = [], data, loading }) {
+export default function DataTable({ columns = [], data, loading, rowClassName }) {
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
@@ -110,10 +110,11 @@ export default function DataTable({ columns = [], data, loading }) {
           {!loading && (
             <TableBody>
               {table.getRowModel()?.rows?.length ? (
-                table.getRowModel().rows.map((row) => (
+                table.getRowModel().rows.map((row, index) => (
                   <TableRow
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
+                    className={rowClassName ? rowClassName(index) : ""}
                   >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id}>
