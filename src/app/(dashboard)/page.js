@@ -18,6 +18,15 @@ import {
 import { fetchDashboardInfo } from "@/lib/api"; // Import the fetch function
 import Loader from "@/components/loader"; // Import your loader component or create a simple one
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { ArrowBigUpIcon } from "lucide-react";
+import { ExternalLinkIcon } from "lucide-react";
+import { Router } from "lucide-react";
+import { WifiHigh } from "lucide-react";
+import { WifiOff } from "lucide-react";
+import { TriangleAlert } from "lucide-react";
+import { Siren } from "lucide-react";
+import Link from "next/link";
 
 ChartJS.register(
   CategoryScale,
@@ -107,10 +116,88 @@ export default function Home() {
         </div>
       ) : (
         <>
+          {/* smruti  */}
+          <div className="flex flex-col gap-6 px-10 md:px-12 mt-4">
+            <h3 className="text-xl font-primary font-semibold">
+              Resource Statistics
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+              {[
+                {
+                  label: "Total Device",
+                  value: dashboardData?.deviceStatistics?.all ?? 0,
+                  icon: (
+                    <div className="size-[40px] grid place-content-center  bg-blue-500/10 text-blue-300 border border-blue-500 rounded-full">
+                      <Router size={"20px"} />
+                    </div>
+                  ),
+                },
+                {
+                  label: "Online Total",
+                  value: dashboardData?.deviceStatistics?.online ?? 0,
+                  icon: (
+                    <div className="size-[40px] grid place-content-center bg-green-500/10 text-green-300 border border-green-500 rounded-full">
+                      <WifiHigh size={"26px"} />
+                    </div>
+                  ),
+                },
+                {
+                  label: "Offline Total",
+                  value: dashboardData?.deviceStatistics?.offline ?? 0,
+                  icon: (
+                    <div className="size-[40px] grid place-content-center bg-red-500/10 text-red-300 border border-red-500 rounded-full">
+                      <WifiOff size={"20px"} />
+                    </div>
+                  ),
+                },
+                {
+                  label: "Alarm Total",
+                  value: dashboardData?.deviceStatistics?.alarm ?? 0,
+                  icon: (
+                    <div className="size-[40px] grid place-content-center bg-yellow-500/10 text-yellow-300 border border-yellow-500 rounded-full">
+                      <Siren />
+                    </div>
+                  ),
+                },
+
+                {
+                  label: "Inspection Report",
+                  value: 6,
+                  icon: (
+                    <div className="size-[40px] grid place-content-center bg-orange-500/10 text-orange-300 border border-orange-500 rounded-full">
+                      <TriangleAlert />
+                    </div>
+                  ),
+                },
+              ].map((item, index) => (
+                <div
+                  key={index}
+                  className="w-full flex flex-col bg-white/5 p-4 rounded-lg border border-white/10 gap-2"
+                >
+                  <div className="flex flex-row items-center justify-between">
+                    <span className="text-base font-primary font-medium">
+                      {item.label}
+                    </span>
+
+                    <button className="font-primary opacity-60">
+                      <ExternalLinkIcon className="size-[16px]" />
+                    </button>
+                  </div>
+                  <div className="flex flex-row gap-4 items-center w-full">
+                    {item.icon}
+                    <h4 className="text-4xl font-bold font-primary">
+                      {item.value}
+                    </h4>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
           {/* Resource Statistics */}
-          <div className="px-10 md:px-12 mt-6 space-y-6 sm:space-y-2">
+          {/* <div className="px-10 md:px-12 mt-6 space-y-6 flex flex-col gap-2">
             <h1 className="text-2xl">Resource Statistics</h1>
-            <div className="flex items-center flex-wrap px-0 md:px-6 gap-2 md:gap-4">
+            <div className="flex w-full  items-center flex-wrap px-0 md:px-6 gap-2 md:gap-4">
               {[
                 {
                   label: "Total Device",
@@ -132,7 +219,7 @@ export default function Home() {
               ].map((item, index) => (
                 <div
                   key={index}
-                  className="flex-1 flex items-center gap-4 md:gap-6"
+                  className="flex-1 border flex items-center gap-4 md:gap-6"
                 >
                   <div className="text-3xl md:text-5xl font-bold">
                     {item.value}
@@ -155,41 +242,52 @@ export default function Home() {
                 className="w-20 relative right-10 md:right-0"
               />
             </div>
-          </div>
+          </div> */}
 
           {/* Project and Pending Info Sections */}
-          <div className="px-6 sm:px-12 mt-6 flex flex-col sm:flex-row gap-6">
+          <div className="px-6 sm:px-12 mt-12 flex flex-col sm:flex-row gap-6">
             {/* Project Info Section */}
             <div className="space-y-6 flex-1 flex-col flex sm:flex-[1.5]">
-              <h1 className="text-2xl py-2">Project Info</h1>
+              <h3 className="text-xl font-primary font-semibold">
+                Project Info
+              </h3>
               <div className="flex flex-1 gap-4">
                 {/* My Project Card */}
                 {dashboardData?.projectInfo?.length > 0 ? (
-                  <div className="project-card flex-1 p-6 bg-white/5 border rounded-xl hover:bg-white/10 transition">
-                    <div className="flex gap-6 items-center justify-between">
-                      <div className="text-xl flex items-center">
-                        <Wifi className="mr-4" />
-                        <h1 className="text-base md:text-lg">
+                  <div className="project-card flex-1 p-6 bg-white/5 border rounded-xl border-white/10  transition">
+                    <div className="flex gap-6 items-center justify-between border-b border-white/10 pb-4">
+                      <div className="text-xl flex items-center gap-4">
+                        <div className="bg-green-500/10 text-green-500 size-[40px] grid place-content-center rounded-full">
+                          <Wifi size={20} />
+                        </div>
+                        <h1 className="text-base md:text-lg font-primary font-medium">
                           {dashboardData.projectInfo[0].name}
                         </h1>
                       </div>
-                      <p className="text-xs mt-2 text-muted-foreground">
+                      {/* <p className="text-xs mt-2 text-muted-foreground">
                         Creation time: {dashboardData.projectInfo[0].created_at}
-                      </p>
+                      </p> */}
+                      <div className="bg-blue-400/10 border border-blue-500/20 font-medium text-xs text-blue-300 px-4 py-2 rounded-full flex flex-row gap-1">
+                        <span>
+                          {/* todo : subproject length  */}
+                          06
+                        </span>
+                        Sub Projects
+                      </div>
                     </div>
 
-                    <div className="flex items-center mt-6">
+                    <div className="grid grid-cols-1 gap-4 items-center mt-4">
                       {dashboardData.projectInfo[0].dev_statistic.map(
                         (item, index) => (
                           <div
                             key={index}
-                            className="flex-1 flex items-center gap-2"
+                            className="flex-1 flex flex-row items-center justify-between gap-2 bg-white/5 p-4 px-6 hover:bg-white/10 transition-all ease-in-out duration-200 rounded "
                           >
+                            <div className="capitalize text-base font-medium font-primary">
+                              {item.type}
+                            </div>
                             <div className="text-3xl md:text-5xl font-semibold">
                               {item.devnums}
-                            </div>
-                            <div className="text-base md:text-lg pl-2 md:pl-4 font-medium leading-6">
-                              {item.type}
                             </div>
                           </div>
                         )
@@ -208,36 +306,95 @@ export default function Home() {
             {/* Pending Info Section */}
             <div className="space-y-6 flex-1 sm:flex-[1]">
               <div className="flex justify-between items-center">
-                <h1 className="text-2xl py-2">Pending Info</h1>
-                <InfoIcon />
+                <h3 className="text-xl font-primary font-semibold">
+                  Recently Added
+                </h3>
+                <Link
+                  href={"#"}
+                  className="text-xs bg-primary/10 text-primary p-2 rounded-full  underline"
+                >
+                  <ExternalLinkIcon size={16} />
+                </Link>
               </div>
-              <div className="flex flex-wrap gap-4">
-                {/* Pending Project Card */}
-                <div className="project-card flex-1 p-6 bg-white/5 border rounded-xl hover:bg-white/10 transition">
+              <div className="bg-white/5 flex flex-col overflow-y-auto gap-4 h-[300px] border border-white/10 p-4 rounded-xl">
+                {[
+                  {
+                    name: "Device 1",
+                    type: "Gateway",
+                    status: "Online",
+                    mac: "00:00:00:00:00:00",
+                  },
+                  {
+                    name: "Device 2",
+                    type: "Gateway",
+                    status: "Online",
+                    mac: "00:00:00:00:00:00",
+                  },
+                  {
+                    name: "Device 3",
+                    type: "Gateway",
+                    status: "Offline",
+                    mac: "00:00:00:00:00:00",
+                  },
+                ].map((item, index) => (
+                  <div
+                    key={index}
+                    className="flex gap-4 items-center justify-between font-primary border-b border-white/10 pb-6 pt-2"
+                  >
+                    <div className="flex gap-4 items-center">
+                      <div
+                        className={`${
+                          item.status === "Online"
+                            ? "bg-green-500/10 text-green-500"
+                            : "bg-red-500/10 text-red-500"
+                        } size-[40px] grid place-content-center rounded-full`}
+                      >
+                        {item.status === "Online" ? (
+                          <Wifi size={20} />
+                        ) : (
+                          <WifiOff size={20} />
+                        )}
+                      </div>
+                      <div className="flex flex-col">
+                        <h1 className="text-base md:text-lg font-primary font-medium">
+                          {item.name}
+                        </h1>
+                        <p className="text-xs text-muted-foreground">
+                          {item.type} - {item.status}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      {item.mac}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {/* <div className="grid grid-cols-1 gap-4">
+                <div className="project-card flex-1 p-6 bg-white/5 border border-white/5 rounded-xl hover:bg-white/10 transition">
                   <div className="text-xl gap-4 flex items-center">
                     <span className="text-5xl font-semibold">02</span>
                     <h1>Pending Project</h1>
                   </div>
                   <div className="flex justify-end mt-6">
-                    <button className="px-6 py-2 bg-primary/40 hover:bg-primary/60 transition border-2 border-primary rounded-full text-sm">
+                    <button className="w-full px-6 py-2 bg-primary/40 hover:bg-primary/60 transition border-2 border-primary rounded-full text-sm">
                       Dispose
                     </button>
                   </div>
                 </div>
 
-                {/* Account Changes Card */}
                 <div className="project-card flex-1 p-6 bg-white/5 border rounded-xl hover:bg-white/10 transition">
                   <div className="text-xl gap-4 flex items-center">
                     <span className="text-5xl font-semibold">0</span>
                     <h1>Account Changes</h1>
                   </div>
                   <div className="flex justify-end mt-6">
-                    <button className="px-6 py-2 bg-primary/40 hover:bg-primary/60 transition border-2 border-primary rounded-full text-sm">
+                    <button className="px-6 py-2 bg-primary/40 hover:bg-primary/60 transition border-2 w-full border-primary rounded-full text-sm">
                       Dispose
                     </button>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
 
