@@ -113,30 +113,33 @@ function AccessPointForm({ onClose, projectData, refreshAction }) {
   //   }, []);
 
   // Recursive component for rendering projects and their children
-  const DeviceProjectHierarchy = ({ projects }) => {
-    return (
-      <ul className="ml-4 border-l border-gray-600 pl-4">
-        {projects.map((project) => (
-          <li key={project.gid} className="my-2">
-            <label className="flex items-center">
-              <input
-                type="radio" // Changed to radio button for single selection
-                name="gid"
-                value={project.gid}
-                checked={formData.gid === project.gid}
-                onChange={handleChange}
-                className="mr-2"
-              />
-              {project.name}
-            </label>
-            {project.child?.length > 0 && (
-              <DeviceProjectHierarchy projects={project.child} />
-            )}
-          </li>
-        ))}
-      </ul>
-    );
-  };
+ const DeviceProjectHierarchy = ({ projects, isRoot = true }) => {
+   return (
+     <ul className="ml-4 border-l border-gray-600 pl-4">
+       {projects.map((project, index) => (
+         <li key={project.gid} className="my-2">
+           <label className="flex items-center">
+             {!(isRoot && index === 0) && ( // Skip rendering the radio button for the root parent
+               <input
+                 type="radio"
+                 name="gid"
+                 value={project.gid}
+                 checked={formData.gid === project.gid}
+                 onChange={handleChange}
+                 className="mr-2"
+               />
+             )}
+             {project.name}
+           </label>
+           {project.child?.length > 0 && (
+             <DeviceProjectHierarchy projects={project.child} isRoot={false} />
+           )}
+         </li>
+       ))}
+     </ul>
+   );
+ };
+
 
   return (
     <form

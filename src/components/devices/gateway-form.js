@@ -7,6 +7,8 @@ function GatewayForm({ onClose, projectData, refreshAction }) {
   const { toast } = useToast();
 
   const [formData, setFormData] = useState({
+    username: "",
+    password: "",
     location: "",
     deviceId: "",
     gid: "",
@@ -33,6 +35,8 @@ function GatewayForm({ onClose, projectData, refreshAction }) {
 
     const apiData = {
       type: "gateway",
+      username: formData.username,
+      password: formData.password,
       location: formData.location,
       deviceId: formData.deviceId,
       gid: formData.gid,
@@ -100,30 +104,33 @@ function GatewayForm({ onClose, projectData, refreshAction }) {
   //   }, []);
 
   // Recursive component for rendering projects and their children
-  const DeviceProjectHierarchy = ({ projects }) => {
-    return (
-      <ul className="ml-4 border-l border-gray-600 pl-4">
-        {projects.map((project) => (
-          <li key={project.gid} className="my-2">
-            <label className="flex items-center">
-              <input
-                type="radio" // Changed to radio button for single selection
-                name="gid"
-                value={project.gid}
-                checked={formData.gid === project.gid}
-                onChange={handleChange}
-                className="mr-2"
-              />
-              {project.name}
-            </label>
-            {project.child?.length > 0 && (
-              <DeviceProjectHierarchy projects={project.child} />
-            )}
-          </li>
-        ))}
-      </ul>
-    );
-  };
+ const DeviceProjectHierarchy = ({ projects, isRoot = true }) => {
+   return (
+     <ul className="ml-4 border-l border-gray-600 pl-4">
+       {projects.map((project, index) => (
+         <li key={project.gid} className="my-2">
+           <label className="flex items-center">
+             {!(isRoot && index === 0) && ( // Skip rendering the radio button for the root parent
+               <input
+                 type="radio"
+                 name="gid"
+                 value={project.gid}
+                 checked={formData.gid === project.gid}
+                 onChange={handleChange}
+                 className="mr-2"
+               />
+             )}
+             {project.name}
+           </label>
+           {project.child?.length > 0 && (
+             <DeviceProjectHierarchy projects={project.child} isRoot={false} />
+           )}
+         </li>
+       ))}
+     </ul>
+   );
+ };
+
 
   return (
     <form
@@ -131,6 +138,30 @@ function GatewayForm({ onClose, projectData, refreshAction }) {
       className="w-full flex flex-col gap-3 items-center justify-between px-8 py-4 text-white"
     >
       {/* Input Fields */}
+
+      <div className="w-full flex items-center justify-center">
+        <label className="w-1/2 block text-sm font-medium mb-1">Username</label>
+        <input
+          type="text"
+          name="username"
+          value={formData.username}
+          onChange={handleChange}
+          className="mt-1 block w-full text-white bg-white bg-opacity-5 border rounded-md shadow-sm p-2 focus:outline-none focus:ring focus:ring-blue-200"
+          required
+        />
+      </div>
+
+      <div className="w-full flex items-center justify-center">
+        <label className="w-1/2 block text-sm font-medium mb-1">Password</label>
+        <input
+          type="password"
+          name="password"
+          value={formData.password}
+          onChange={handleChange}
+          className="mt-1 block w-full text-white bg-white bg-opacity-5 border rounded-md shadow-sm p-2 focus:outline-none focus:ring focus:ring-blue-200"
+          required
+        />
+      </div>
 
       <div className="w-full flex items-center justify-center">
         <label className="w-1/2 block text-sm font-medium mb-1">Location</label>
