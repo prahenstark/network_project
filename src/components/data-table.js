@@ -44,11 +44,9 @@ export default function DataTable({ columns = [], data, loading }) {
     },
   });
 
-  // Function to determine row background based on status
   const getRowClassName = (row) => {
-    const status = row.original.status; // Access the status field from row data
-    return status === "1" ? "bg-green-700/10" : "bg-red-700/10";
-  };
+    console.log(row)
+  }
 
   return (
     <div className="max-w-full p-6">
@@ -77,7 +75,7 @@ export default function DataTable({ columns = [], data, loading }) {
                   <TableRow
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
-                    className={getRowClassName(row)} // Apply conditional class
+                    className={row.original.bg === "green" ? "bg-green-500/10" : row.original.bg === "red" ? "bg-red-500/10": ""} // Apply conditional class
                   >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id}>

@@ -81,6 +81,7 @@ function DeviceTable({ data, refreshAction, statusFilter }) {
         version: deviceListData?.version || "N/A",
         accessTime: deviceListData?.access_time || "N/A", // Or any other relevant field
         status: deviceListData?.status === "1" ? <CircleCheck /> : <CircleX />,
+        bg: deviceListData?.status === "1" ? "green" : "red"
       }));
 
       setTableData(formattedData);
