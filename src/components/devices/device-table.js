@@ -11,7 +11,7 @@ import { formatDate } from "date-fns";
 import { fetchProtectedInfo } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 
-function DeviceTable({ data, refreshAction }) {
+function DeviceTable({ data, refreshAction, statusFilter }) {
   // Transform the data as needed for the table
   const { toast } = useToast();
   const [tableData, setTableData] = useState([]);
@@ -53,11 +53,23 @@ function DeviceTable({ data, refreshAction }) {
     }
   };
 
-  // Update tableData whenever the data prop changes
   useEffect(() => {
     if (data) {
       const deviceList = data?.deviceList;
-      const formattedData = deviceList?.map((deviceListData, index) => ({
+
+      // Filter based on the statusFilter parameter
+      let filteredDevices = deviceList?.filter((deviceListData) => {
+        if (statusFilter === "offline") {
+          return deviceListData?.status === "0"; // Only show offline devices
+        }
+        if (statusFilter === "online") {
+          return deviceListData?.status === "1"; // Only show online devices
+        }
+        return true; // Show all devices when statusFilter is 'all'
+      });
+
+      // Map the filtered devices to a formatted structure
+      const formattedData = filteredDevices?.map((deviceListData, index) => ({
         id: index,
         deviceId: deviceListData?.deviceId || "N/A",
         name: deviceListData?.name || "N/A", // Provide a default
@@ -70,10 +82,11 @@ function DeviceTable({ data, refreshAction }) {
         accessTime: deviceListData?.access_time || "N/A", // Or any other relevant field
         status: deviceListData?.status === "1" ? <CircleCheck /> : <CircleX />,
       }));
+
       setTableData(formattedData);
       console.log("Device data", formattedData);
     }
-  }, [data]);
+  }, [data, statusFilter]);
 
   const columns = [
     {

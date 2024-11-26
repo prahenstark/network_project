@@ -144,6 +144,7 @@ export default function Home() {
               {[
                 {
                   label: "Total Device",
+                  param: "all",
                   value: dashboardData?.deviceStatistics?.all ?? 0,
                   icon: (
                     <div className="size-[40px] grid place-content-center  bg-blue-500/10 text-blue-300 border border-blue-500 rounded-full">
@@ -153,6 +154,7 @@ export default function Home() {
                 },
                 {
                   label: "Online Total",
+                  param: "online",
                   value: dashboardData?.deviceStatistics?.online ?? 0,
                   icon: (
                     <div className="size-[40px] grid place-content-center bg-green-500/10 text-green-300 border border-green-500 rounded-full">
@@ -162,6 +164,7 @@ export default function Home() {
                 },
                 {
                   label: "Offline Total",
+                  param: "offline",
                   value: dashboardData?.deviceStatistics?.offline ?? 0,
                   icon: (
                     <div className="size-[40px] grid place-content-center bg-red-500/10 text-red-300 border border-red-500 rounded-full">
@@ -171,6 +174,7 @@ export default function Home() {
                 },
                 {
                   label: "Alarm Total",
+                  param: "all",
                   value: dashboardData?.deviceStatistics?.alarm ?? 0,
                   icon: (
                     <div className="size-[40px] grid place-content-center bg-yellow-500/10 text-yellow-300 border border-yellow-500 rounded-full">
@@ -181,6 +185,7 @@ export default function Home() {
 
                 {
                   label: "Inspection Report",
+                  param: "all",
                   value: 6,
                   icon: (
                     <div className="size-[40px] grid place-content-center bg-orange-500/10 text-orange-300 border border-orange-500 rounded-full">
@@ -198,9 +203,9 @@ export default function Home() {
                       {item.label}
                     </span>
 
-                    <button className="font-primary opacity-60">
+                    <Link href={"/devices?status="+item.param} className="font-primary opacity-60">
                       <ExternalLinkIcon className="size-[16px]" />
-                    </button>
+                    </Link>
                   </div>
                   <div className="flex flex-row gap-4 items-center w-full">
                     {item.icon}

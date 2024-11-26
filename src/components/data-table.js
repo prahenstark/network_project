@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   flexRender,
   getCoreRowModel,
@@ -9,8 +9,6 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -20,9 +18,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Loader } from "lucide-react";
 
-export default function DataTable({ columns = [], data, loading, rowClassName }) {
+export default function DataTable({ columns = [], data, loading }) {
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
@@ -47,7 +44,11 @@ export default function DataTable({ columns = [], data, loading, rowClassName })
     },
   });
 
-  // console.log("Table Data:", table?.getRowModel()?.rows?.length);
+  // Function to determine row background based on status
+  const getRowClassName = (row) => {
+    const status = row.original.status; // Access the status field from row data
+    return status === "1" ? "bg-green-700/10" : "bg-red-700/10";
+  };
 
   return (
     <div className="max-w-full p-6">
@@ -56,29 +57,27 @@ export default function DataTable({ columns = [], data, loading, rowClassName })
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  );
-                })}
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                  </TableHead>
+                ))}
               </TableRow>
             ))}
           </TableHeader>
           {!loading && (
             <TableBody>
               {table.getRowModel()?.rows?.length ? (
-                table.getRowModel().rows.map((row, index) => (
+                table.getRowModel().rows.map((row) => (
                   <TableRow
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
-                    className={rowClassName ? rowClassName(index) : ""}
+                    className={getRowClassName(row)} // Apply conditional class
                   >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id}>
