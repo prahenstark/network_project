@@ -15,7 +15,7 @@ import {
   Legend,
   ArcElement,
 } from "chart.js";
-import { fetchDashboardInfo } from "@/lib/api"; // Import the fetch function
+import { API_URL, fetchDashboardInfo } from "@/lib/api"; // Import the fetch function
 import Loader from "@/components/loader"; // Import your loader component or create a simple one
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -27,6 +27,8 @@ import { WifiOff } from "lucide-react";
 import { TriangleAlert } from "lucide-react";
 import { Siren } from "lucide-react";
 import Link from "next/link";
+import axios from "axios";
+import { MapPin } from "lucide-react";
 
 ChartJS.register(
   CategoryScale,
@@ -42,6 +44,23 @@ ChartJS.register(
 export default function Home() {
   const [dashboardData, setDashboardData] = useState(null); // State to hold the dashboard data
   const [loading, setLoading] = useState(true); // State to handle loading
+  const token = localStorage.getItem("bearerToken");
+
+  const [recentData, setRecentData] = useState([]);
+
+  const fetchRecentData = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/devices/latest-device`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      // console.log("res", res.data);
+      setRecentData(res.data.devices);
+    } catch (error) {
+      console.log("Failed to fetch recent data:", error);
+    }
+  };
 
   useEffect(() => {
     const getData = async () => {
@@ -55,7 +74,7 @@ export default function Home() {
         setLoading(false); // Stop loading
       }
     };
-
+    fetchRecentData();
     getData();
   }, []);
 
@@ -317,26 +336,7 @@ export default function Home() {
                 </Link>
               </div>
               <div className="bg-white/5 flex flex-col overflow-y-auto gap-4 h-[300px] border border-white/10 p-4 rounded-xl">
-                {[
-                  {
-                    name: "Device 1",
-                    type: "Gateway",
-                    status: "Online",
-                    mac: "00:00:00:00:00:00",
-                  },
-                  {
-                    name: "Device 2",
-                    type: "Gateway",
-                    status: "Online",
-                    mac: "00:00:00:00:00:00",
-                  },
-                  {
-                    name: "Device 3",
-                    type: "Gateway",
-                    status: "Offline",
-                    mac: "00:00:00:00:00:00",
-                  },
-                ].map((item, index) => (
+                {recentData.map((item, index) => (
                   <div
                     key={index}
                     className="flex gap-4 items-center justify-between font-primary border-b border-white/10 pb-6 pt-2"
@@ -344,28 +344,30 @@ export default function Home() {
                     <div className="flex gap-4 items-center">
                       <div
                         className={`${
-                          item.status === "Online"
+                          item.status === "1"
                             ? "bg-green-500/10 text-green-500"
                             : "bg-red-500/10 text-red-500"
                         } size-[40px] grid place-content-center rounded-full`}
                       >
-                        {item.status === "Online" ? (
+                        {item.status === "1" ? (
                           <Wifi size={20} />
                         ) : (
                           <WifiOff size={20} />
                         )}
                       </div>
                       <div className="flex flex-col">
-                        <h1 className="text-base md:text-lg font-primary font-medium">
-                          {item.name}
+                        <h1 className="text-base capitalize md:text-lg font-primary font-medium">
+                          {item.deviceId && item.deviceId.length > 20
+                            ? item.deviceId.slice(0, 20) + "..."
+                            : item.deviceId}
                         </h1>
-                        <p className="text-xs text-muted-foreground">
-                          {item.type} - {item.status}
+                        <p className="text-xs capitalize gap-1 flex flex-row items-center text-muted-foreground">
+                          <MapPin size={16} /> {item.location} - {item.type}
                         </p>
                       </div>
                     </div>
                     <div className="text-xs text-muted-foreground">
-                      {item.mac}
+                      {item.ipAddress}
                     </div>
                   </div>
                 ))}
