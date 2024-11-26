@@ -79,6 +79,7 @@ function AllDeviceTable({ data, refreshAction, mode }) {
         version: device.version || "N/A",
         accessTime: device.access_time || "N/A",
         status: device.status === "1" ? <CircleCheck /> : <CircleX />,
+        bg: device.status === "1" ? "green" : "red"
       }));
 
       setTableData(formattedData);
