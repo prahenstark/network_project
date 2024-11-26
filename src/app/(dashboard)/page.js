@@ -203,7 +203,7 @@ export default function Home() {
                       {item.label}
                     </span>
 
-                    <Link href={"/devices?status="+item.param} className="font-primary opacity-60">
+                    <Link href={"/all-devices?status="+item.param} className="font-primary opacity-60">
                       <ExternalLinkIcon className="size-[16px]" />
                     </Link>
                   </div>

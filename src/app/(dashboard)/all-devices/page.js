@@ -2,17 +2,27 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "@/components/navbar";
 import ToggleHeader from "@/components/toggle-header";
-import SelectDropdown from "@/components/select-dropdown";
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+} from "@/components/ui/select";
 import DeviceTable from "@/components/devices/device-table";
 import Loader from "@/components/loader";
 import { fetchDashboardInfo } from "@/lib/api";
 import { useDevice } from "@/context/device-context";
 import AllDeviceTable from "@/components/all-devices/all-device-table";
+import { useSearchParams } from "next/navigation";
 
 export default function AllDevices() {
   const [loading, setLoading] = useState(true);
   const [allDevicesData, setAllDevicesData] = useState([]);
   const { selectedDeviceProject } = useDevice();
+  const params = useSearchParams();
+  const status = params.get("status");
+  const [mode, setMode] = useState(status || "all"); // State to manage the selected mode
 
   const getData = async () => {
     try {
@@ -47,9 +57,9 @@ export default function AllDevices() {
   }, []);
 
   const dropdownOptions = [
-    { label: "All", value: "all" },
-    { label: "Online", value: "online" },
-    { label: "Offline", value: "offline" },
+    { label: "All Devices", value: "all" },
+    { label: "Online Devices", value: "online" },
+    { label: "Offline Devices", value: "offline" },
   ];
 
   return (
@@ -64,14 +74,30 @@ export default function AllDevices() {
           ) : (
             <>
               <ToggleHeader pageName="All Device List" className="px-6 pt-8 ">
-                <SelectDropdown
-                  className="min-w-20 md:min-w-28"
-                  options={dropdownOptions}
-                  
-                />
+                <div className="md:min-w-64 max-md:w-full">
+                  <Select
+                    value={mode}
+                    onValueChange={setMode} // Update state on change
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select Mode" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {dropdownOptions.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </ToggleHeader>
               <div className="md:hidden h-32"></div>
-              <AllDeviceTable data={allDevicesData} refreshAction={getData} />
+              <AllDeviceTable
+                mode={mode}
+                data={allDevicesData}
+                refreshAction={getData}
+              />
             </>
           )}
         </div>
