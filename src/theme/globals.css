@@ -7,7 +7,9 @@ input {
   color-scheme: dark;
 }
 
-
+.hide-scrbar::-webkit-scrollbar{
+  display: none;
+}
 
 @layer base {
   :root {
