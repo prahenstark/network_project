@@ -73,7 +73,7 @@ export default function AllDevices() {
             </div>
           ) : (
             <>
-              <ToggleHeader pageName="All Device List" className="px-6 pt-8 ">
+              <ToggleHeader pageName="All Device List" className="px-6 pt-8 max-md:mb-6">
                 <div className="md:min-w-64 max-md:w-full">
                   <Select
                     value={mode}
@@ -92,7 +92,6 @@ export default function AllDevices() {
                   </Select>
                 </div>
               </ToggleHeader>
-              <div className="md:hidden h-32"></div>
               <AllDeviceTable
                 mode={mode}
                 data={allDevicesData}

@@ -129,7 +129,7 @@ export default function Devices() {
                   <div className="text-lg font-medium">5G</div>
                 </div>
               </div>
-              <ToggleHeader pageName="Device List" className="px-6 ">
+              <ToggleHeader pageName="Device List" className="px-6 max-md:mb-32">
                 <div className="flex items-center justify-between gap-4 max-w-full">
                   {/* <button onClick={toggleProjectListFunction}>
                     <Menu />
@@ -182,7 +182,7 @@ export default function Devices() {
                   </button>
                 </div>
               </ToggleHeader>
-              <div className="md:hidden h-32"></div>
+              
               <DeviceTable statusFilter={status} data={selectedDevice} refreshAction={getData} />
             </>
           )}

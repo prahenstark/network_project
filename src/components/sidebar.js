@@ -56,7 +56,7 @@ export default function Sidebar() {
   if (sidebarOpen) {
     return (
       <div className="w-20 bg-background border-r flex flex-col justify-between items-center">
-        <div className="w-full">
+        <div className="w-full overflow-y-scroll overflow-x-hidden hide-scrbar">
           <Link href="/">
             <div className="logo-container mx-auto flex size-16 items-center justify-center border-b">
               <Image
@@ -90,15 +90,23 @@ export default function Sidebar() {
                 />
               </div>
             ))}
+            <button
+              onClick={() => {
+                setIsModalOpen(true);
+              }}
+              className="icon py-4 md:hidden"
+            >
+              <LogOut size={20} />
+            </button>
           </div>
         </div>
 
-        <div className="w-full lower-container flex flex-col size-16 items-center justify-center border-b pb-16">
-          <Link href="/settings">
+        <div className="w-full max-md:hidden lower-container flex flex-col size-16 items-center justify-center border-b pb-16">
+          {/* <Link href="/settings">
             <div className="icon p-4 w-full ">
               <SettingsIcon size={20} />
             </div>
-          </Link>
+          </Link> */}
 
           <button
             onClick={() => {
