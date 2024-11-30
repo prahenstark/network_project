@@ -40,7 +40,7 @@ export default function Sidebar() {
       },
       { href: "/all-devices", icon: MonitorSmartphoneIcon },
       { href: "/projects", icon: FolderIcon },
-      { href: "/maintainance", icon: ShieldAlertIcon },
+      // { href: "/maintainance", icon: ShieldAlertIcon },
       { href: "/app-auth", icon: LockIcon },
     ];
     if (user && user.role === "vendor") {
