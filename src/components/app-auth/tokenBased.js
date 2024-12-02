@@ -49,7 +49,7 @@ export default function TokenBasedForm() {
       useHour,
       couponExpiry: expiryEpoch,
       deviceId: selectedDevice,
-      authType: "token"
+      authType: "coupon"
     };
 
     try {

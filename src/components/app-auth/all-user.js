@@ -12,6 +12,10 @@ import {
 import { useEffect, useState } from "react";
 import { fetchProtectedInfo } from "@/lib/api"; // Ensure this is implemented correctly
 import { useToast } from "@/hooks/use-toast";
+import { LockIcon } from "lucide-react";
+import { MailIcon } from "lucide-react";
+import { UserIcon } from "lucide-react";
+import { TicketIcon } from "lucide-react";
 
 export default function AllUsers({}) {
   const [devices, setDevices] = useState([]); // State for all devices
@@ -35,7 +39,10 @@ export default function AllUsers({}) {
         }
       } catch (error) {
         console.error("Error fetching devices:", error);
-        toast({ description: "Failed to fetch devices.", variant: "destructive" });
+        toast({
+          description: "Failed to fetch devices.",
+          variant: "destructive",
+        });
       } finally {
         setLoading(false);
       }
@@ -51,11 +58,16 @@ export default function AllUsers({}) {
     async function fetchGuestUsers() {
       setLoadingUsers(true);
       try {
-        const data = await fetchProtectedInfo(`/devices/guest-users/${selectedDevice}`);
+        const data = await fetchProtectedInfo(
+          `/devices/guest-users/${selectedDevice}`
+        );
         setGuestUsers(data.guests || []); // Adjusted to match the new JSON structure
       } catch (error) {
         console.error("Error fetching guest users:", error);
-        toast({ description: "Failed to fetch guest users.", variant: "destructive" });
+        toast({
+          description: "Failed to fetch guest users.",
+          variant: "destructive",
+        });
       } finally {
         setLoadingUsers(false);
       }
@@ -66,7 +78,9 @@ export default function AllUsers({}) {
 
   // Filter guest users based on the search query and authType
   const filteredUsers = guestUsers.filter((user) => {
-    const matchesSearch = user.name.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = user.name
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
     const matchesAuthType =
       selectedAuthType === "all" || user.authType === selectedAuthType;
     return matchesSearch && matchesAuthType;
@@ -76,8 +90,42 @@ export default function AllUsers({}) {
   const columns = [
     { header: "Name", accessorKey: "name" },
     { header: "SSID", accessorKey: "ssid" },
-    { header: "Password", accessorKey: "password" },
-    { header: "Auth Type", accessorKey: "authType" },
+    {
+      header: "Password",
+      accessorKey: "password",
+      cell: ({ getValue }) => {
+        const [showPassword, setShowPassword] = useState(false);
+        const password = getValue();
+
+        return (
+          <div className="flex items-center space-x-2">
+            <button onClick={() => setShowPassword(!showPassword)}>
+              {showPassword ? password : "*********"}
+            </button>
+          </div>
+        );
+      },
+    },
+    {
+      header: "Auth Type",
+      accessorKey: "authType",
+      cell: ({ getValue }) => {
+        const authType = getValue();
+
+        return (
+          <div className="flex items-center space-x-2">
+            {authType === "auth" ? (
+              <LockIcon size={20} />
+            ) : authType === "coupon" ? (
+              <TicketIcon size={20} />
+            ) : (
+              <MailIcon size={20} />
+            )}
+            <span>{authType}</span>
+          </div>
+        );
+      },
+    },
     { header: "Coupon Code", accessorKey: "couponCode" },
     {
       header: "Coupon Expiry",
@@ -85,7 +133,7 @@ export default function AllUsers({}) {
       cell: (info) =>
         info.getValue()
           ? new Date(parseInt(info.getValue()) * 1000).toLocaleString()
-          : "Never", // Format or indicate no expiry
+          : "Never",
     },
   ];
 
@@ -131,10 +179,26 @@ export default function AllUsers({}) {
               <SelectValue placeholder="Filter by Auth Type" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All</SelectItem>
-              <SelectItem value="auth">Auth</SelectItem>
-              <SelectItem value="sms">SMS</SelectItem>
-              <SelectItem value="coupon">Coupon</SelectItem>
+              <SelectItem value="all">
+                <span className="flex py-1 gap-2 items-center">
+                  <UserIcon size={20} /> All
+                </span>
+              </SelectItem>
+              <SelectItem value="auth">
+                <span className="flex py-1 gap-2 items-center">
+                  <LockIcon size={20} /> Auth
+                </span>
+              </SelectItem>
+              <SelectItem value="sms">
+                <span className="flex py-1 gap-2 items-center">
+                  <MailIcon size={20} /> SMS
+                </span>
+              </SelectItem>
+              <SelectItem value="coupon">
+                <span className="flex py-1 gap-2 items-center">
+                  <TicketIcon size={20} /> Coupon
+                </span>
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
