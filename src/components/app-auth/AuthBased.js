@@ -45,6 +45,7 @@ export default function AuthBasedForm() {
       username,
       password,
       deviceId: selectedDevice,
+      authType: "auth"
     };
 
     try {
@@ -60,7 +61,7 @@ export default function AuthBasedForm() {
         setPassword("");
         setSelectedDevice("");
       } else {
-        console.error("Error adding guest");
+        toast({description: "Guest added successfully", variant: "destructive"});
       }
     } catch (error) {
       console.error("Error during PUT request:", error);

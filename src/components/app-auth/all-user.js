@@ -12,53 +12,56 @@ import {
 import { useEffect, useState } from "react";
 import { fetchProtectedInfo } from "@/lib/api"; // Ensure this is implemented correctly
 import { useToast } from "@/hooks/use-toast";
+import { LockIcon } from "lucide-react";
+import { MailIcon } from "lucide-react";
+import { UserIcon } from "lucide-react";
+import { TicketIcon } from "lucide-react";
 
 export default function AllUsers({}) {
-  const [devices, setDevices] = useState([]);
-  const [selectedDevice, setSelectedDevice] = useState(""); // State for selected device
+  const [devices, setDevices] = useState([]); // State for all devices
+  const [selectedDevice, setSelectedDevice] = useState(""); // State for the currently selected device
   const [guestUsers, setGuestUsers] = useState([]); // State for guest users
   const [loading, setLoading] = useState(true); // Loading state for devices
   const [loadingUsers, setLoadingUsers] = useState(false); // Loading state for guest users
-  const [searchQuery, setSearchQuery] = useState(""); // State for the search query
+  const [searchQuery, setSearchQuery] = useState(""); // Search query state
+  const [selectedAuthType, setSelectedAuthType] = useState("all"); // State for the selected authType filter
   const { toast } = useToast();
 
   // Fetch devices on component mount
   useEffect(() => {
     async function fetchDevices() {
       try {
-        const data = await fetchProtectedInfo("/devices/gateway-device"); // API endpoint
-        const deviceList = data.gateways || []; // Assuming 'gateways' is the correct property
+        const data = await fetchProtectedInfo("/devices/gateway-device");
+        const deviceList = data.gateways || [];
         setDevices(deviceList);
         if (deviceList.length > 0) {
-          setSelectedDevice(deviceList[0].deviceId); // Set the first device as the default
+          setSelectedDevice(deviceList[0].deviceId); // Default to the first device
         }
       } catch (error) {
         console.error("Error fetching devices:", error);
-        toast({ description: "Failed to fetch devices.", variant: "destructive" });
+        toast({
+          description: "Failed to fetch devices.",
+          variant: "destructive",
+        });
       } finally {
-        setLoading(false); // Stop loading devices
+        setLoading(false);
       }
     }
 
     fetchDevices();
   }, []);
 
-  // Fetch guest users when selectedDevice changes
+  // Fetch guest users for the selected device
   useEffect(() => {
-    if (!selectedDevice) return; // Do nothing if no device is selected
+    if (!selectedDevice) return;
 
     async function fetchGuestUsers() {
-      setLoadingUsers(true); // Start loading users
+      setLoadingUsers(true);
       try {
-        const data = await fetchProtectedInfo(`/devices/guest-users/${selectedDevice}`); // API endpoint
-        if (data && data.response) {
-          setGuestUsers(data.response.userobj_array || []); // Assuming the data structure
-        } else {
-          toast({
-            description: "No guest users found for this device.",
-            variant: "destructive",
-          });
-        }
+        const data = await fetchProtectedInfo(
+          `/devices/guest-users/${selectedDevice}`
+        );
+        setGuestUsers(data.guests || []); // Adjusted to match the new JSON structure
       } catch (error) {
         console.error("Error fetching guest users:", error);
         toast({
@@ -66,30 +69,71 @@ export default function AllUsers({}) {
           variant: "destructive",
         });
       } finally {
-        setLoadingUsers(false); // Stop loading users
+        setLoadingUsers(false);
       }
     }
 
     fetchGuestUsers();
   }, [selectedDevice]);
 
-  // Filter guest users based on the search query
-  const filteredUsers = guestUsers.filter((user) =>
-    user.Name.toLowerCase().includes(searchQuery.toLowerCase()) // Case-insensitive search
-  );
+  // Filter guest users based on the search query and authType
+  const filteredUsers = guestUsers.filter((user) => {
+    const matchesSearch = user.name
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+    const matchesAuthType =
+      selectedAuthType === "all" || user.authType === selectedAuthType;
+    return matchesSearch && matchesAuthType;
+  });
 
-  // Define table columns
+  // Define table columns to match the guest user data structure
   const columns = [
-    { header: "Name", accessorKey: "Name" },
-    { header: "Auth Info", accessorKey: "AuthInfo" },
-    { header: "Department", accessorKey: "Department" },
-    { header: "Policy Level", accessorKey: "PolicyLevel" },
-    { header: "MAC Address", accessorKey: "Mac" },
-    { header: "Device IP", accessorKey: "DeviceIP" },
+    { header: "Name", accessorKey: "name" },
+    { header: "SSID", accessorKey: "ssid" },
     {
-      header: "Create Time",
-      accessorKey: "CreateTime",
-      cell: (info) => new Date(info.getValue() * 1000).toLocaleString(),
+      header: "Password",
+      accessorKey: "password",
+      cell: ({ getValue }) => {
+        const [showPassword, setShowPassword] = useState(false);
+        const password = getValue();
+
+        return (
+          <div className="flex items-center space-x-2">
+            <button onClick={() => setShowPassword(!showPassword)}>
+              {showPassword ? password : "*********"}
+            </button>
+          </div>
+        );
+      },
+    },
+    {
+      header: "Auth Type",
+      accessorKey: "authType",
+      cell: ({ getValue }) => {
+        const authType = getValue();
+
+        return (
+          <div className="flex items-center space-x-2">
+            {authType === "auth" ? (
+              <LockIcon size={20} />
+            ) : authType === "coupon" ? (
+              <TicketIcon size={20} />
+            ) : (
+              <MailIcon size={20} />
+            )}
+            <span>{authType}</span>
+          </div>
+        );
+      },
+    },
+    { header: "Coupon Code", accessorKey: "couponCode" },
+    {
+      header: "Coupon Expiry",
+      accessorKey: "couponExpiry",
+      cell: (info) =>
+        info.getValue()
+          ? new Date(parseInt(info.getValue()) * 1000).toLocaleString()
+          : "Never",
     },
   ];
 
@@ -103,27 +147,58 @@ export default function AllUsers({}) {
 
   return (
     <div>
-      <div className="flex max-md:flex-col items-center justify-end gap-4 mb-4">
+      <div className="flex max-md:flex-col items-center justify-center md:justify-end gap-4 mb-4">
         {/* Search Input */}
         <Input
           className="max-w-sm bg-green-900/40"
           placeholder="Search Users..."
           value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)} // Update search query
+          onChange={(e) => setSearchQuery(e.target.value)}
         />
 
         {/* Device Select Component */}
-        <div className="md:min-w-64 max-md:w-full">
+        <div className="md:min-w-48 max-md:w-full">
           <Select value={selectedDevice} onValueChange={setSelectedDevice}>
             <SelectTrigger className="max-w-sm bg-green-900/40">
               <SelectValue placeholder="Select a device" />
             </SelectTrigger>
             <SelectContent>
               {devices.map((device) => (
-                <SelectItem key={device._id} value={device.deviceId}>
+                <SelectItem key={device.deviceId} value={device.deviceId}>
                   {device.deviceId}
                 </SelectItem>
               ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Auth Type Filter */}
+        <div className="md:min-w-48 max-md:w-full">
+          <Select value={selectedAuthType} onValueChange={setSelectedAuthType}>
+            <SelectTrigger className="max-w-sm bg-green-900/40">
+              <SelectValue placeholder="Filter by Auth Type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">
+                <span className="flex py-1 gap-2 items-center">
+                  <UserIcon size={20} /> All
+                </span>
+              </SelectItem>
+              <SelectItem value="auth">
+                <span className="flex py-1 gap-2 items-center">
+                  <LockIcon size={20} /> Auth
+                </span>
+              </SelectItem>
+              <SelectItem value="sms">
+                <span className="flex py-1 gap-2 items-center">
+                  <MailIcon size={20} /> SMS
+                </span>
+              </SelectItem>
+              <SelectItem value="coupon">
+                <span className="flex py-1 gap-2 items-center">
+                  <TicketIcon size={20} /> Coupon
+                </span>
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
