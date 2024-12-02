@@ -49,6 +49,7 @@ export default function TokenBasedForm() {
       useHour,
       couponExpiry: expiryEpoch,
       deviceId: selectedDevice,
+      authType: "token"
     };
 
     try {
@@ -61,7 +62,7 @@ export default function TokenBasedForm() {
         setExpiryDate("");
         setUseHour("");
       } else {
-        console.error("Error adding guest");
+        toast({description: "Guest added successfully", variant: "destructive"});
       }
     } catch (error) {
       console.error("Error during PUT request:", error);

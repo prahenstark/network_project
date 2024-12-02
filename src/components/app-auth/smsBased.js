@@ -42,6 +42,7 @@ export default function SMSBasedForm() {
     const payload = {
       mobile,
       deviceId: selectedDevice,
+      authType: "sms"
     };
 
     try {
@@ -52,7 +53,7 @@ export default function SMSBasedForm() {
         setMobile("");
         setSelectedDevice("");
       } else {
-        console.error("Error adding guest");
+        toast({description: "Guest added successfully", variant: "destructive"});
       }
     } catch (error) {
       console.error("Error during PUT request:", error);
