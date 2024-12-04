@@ -2,6 +2,7 @@
 
 import { createContext, useState, useEffect, useContext } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import { Loader } from "lucide-react";
 
 const AuthContext = createContext();
 
@@ -62,11 +63,23 @@ export const AuthProvider = ({ children }) => {
 
   // Render a loading state until we confirm the user's authentication status
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader className="animate-spin" />
+      </div>
+    );
   }
 
   return (
-    <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ user }}>
+      {!pathname.includes("/auth") && !user ? (
+        <div className="flex items-center justify-center min-h-screen">
+          <Loader className="animate-spin" />
+        </div>
+      ) : (
+        children
+      )}
+    </AuthContext.Provider>
   );
 };
 
