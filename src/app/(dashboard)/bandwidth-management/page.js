@@ -19,7 +19,7 @@ import { ChevronRight } from "lucide-react";
 export default function BandwidthManagement({}) {
   const [devices, setDevices] = useState([]); // State for all devices
   const [selectedDevice, setSelectedDevice] = useState(""); // State for the currently selected device
-  const [apLogsData, setApLogsData] = useState([]); // State for guest users
+  const [bandwidthData, setBandwidthData] = useState([]); // State for guest users
   const [loading, setLoading] = useState(true); // Loading state for devices
   const [loadingUsers, setLoadingUsers] = useState(false); // Loading state for guest users
   const [searchQuery, setSearchQuery] = useState(""); // Search query state
@@ -60,7 +60,7 @@ export default function BandwidthManagement({}) {
         const data = await fetchProtectedInfo(
           `/devices/bandwidth-rules/${selectedDevice}?pageSize=10&pageNo=1`
         );
-        setApLogsData(data.response.BAND_CONTROL_RULE_array || []);
+        setBandwidthData(data.response.BAND_CONTROL_RULE_array || []);
       } catch (error) {
         console.error("Error fetching logs:", error);
         toast({
@@ -149,7 +149,7 @@ export default function BandwidthManagement({}) {
         </div>
         <BandwidthTable
           columns={columns}
-          rawData={apLogsData}
+          rawData={bandwidthData}
           loading={loadingUsers}
           expandedRows={expandedRows}
           setExpandedRows={setExpandedRows}
