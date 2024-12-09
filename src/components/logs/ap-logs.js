@@ -74,22 +74,6 @@ export default function ApLogs({}) {
     fetchApLogs();
   }, [selectedDevice]);
 
-// useEffect(() => {
-//   console.log("Updated apLogsData:", apLogsData);
-// }, [apLogsData]);
-
-
-  // Filter guest users based on the search query and authType
-  //   const filteredUsers = apLogsData.filter((user) => {
-  //     const matchesSearch = user.name
-  //       .toLowerCase()
-  //       .includes(searchQuery.toLowerCase());
-  //     const matchesAuthType =
-  //       selectedAuthType === "all" || user.authType === selectedAuthType;
-  //     return matchesSearch && matchesAuthType;
-  //   });
-
-  // Define table columns to match the guest user data structure
   const columns = [
     { header: "Time", accessorKey: "Time" },
     { header: "Type", accessorKey: "Type" },

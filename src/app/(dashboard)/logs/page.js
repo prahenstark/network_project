@@ -17,7 +17,7 @@ export default function Logs() {
 
   return (
     <div>
-      <Navbar title="Authentication" />
+      <Navbar title="Logs" />
 
       <div className="min-h-screen flex flex-col p-6">
         {/* Navbar for Tab Controls */}
