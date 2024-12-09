@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import Navbar from "@/components/navbar";
 import { InfoIcon, Wifi } from "lucide-react";
