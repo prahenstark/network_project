@@ -20,6 +20,7 @@ import { useUIState } from "@/hooks/use-uiState";
 import { RouterIcon } from "lucide-react";
 import { MonitorSmartphoneIcon } from "lucide-react";
 import { NetworkIcon } from "lucide-react";
+import { LogsIcon } from "lucide-react";
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -42,6 +43,7 @@ export default function Sidebar() {
       { href: "/projects", icon: FolderIcon },
       // { href: "/maintainance", icon: ShieldAlertIcon },
       { href: "/app-auth", icon: LockIcon },
+      { href: "/logs", icon: LogsIcon },
     ];
     if (user && user.role === "vendor") {
       items.push({ href: "/accounts", icon: UsersIcon });
