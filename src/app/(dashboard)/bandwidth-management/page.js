@@ -10,7 +10,7 @@ import {
 import { useEffect, useState } from "react";
 import { fetchProtectedInfo } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
-import ApLogsTable from "@/components/logs/ap-logs-table";
+import ApLogsTable from "@/components/logs/logs-table";
 import { Input } from "@/components/ui/input";
 import Navbar from "@/components/navbar";
 import BandwidthTable from "@/components/bandwidth-management/bandwidth-table";

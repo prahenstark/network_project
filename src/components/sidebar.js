@@ -89,7 +89,7 @@ export default function Sidebar() {
                 {/* Change bg color if active */}
                 <div
                   className={`h-10 w-1 ml-auto rounded-tl-md rounded-bl-md ${
-                    pathname === item.href ? "bg-primary" : ""
+                    pathname.startsWith(item.href) ? "bg-primary" : ""
                   }`}
                 />
               </div>
