@@ -11,12 +11,12 @@ import {
 import { useEffect, useState } from "react";
 import { fetchProtectedInfo } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
-import LogsTable from "@/components/logs/logs-table";
+import ApLogsTable from "@/components/logs/logs-table";
 
-export default function SystemLogs() {
+export default function AcLogs() {
   const [devices, setDevices] = useState([]); // State for all devices
   const [selectedDevice, setSelectedDevice] = useState(""); // Currently selected device
-  const [systemLogsData, setSystemLogsData] = useState([]); // Logs data
+  const [apLogsData, setApLogsData] = useState([]); // Logs data
   const [loading, setLoading] = useState(true); // Loading state for devices
   const [loadingLogs, setLoadingLogs] = useState(false); // Loading state for logs
   const [searchQuery, setSearchQuery] = useState(""); // Search query
@@ -46,17 +46,17 @@ export default function SystemLogs() {
     fetchDevices();
   }, []);
 
-  // Fetch system logs for the selected device
+  // Fetch logs for the selected device
   useEffect(() => {
     if (!selectedDevice) return;
 
-    async function fetchSystemLogs() {
+    async function fetchApLogs() {
       setLoadingLogs(true);
       try {
         const data = await fetchProtectedInfo(
-          `/devices/system-logs/${selectedDevice}?pageSize=10&pageNo=1`
+          `/devices/ac-logs/${selectedDevice}?pageSize=10&pageNo=1`
         );
-        setSystemLogsData(data.response.log_array || []);
+        setApLogsData(data.response.log_array || []);
       } catch (error) {
         console.error("Error fetching logs:", error);
         toast({
@@ -68,7 +68,7 @@ export default function SystemLogs() {
       }
     }
 
-    fetchSystemLogs();
+    fetchApLogs();
   }, [selectedDevice]);
 
   // Define table columns
@@ -87,7 +87,7 @@ export default function SystemLogs() {
   }
 
   // Filter logs based on the search query
-  const filteredLogs = systemLogsData.filter((log) =>
+  const filteredLogs = apLogsData.filter((log) =>
     log.Info.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -96,7 +96,7 @@ export default function SystemLogs() {
       <div className="flex max-md:flex-col items-center justify-center md:justify-end gap-4 mb-4">
         <Input
           className="max-w-sm bg-green-900/40"
-          placeholder="Search Logs..."
+          placeholder="Search AC Logs..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
@@ -117,11 +117,11 @@ export default function SystemLogs() {
         </div>
       </div>
 
-      <LogsTable
+      <ApLogsTable
         columns={columns}
         rawData={filteredLogs}
         loading={loadingLogs}
-        rowClassName={(index) => (index % 2 === 0 ? "bg-blue-100/5" : "")}
+        rowClassName={(index) => (index % 2 === 0 ? "bg-green-100/5" : "")}
       />
     </div>
   );

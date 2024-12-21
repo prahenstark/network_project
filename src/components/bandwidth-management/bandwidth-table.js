@@ -17,18 +17,19 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-export default function AcLogsTable({
+export default function BandwidthTable({
   columns = [],
   rawData,
   loading,
   rowClassName,
+  expandedRows,
+  setExpandedRows,
 }) {
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
   const [rowSelection, setRowSelection] = useState({});
 
-  // Transform raw data into rows
   const data = rawData || [];
 
   const table = useReactTable({
@@ -74,20 +75,54 @@ export default function AcLogsTable({
             <TableBody>
               {table.getRowModel()?.rows?.length ? (
                 table.getRowModel().rows.map((row, index) => (
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && "selected"}
-                    className={rowClassName ? rowClassName(index) : ""}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
+                  <React.Fragment key={row.id}>
+                    <TableRow
+                      data-state={row.getIsSelected() && "selected"}
+                      className={rowClassName ? rowClassName(index) : ""}
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell key={cell.id}>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                    {expandedRows.includes(index) && (
+                      <TableRow>
+                        <td
+                          colSpan={columns.length}
+                          className=" p-2 rounded-md border border-green-500 "
+                        >
+                          <div className="mt-2">
+                            <table className="table-auto w-full text-left text-sm">
+                              <thead>
+                                <tr>
+                                  {Object.keys(row.original.Obj).map((key) => (
+                                    <th key={key} className="border px-2 py-1">
+                                      {key}
+                                    </th>
+                                  ))}
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr>
+                                  {Object.values(row.original.Obj).map(
+                                    (value, i) => (
+                                      <td key={i} className="border px-2 py-1">
+                                        {value}
+                                      </td>
+                                    )
+                                  )}
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </td>
+                      </TableRow>
+                    )}
+                  </React.Fragment>
                 ))
               ) : (
                 <TableRow>

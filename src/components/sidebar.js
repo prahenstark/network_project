@@ -21,6 +21,7 @@ import { RouterIcon } from "lucide-react";
 import { MonitorSmartphoneIcon } from "lucide-react";
 import { NetworkIcon } from "lucide-react";
 import { LogsIcon } from "lucide-react";
+import { Cast } from "lucide-react";
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -44,6 +45,7 @@ export default function Sidebar() {
       // { href: "/maintainance", icon: ShieldAlertIcon },
       { href: "/app-auth", icon: LockIcon },
       { href: "/logs", icon: LogsIcon },
+      { href: "/bandwidth-management", icon: Cast },
     ];
     if (user && user.role === "vendor") {
       items.push({ href: "/accounts", icon: UsersIcon });
@@ -87,7 +89,7 @@ export default function Sidebar() {
                 {/* Change bg color if active */}
                 <div
                   className={`h-10 w-1 ml-auto rounded-tl-md rounded-bl-md ${
-                    pathname === item.href ? "bg-primary" : ""
+                    pathname.startsWith(item.href) ? "bg-primary" : ""
                   }`}
                 />
               </div>

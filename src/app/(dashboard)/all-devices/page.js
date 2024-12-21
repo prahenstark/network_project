@@ -73,13 +73,16 @@ export default function AllDevices() {
             </div>
           ) : (
             <>
-              <ToggleHeader pageName="All Device List" className="px-6 pt-8 max-md:mb-6">
+              <ToggleHeader
+                pageName="All Device List"
+                className="px-6 pt-8 max-md:mb-6"
+              >
                 <div className="md:min-w-64 max-md:w-full">
                   <Select
                     value={mode}
                     onValueChange={setMode} // Update state on change
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="bg-green-900/40">
                       <SelectValue placeholder="Select Mode" />
                     </SelectTrigger>
                     <SelectContent>
