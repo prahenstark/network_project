@@ -94,9 +94,23 @@ export default function Home() {
 
   const [recentData, setRecentData] = useState([]);
 
-  useEffect(() => {
-    setChartData(ipData);
-  }, []);
+  //TODO: remove hardcoded deviceId and replace with device dropdown
+  const deviceId = "Y21220041165";
+
+  const fetchChartData = async () => {
+    try{
+      const res = await axios.get(`${API_URL}/devices/ip-real-stream-graph/${deviceId}?pageSize=10&pageNo=1`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log("res", res.data.response);
+      setChartData(res.data.response);
+    }
+    catch (error) {
+      console.log("Failed to fetch recent data:", error);
+    }
+  };
 
   const fetchRecentData = async () => {
     try {
@@ -126,6 +140,7 @@ export default function Home() {
     };
     fetchRecentData();
     getData();
+    fetchChartData();
   }, []);
 
   // Data and configuration for User Activity (Line Chart)
