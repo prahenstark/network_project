@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import Navbar from "@/components/navbar";
 import { InfoIcon, Wifi } from "lucide-react";
 import { Line, Doughnut } from "react-chartjs-2";
@@ -28,6 +28,10 @@ import { Siren } from "lucide-react";
 import Link from "next/link";
 import axios from "axios";
 import { MapPin } from "lucide-react";
+import ByteSendReciveChart from "@/components/charts/byte-send-recieve-chart";
+import TrafficProtocolBreakDownPie from "@/components/charts/traffic-protocol-breakdown-pie";
+import TrafficStreamBreakDownChart from "@/components/charts/traffic-stream-breakdown-chart";
+import SendRecvRateChart from "@/components/charts/send-rate-vs-receive-rate-scatter";
 
 ChartJS.register(
   CategoryScale,
@@ -40,12 +44,73 @@ ChartJS.register(
   ArcElement // For Doughnut chart
 );
 
+const ipData = [
+  {
+      Ip: "192.168.10.52",
+      Streams: [
+          { SndBytes: "0", RcvBytes: "0", SendRate: 0, RecvRate: 0 },
+          { SndBytes: "18772074", RcvBytes: "0", SendRate: 146, RecvRate: 0 },
+          { SndBytes: "0", RcvBytes: "0", SendRate: 0, RecvRate: 0 },
+          { SndBytes: "0", RcvBytes: "0", SendRate: 0, RecvRate: 0 },
+          { SndBytes: "0", RcvBytes: "0", SendRate: 0, RecvRate: 0 },
+          { SndBytes: "0", RcvBytes: "0", SendRate: 0, RecvRate: 0 }
+      ],
+      TCPCount: 0,
+      UDPCount: 2
+  },
+  {
+      Ip: "192.168.10.51",
+      Streams: [
+          { SndBytes: "0", RcvBytes: "0", SendRate: 0, RecvRate: 0 },
+          { SndBytes: "18403590", RcvBytes: "0", SendRate: 146, RecvRate: 0 },
+          { SndBytes: "0", RcvBytes: "0", SendRate: 0, RecvRate: 0 },
+          { SndBytes: "0", RcvBytes: "0", SendRate: 0, RecvRate: 0 },
+          { SndBytes: "0", RcvBytes: "0", SendRate: 0, RecvRate: 0 },
+          { SndBytes: "0", RcvBytes: "0", SendRate: 0, RecvRate: 0 }
+      ],
+      TCPCount: 0,
+      UDPCount: 2
+  },
+  {
+      Ip: "192.168.10.57",
+      Streams: [
+          { SndBytes: "0", RcvBytes: "0", SendRate: 0, RecvRate: 0 },
+          { SndBytes: "30447965", RcvBytes: "0", SendRate: 0, RecvRate: 0 },
+          { SndBytes: "0", RcvBytes: "0", SendRate: 0, RecvRate: 0 },
+          { SndBytes: "0", RcvBytes: "0", SendRate: 0, RecvRate: 0 },
+          { SndBytes: "0", RcvBytes: "0", SendRate: 0, RecvRate: 0 },
+          { SndBytes: "25882418", RcvBytes: "154153491", SendRate: 0, RecvRate: 0 }
+      ],
+      TCPCount: 13,
+      UDPCount: 34
+  }
+];
+
 export default function Home() {
   const [dashboardData, setDashboardData] = useState(null); // State to hold the dashboard data
   const [loading, setLoading] = useState(true); // State to handle loading
+  const [chartData, setChartData] = useState(null); // State to hold the chart data
   const token = localStorage.getItem("bearerToken");
 
   const [recentData, setRecentData] = useState([]);
+
+  //TODO: remove hardcoded deviceId and replace with device dropdown
+  const deviceId = "Y21220041165";
+
+  const fetchChartData = async () => {
+    try{
+      const res = await axios.get(`${API_URL}/devices/ip-real-stream-graph/${deviceId}?pageSize=10&pageNo=1`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log("res", res.data.response);
+      setChartData(res.data.response);
+    }
+    catch (error) {
+      console.log("Failed to fetch recent data:", error);
+    }
+  };
 
   const fetchRecentData = async () => {
     try {
@@ -75,6 +140,7 @@ export default function Home() {
     };
     fetchRecentData();
     getData();
+    fetchChartData();
   }, []);
 
   // Data and configuration for User Activity (Line Chart)
@@ -405,23 +471,32 @@ export default function Home() {
           </div>
 
           {/* Chart Sections */}
-          <div className="px-6 sm:px-12 mt-10 lg:flex gap-6">
+          <div className="px-6 sm:px-12 mt-10 flex flex-col gap-6">
+            {/* Total Bytes Chart */}
+            <ByteSendReciveChart ipData={chartData} />
+            {/* Traffic Stream Breakdown */}
+            <TrafficStreamBreakDownChart ipData={chartData} />
+            {/* Send vs Receive Rate */}
+            <SendRecvRateChart ipData={chartData} />
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Device Statistics Section */}
+                <div className="space-y-6 flex-1 sm:flex-[1] bg-white/5 p-6 border rounded-xl">
+                  <div className="flex justify-between items-center">
+                    <h1 className="text-2xl py-2">Device Statistics</h1>
+                    <InfoIcon />
+                  </div>
+                  <div className="project-card flex justify-center items-center flex-1 p-6 border rounded-xl ">
+                    <Doughnut data={deviceStatisticsData} />
+                  </div>
+                </div>
+                 {/* Protocol Distribution */}
+                 <TrafficProtocolBreakDownPie ipData={chartData}/>
+              </div>
             {/* User Activity Section */}
             <div className="space-y-6 flex-1 flex flex-col lg:flex-[1.5]">
               <h1 className="text-2xl py-2">User Activity</h1>
               <div className="project-card flex justify-center items-center flex-1 p-6 bg-white/5 border rounded-xl hover:bg-white/10 transition">
                 <Line data={userActivityData} options={userActivityOptions} />
-              </div>
-            </div>
-
-            {/* Device Statistics Section */}
-            <div className="space-y-6 flex-1 sm:flex-[1]">
-              <div className="flex justify-between items-center">
-                <h1 className="text-2xl py-2">Device Statistics</h1>
-                <InfoIcon />
-              </div>
-              <div className="project-card flex justify-center items-center flex-1 p-6 bg-white/5 border rounded-xl hover:bg-white/10 transition">
-                <Doughnut data={deviceStatisticsData} />
               </div>
             </div>
           </div>
