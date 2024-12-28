@@ -18,6 +18,8 @@ export default function SMSBasedForm() {
   const [devices, setDevices] = useState([]);
   const [mobile, setMobile] = useState(""); // State for mobile number
   const [selectedDevice, setSelectedDevice] = useState(""); // State for selected device
+  const [selectedSMSType, setSelectedSMSType] = useState("closed"); // State for SMS type
+  const [usageHours, setUsageHours] = useState(""); // State for number of hours
   const { toast } = useToast();
 
   // Fetch devices on component mount
@@ -40,20 +42,27 @@ export default function SMSBasedForm() {
 
     // Prepare data for the API call
     const payload = {
-      mobile,
       deviceId: selectedDevice,
-      authType: "sms"
+      authType: "sms",
+      ...(selectedSMSType === "open"
+        ? { usageHours }
+        : { mobile }),
     };
 
     try {
-      const response = await fetchProtectedInfo(`/devices/add-guest/${selectedDevice}`, 'PUT', payload);
+      const response = await fetchProtectedInfo(
+        `/devices/add-guest/${selectedDevice}`,
+        "PUT",
+        payload
+      );
 
       if (response) {
-        toast({description: "Guest added successfully"});
+        toast({ description: "Guest added successfully" });
         setMobile("");
+        setUsageHours("");
         setSelectedDevice("");
       } else {
-        toast({description: "Guest added successfully", variant: "destructive"});
+        toast({ description: "Failed to add guest", variant: "destructive" });
       }
     } catch (error) {
       console.error("Error during PUT request:", error);
@@ -81,13 +90,37 @@ export default function SMSBasedForm() {
             </Select>
           </div>
           <div>
-            <Label className="block mb-2">Mobile</Label>
-            <Input
-              value={mobile}
-              onChange={(e) => setMobile(e.target.value)}
-              placeholder="Enter mobile number"
-            />
+            <Label className="block mb-2">Select SMS Type</Label>
+            <Select required value={selectedSMSType} onValueChange={setSelectedSMSType}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select the type of SMS" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="open">Open SMS</SelectItem>
+                <SelectItem value="closed">Closed SMS</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
+          {selectedSMSType === "open" ? (
+            <div>
+              <Label className="block mb-2">Usage Hours</Label>
+              <Input
+                type="number"
+                value={usageHours}
+                onChange={(e) => setUsageHours(e.target.value)}
+                placeholder="Enter number of hours"
+              />
+            </div>
+          ) : (
+            <div>
+              <Label className="block mb-2">Mobile</Label>
+              <Input
+                value={mobile}
+                onChange={(e) => setMobile(e.target.value)}
+                placeholder="Enter mobile number"
+              />
+            </div>
+          )}
           <Button className="w-full" type="submit">
             Create
           </Button>

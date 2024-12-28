@@ -89,7 +89,7 @@ const ipData = [
 export default function Home() {
   const [dashboardData, setDashboardData] = useState(null); // State to hold the dashboard data
   const [loading, setLoading] = useState(true); // State to handle loading
-  const [chartData, setChartData] = useState(null); // State to hold the chart data
+  const [chartData, setChartData] = useState([]); // State to hold the chart data
   const token = localStorage.getItem("bearerToken");
 
   const [recentData, setRecentData] = useState([]);
