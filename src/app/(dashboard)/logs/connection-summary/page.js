@@ -12,30 +12,35 @@ import { useEffect, useState } from "react";
 import { fetchProtectedInfo } from "@/lib/api"; // Ensure this is implemented correctly
 import { useToast } from "@/hooks/use-toast";
 import ConnectionSummaryTable from "@/components/logs/logs-table"; // Assuming you'll reuse the same table component
+import { useLogDevice } from "@/context/log-device-provider";
 
 export default function ConnectionSummary() {
   const [devices, setDevices] = useState([]); // State for all devices
   const [selectedDevice, setSelectedDevice] = useState(""); // State for the currently selected device
   const [connectionSummaryData, setConnectionSummaryData] = useState([]); // State for connection summary data
   const [filteredSummary, setFilteredSummary] = useState([]); // State for filtered summary data
-  const [loading, setLoading] = useState(true); // Loading state for devices
-  const [loadingSummary, setLoadingSummary] = useState(false); // Loading state for connection summary data
+  const [loading, setLoading] = useState(false); // Loading state for connection summary data
   const [searchQuery, setSearchQuery] = useState(""); // Search query state
+  const { selectedLogDevice } = useLogDevice();
   const { toast } = useToast();
 
   useEffect(() => {
-    async function fetchDevices() {
+    if (!selectedLogDevice) return;
+
+    async function fetchConnectionSummary() {
+      setLoading(true);
       try {
-        const data = await fetchProtectedInfo("/devices/gateway-device");
-        const deviceList = data.gateways || [];
-        setDevices(deviceList);
-        if (deviceList.length > 0) {
-          setSelectedDevice(deviceList[0].deviceId); // Default to the first device
-        }
+        const data = await fetchProtectedInfo(
+          `/devices/connection-summary/${selectedLogDevice}?pageSize=10&pageNo=1`
+        );
+        const summary = data.response.trace_info_array || [];
+        setConnectionSummaryData(summary);
+        setFilteredSummary(summary); // Initialize filtered summary
       } catch (error) {
-        console.error("Error fetching devices:", error);
+        setConnectionSummaryData([]);
+        console.error("Error fetching connection summary:", error);
         toast({
-          description: "Failed to fetch devices.",
+          description: "Failed to fetch connection summary.",
           variant: "destructive",
         });
       } finally {
@@ -43,34 +48,8 @@ export default function ConnectionSummary() {
       }
     }
 
-    fetchDevices();
-  }, []);
-
-  useEffect(() => {
-    if (!selectedDevice) return;
-
-    async function fetchConnectionSummary() {
-      setLoadingSummary(true);
-      try {
-        const data = await fetchProtectedInfo(
-          `/devices/connection-summary/${selectedDevice}?pageSize=10&pageNo=1`
-        );
-        const summary = data.response.trace_info_array || [];
-        setConnectionSummaryData(summary);
-        setFilteredSummary(summary); // Initialize filtered summary
-      } catch (error) {
-        console.error("Error fetching connection summary:", error);
-        toast({
-          description: "Failed to fetch connection summary.",
-          variant: "destructive",
-        });
-      } finally {
-        setLoadingSummary(false);
-      }
-    }
-
     fetchConnectionSummary();
-  }, [selectedDevice]);
+  }, [selectedLogDevice]);
 
   // Filter connection summary based on the search query
   useEffect(() => {
@@ -92,40 +71,16 @@ export default function ConnectionSummary() {
     return <div>Loading devices...</div>;
   }
 
-  if (!devices.length) {
+  if (!selectedLogDevice) {
     return <div>No devices available.</div>;
   }
 
   return (
     <div>
-      <div className="flex max-md:flex-col items-center justify-center md:justify-end gap-4 mb-4">
-        <Input
-          className="max-w-sm bg-green-900/40"
-          placeholder="Search Connection Summary..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-
-        <div className="md:min-w-48 max-md:w-full">
-          <Select value={selectedDevice} onValueChange={setSelectedDevice}>
-            <SelectTrigger className="max-w-sm bg-green-900/40">
-              <SelectValue placeholder="Select a device" />
-            </SelectTrigger>
-            <SelectContent>
-              {devices.map((device) => (
-                <SelectItem key={device.deviceId} value={device.deviceId}>
-                  {device.deviceId}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
-
       <ConnectionSummaryTable
         columns={columns}
         rawData={filteredSummary}
-        loading={loadingSummary}
+        loading={loading}
         rowClassName={(index) => (index % 2 === 0 ? "bg-green-100/5" : "")}
       />
     </div>

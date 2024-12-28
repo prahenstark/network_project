@@ -12,30 +12,57 @@ import { useEffect, useState } from "react";
 import { fetchProtectedInfo } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 import ApLogsTable from "@/components/logs/logs-table";
+import { useLogDevice } from "@/context/log-device-provider";
 
 export default function AcLogs() {
   const [devices, setDevices] = useState([]); // State for all devices
   const [selectedDevice, setSelectedDevice] = useState(""); // Currently selected device
-  const [apLogsData, setApLogsData] = useState([]); // Logs data
-  const [loading, setLoading] = useState(true); // Loading state for devices
-  const [loadingLogs, setLoadingLogs] = useState(false); // Loading state for logs
+  const [acLogsData, setAcLogsData] = useState([]); // Logs data
+  const [loading, setLoading] = useState(false); // Loading state for logs
   const [searchQuery, setSearchQuery] = useState(""); // Search query
+  const { selectedLogDevice } = useLogDevice();
   const { toast } = useToast();
 
   // Fetch devices on component mount
+  // useEffect(() => {
+  //   async function fetchDevices() {
+  //     try {
+  //       const data = await fetchProtectedInfo("/devices/gateway-device");
+  //       const deviceList = data.gateways || [];
+  //       setDevices(deviceList);
+  //       if (deviceList.length > 0) {
+  //         setSelectedDevice(deviceList[0].deviceId); // Default to the first device
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching devices:", error);
+  //       toast({
+  //         description: "Failed to fetch devices.",
+  //         variant: "destructive",
+  //       });
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   }
+
+  //   fetchDevices();
+  // }, []);
+
+  // Fetch logs for the selected device
   useEffect(() => {
-    async function fetchDevices() {
+    if (!selectedLogDevice) return;
+
+    async function fetchApLogs() {
+      setLoading(true);
       try {
-        const data = await fetchProtectedInfo("/devices/gateway-device");
-        const deviceList = data.gateways || [];
-        setDevices(deviceList);
-        if (deviceList.length > 0) {
-          setSelectedDevice(deviceList[0].deviceId); // Default to the first device
-        }
+        const data = await fetchProtectedInfo(
+          `/devices/ac-logs/${selectedLogDevice}?pageSize=10&pageNo=1`
+        );
+        setAcLogsData(data.response.log_array || []);
       } catch (error) {
-        console.error("Error fetching devices:", error);
+        setAcLogsData([]);
+        console.error("Error fetching logs:", error);
         toast({
-          description: "Failed to fetch devices.",
+          description: "Failed to fetch logs.",
           variant: "destructive",
         });
       } finally {
@@ -43,33 +70,8 @@ export default function AcLogs() {
       }
     }
 
-    fetchDevices();
-  }, []);
-
-  // Fetch logs for the selected device
-  useEffect(() => {
-    if (!selectedDevice) return;
-
-    async function fetchApLogs() {
-      setLoadingLogs(true);
-      try {
-        const data = await fetchProtectedInfo(
-          `/devices/ac-logs/${selectedDevice}?pageSize=10&pageNo=1`
-        );
-        setApLogsData(data.response.log_array || []);
-      } catch (error) {
-        console.error("Error fetching logs:", error);
-        toast({
-          description: "Failed to fetch logs.",
-          variant: "destructive",
-        });
-      } finally {
-        setLoadingLogs(false);
-      }
-    }
-
     fetchApLogs();
-  }, [selectedDevice]);
+  }, [selectedLogDevice]);
 
   // Define table columns
   const columns = [
@@ -82,45 +84,21 @@ export default function AcLogs() {
     return <div>Loading devices...</div>;
   }
 
-  if (!devices.length) {
+  if (!selectedLogDevice) {
     return <div>No devices available.</div>;
   }
 
   // Filter logs based on the search query
-  const filteredLogs = apLogsData.filter((log) =>
+  const filteredLogs = acLogsData.filter((log) =>
     log.Info.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
     <div>
-      <div className="flex max-md:flex-col items-center justify-center md:justify-end gap-4 mb-4">
-        <Input
-          className="max-w-sm bg-green-900/40"
-          placeholder="Search AC Logs..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-
-        <div className="md:min-w-48 max-md:w-full">
-          <Select value={selectedDevice} onValueChange={setSelectedDevice}>
-            <SelectTrigger className="max-w-sm bg-green-900/40">
-              <SelectValue placeholder="Select a device" />
-            </SelectTrigger>
-            <SelectContent>
-              {devices.map((device) => (
-                <SelectItem key={device.deviceId} value={device.deviceId}>
-                  {device.deviceId}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
-
       <ApLogsTable
         columns={columns}
         rawData={filteredLogs}
-        loading={loadingLogs}
+        loading={loading}
         rowClassName={(index) => (index % 2 === 0 ? "bg-green-100/5" : "")}
       />
     </div>

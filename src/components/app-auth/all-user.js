@@ -16,6 +16,7 @@ import { LockIcon } from "lucide-react";
 import { MailIcon } from "lucide-react";
 import { UserIcon } from "lucide-react";
 import { TicketIcon } from "lucide-react";
+import { Button } from "../ui/button";
 
 export default function AllUsers({}) {
   const [devices, setDevices] = useState([]); // State for all devices
@@ -86,6 +87,39 @@ export default function AllUsers({}) {
     return matchesSearch && matchesAuthType;
   });
 
+  const handleDeleteUser = async (user) => {
+    const apiData = user._id;
+    console.log("User", apiData);
+
+    try {
+      const response = await fetchProtectedInfo(
+        `/devices/delete-guest/${apiData}`,
+        "DELETE"
+      );
+
+      if (response) {
+        toast({
+          title: "Guest User removed!",
+          description: "Successfully removed guest user.",
+        });
+      } else {
+        toast({
+          title: "Error",
+          variant: "destructive",
+          description: "Failed to remove guest user.",
+        });
+      }
+
+      refreshAction();
+    } catch (error) {
+      toast({
+        title: "Error",
+        variant: "destructive",
+        description: "Something went wrong. Please try again later.",
+      });
+    }
+  };
+
   // Define table columns to match the guest user data structure
   const columns = [
     { header: "Name", accessorKey: "name" },
@@ -134,6 +168,22 @@ export default function AllUsers({}) {
         info.getValue()
           ? new Date(parseInt(info.getValue()) * 1000).toLocaleString()
           : "Never",
+    },
+    {
+      id: "config",
+      enableHiding: false,
+      header: "Config",
+      cell: ({ row }) => {
+        return (
+          <Button
+            variant="destructive"
+            size="sm"
+            onClick={() => handleDeleteUser(row.original)}
+          >
+            Delete User
+          </Button>
+        );
+      },
     },
   ];
 

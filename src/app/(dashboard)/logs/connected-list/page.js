@@ -12,30 +12,35 @@ import { useEffect, useState } from "react";
 import { fetchProtectedInfo } from "@/lib/api"; // Ensure this is implemented correctly
 import { useToast } from "@/hooks/use-toast";
 import ConnectionListTable from "@/components/logs/logs-table"; // Assuming you'll reuse the same table component
+import { useLogDevice } from "@/context/log-device-provider";
 
 export default function ConnectedList() {
   const [devices, setDevices] = useState([]); // State for all devices
   const [selectedDevice, setSelectedDevice] = useState(""); // State for the currently selected device
   const [connectionListData, setConnectionListData] = useState([]); // State for connection list data
   const [filteredConnections, setFilteredConnections] = useState([]); // State for filtered connection list
-  const [loading, setLoading] = useState(true); // Loading state for devices
-  const [loadingConnections, setLoadingConnections] = useState(false); // Loading state for connection data
+  const [loading, setLoading] = useState(false); // Loading state for connection data
   const [searchQuery, setSearchQuery] = useState(""); // Search query state
+  const { selectedLogDevice } = useLogDevice();
   const { toast } = useToast();
 
   useEffect(() => {
-    async function fetchDevices() {
+    if (!selectedLogDevice) return;
+
+    async function fetchConnectionList() {
+      setLoading(true);
       try {
-        const data = await fetchProtectedInfo("/devices/gateway-device");
-        const deviceList = data.gateways || [];
-        setDevices(deviceList);
-        if (deviceList.length > 0) {
-          setSelectedDevice(deviceList[0].deviceId); // Default to the first device
-        }
+        const data = await fetchProtectedInfo(
+          `/devices/connection-list/${selectedLogDevice}?pageSize=10&pageNo=1`
+        );
+        const connections = data.response.trace_info_array || [];
+        setConnectionListData(connections);
+        setFilteredConnections(connections); // Initialize filtered connections
       } catch (error) {
-        console.error("Error fetching devices:", error);
+        setConnectionListData([]);
+        console.error("Error fetching connection list:", error);
         toast({
-          description: "Failed to fetch devices.",
+          description: "Failed to fetch connection list.",
           variant: "destructive",
         });
       } finally {
@@ -43,41 +48,16 @@ export default function ConnectedList() {
       }
     }
 
-    fetchDevices();
-  }, []);
-
-  useEffect(() => {
-    if (!selectedDevice) return;
-
-    async function fetchConnectionList() {
-      setLoadingConnections(true);
-      try {
-        const data = await fetchProtectedInfo(
-          `/devices/connection-list/${selectedDevice}?pageSize=10&pageNo=1`
-        );
-        const connections = data.response.trace_info_array || [];
-        setConnectionListData(connections);
-        setFilteredConnections(connections); // Initialize filtered connections
-      } catch (error) {
-        console.error("Error fetching connection list:", error);
-        toast({
-          description: "Failed to fetch connection list.",
-          variant: "destructive",
-        });
-      } finally {
-        setLoadingConnections(false);
-      }
-    }
-
     fetchConnectionList();
-  }, [selectedDevice]);
+  }, [selectedLogDevice]);
 
   // Filter connection list based on the search query
   useEffect(() => {
     const filtered = connectionListData.filter(
       (connection) =>
-        connection.TraceInfo.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        String(connection.Time).includes(searchQuery)
+        connection.TraceInfo.toLowerCase().includes(
+          searchQuery.toLowerCase()
+        ) || String(connection.Time).includes(searchQuery)
     );
     setFilteredConnections(filtered);
   }, [searchQuery, connectionListData]);
@@ -92,40 +72,16 @@ export default function ConnectedList() {
     return <div>Loading devices...</div>;
   }
 
-  if (!devices.length) {
+  if (!selectedLogDevice) {
     return <div>No devices available.</div>;
   }
 
   return (
     <div>
-      <div className="flex max-md:flex-col items-center justify-center md:justify-end gap-4 mb-4">
-        <Input
-          className="max-w-sm bg-green-900/40"
-          placeholder="Search Connections..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-
-        <div className="md:min-w-48 max-md:w-full">
-          <Select value={selectedDevice} onValueChange={setSelectedDevice}>
-            <SelectTrigger className="max-w-sm bg-green-900/40">
-              <SelectValue placeholder="Select a device" />
-            </SelectTrigger>
-            <SelectContent>
-              {devices.map((device) => (
-                <SelectItem key={device.deviceId} value={device.deviceId}>
-                  {device.deviceId}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
-
       <ConnectionListTable
         columns={columns}
         rawData={filteredConnections}
-        loading={loadingConnections}
+        loading={loading}
         rowClassName={(index) => (index % 2 === 0 ? "bg-green-100/5" : "")}
       />
     </div>

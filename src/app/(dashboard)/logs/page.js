@@ -12,30 +12,36 @@ import { useEffect, useState } from "react";
 import { fetchProtectedInfo } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 import LogsTable from "@/components/logs/logs-table";
+import { useLogDevice } from "@/context/log-device-provider";
 
 export default function SystemLogs() {
   const [devices, setDevices] = useState([]); // State for all devices
   const [selectedDevice, setSelectedDevice] = useState(""); // Currently selected device
   const [systemLogsData, setSystemLogsData] = useState([]); // Logs data
-  const [loading, setLoading] = useState(true); // Loading state for devices
-  const [loadingLogs, setLoadingLogs] = useState(false); // Loading state for logs
+  const [loading, setLoading] = useState(false); // Loading state for logs
   const [searchQuery, setSearchQuery] = useState(""); // Search query
+  const { selectedLogDevice } = useLogDevice();
   const { toast } = useToast();
 
-  // Fetch devices on component mount
+  // Fetch system logs for the selected device
   useEffect(() => {
-    async function fetchDevices() {
+    if (!selectedLogDevice) {
+      return;
+    }
+
+    async function fetchSystemLogs() {
+      setLoading(true);
       try {
-        const data = await fetchProtectedInfo("/devices/gateway-device");
-        const deviceList = data.gateways || [];
-        setDevices(deviceList);
-        if (deviceList.length > 0) {
-          setSelectedDevice(deviceList[0].deviceId); // Default to the first device
-        }
+        const data = await fetchProtectedInfo(
+          `/devices/system-logs/${selectedLogDevice}?pageSize=10&pageNo=1`
+        );
+        setSystemLogsData(data.response.log_array || []);
+        setLoading(false);
       } catch (error) {
-        console.error("Error fetching devices:", error);
+        setSystemLogsData([]);
+        console.error("Error fetching logs:", error);
         toast({
-          description: "Failed to fetch devices.",
+          description: "Failed to fetch logs.",
           variant: "destructive",
         });
       } finally {
@@ -43,33 +49,8 @@ export default function SystemLogs() {
       }
     }
 
-    fetchDevices();
-  }, []);
-
-  // Fetch system logs for the selected device
-  useEffect(() => {
-    if (!selectedDevice) return;
-
-    async function fetchSystemLogs() {
-      setLoadingLogs(true);
-      try {
-        const data = await fetchProtectedInfo(
-          `/devices/system-logs/${selectedDevice}?pageSize=10&pageNo=1`
-        );
-        setSystemLogsData(data.response.log_array || []);
-      } catch (error) {
-        console.error("Error fetching logs:", error);
-        toast({
-          description: "Failed to fetch logs.",
-          variant: "destructive",
-        });
-      } finally {
-        setLoadingLogs(false);
-      }
-    }
-
     fetchSystemLogs();
-  }, [selectedDevice]);
+  }, [selectedLogDevice]);
 
   // Define table columns
   const columns = [
@@ -82,7 +63,7 @@ export default function SystemLogs() {
     return <div>Loading devices...</div>;
   }
 
-  if (!devices.length) {
+  if (!selectedLogDevice) {
     return <div>No devices available.</div>;
   }
 
@@ -93,7 +74,7 @@ export default function SystemLogs() {
 
   return (
     <div>
-      <div className="flex max-md:flex-col items-center justify-center md:justify-end gap-4 mb-4">
+      {/* <div className="flex max-md:flex-col items-center justify-center md:justify-end gap-4 mb-4">
         <Input
           className="max-w-sm bg-green-900/40"
           placeholder="Search Logs..."
@@ -115,12 +96,12 @@ export default function SystemLogs() {
             </SelectContent>
           </Select>
         </div>
-      </div>
+      </div> */}
 
       <LogsTable
         columns={columns}
         rawData={filteredLogs}
-        loading={loadingLogs}
+        loading={loading}
         rowClassName={(index) => (index % 2 === 0 ? "bg-blue-100/5" : "")}
       />
     </div>
