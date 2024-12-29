@@ -16,7 +16,7 @@ export default function Auth() {
 
   const tabsContent = {
     "Guest Users": (
-      <AllUsers />
+      <AllUsers/>
     ),
     "Auth Based": <AuthBasedForm />,
     "Token Based": <TokenBasedForm />,

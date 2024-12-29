@@ -1,5 +1,5 @@
 import { toast } from "@/hooks/use-toast";
-import { fetchDashboardInfo } from "@/lib/api";
+import { fetchDashboardInfo, fetchProtectedInfo } from "@/lib/api";
 import { XIcon } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
@@ -51,14 +51,18 @@ const HandoverModal = ({ isOpen, onClose, id, refreshAction }) => {
       email: selectedUserEmail,
     };
 
+    console.log("API DATA", apiData);
+
     try {
+      console.log("Inside try");
       // Send API call to delete the user with the provided UID
-      const result = await fetchDashboardInfo(
-        (createFinalPath = false),
+      const result = await fetchProtectedInfo(
         `/users/project/handover/${id}`,
         "PUT",
         apiData
       );
+
+      console.log("Result", result);
 
       if (result) {
         toast({
