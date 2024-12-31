@@ -1,6 +1,6 @@
 import { useToast } from "@/hooks/use-toast";
 import React, { useState } from "react";
-import { fetchDashboardInfo } from "@/lib/api";
+import { fetchProtectedInfo } from "@/lib/api";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { XIcon } from "lucide-react";
@@ -24,13 +24,15 @@ const DeleteModal = ({ isOpen, onClose, gids }) => {
 
     try {
       // Send API call to delete the user with the provided UID
-      const result = await fetchDashboardInfo(
-        "/account/delete-users",
+      const result = await fetchProtectedInfo(
+        "cloudnet/portal/dashboard/account/delete-users",
         "DELETE",
         {
-          uids: gids,
+          uids: [gids[0]],
         }
       );
+
+
 
       if (result) {
         toast({
