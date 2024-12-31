@@ -91,11 +91,15 @@ const ProjectItem = ({
         id={id}
       />
 
-      <HandoverModal
-        isOpen={isHandoverModalOpen}
-        refreshAction={refreshAction}
-        onClose={() => setHandoverModalOpen(false)}
-      />
+      {/* Conditionally Render HandoverModal to minimaize account api call*/}
+      {isHandoverModalOpen && (
+        <HandoverModal
+          isOpen={isHandoverModalOpen}
+          refreshAction={refreshAction}
+          id={id}
+          onClose={() => setHandoverModalOpen(false)}
+        />
+      )}
 
       <DeleteModal
         isOpen={isDeleteModalOpen}

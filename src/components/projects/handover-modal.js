@@ -1,12 +1,33 @@
+import { toast } from "@/hooks/use-toast";
+import { fetchDashboardInfo, fetchProtectedInfo } from "@/lib/api";
 import { XIcon } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-const HandoverModal = ({ isOpen, onClose, refreshAction }) => {
+const HandoverModal = ({ isOpen, onClose, id, refreshAction }) => {
   const [formData, setFormData] = useState({
-    field1: "",
-    field2: "",
-    textarea: "",
+    selectedUser: "", // Stores the selected user's email
   });
+  const [loading, setLoading] = useState(true);
+  const [users, setUsers] = useState([]); // Stores the user data
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const path = "/account?pageOffset=10&pageIndex=1&status=2";
+      try {
+        setLoading(true); // Start loading
+        const response = await fetchDashboardInfo(path);
+        setUsers(response?.users || []); // Extract users array
+      } catch (error) {
+        console.log("Error fetching data:", error);
+      } finally {
+        setLoading(false); // Stop loading
+      }
+    };
+
+    if (isOpen) {
+      fetchData(); // Fetch data only when modal is open
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -15,13 +36,58 @@ const HandoverModal = ({ isOpen, onClose, refreshAction }) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitted!");
+
+    const selectedUserEmail = formData.selectedUser;
+    if (!selectedUserEmail) {
+      console.log("No user selected!");
+      return;
+    }
+
+    console.log("Submitting handover to:", selectedUserEmail);
+
+    const apiData = {
+      email: selectedUserEmail,
+    };
+
+    console.log("API DATA", apiData);
+
+    try {
+      console.log("Inside try");
+      // Send API call to delete the user with the provided UID
+      const result = await fetchProtectedInfo(
+        `/users/project/handover/${id}`,
+        "PUT",
+        apiData
+      );
+
+      console.log("Result", result);
+
+      if (result) {
+        toast({
+          title: "Project handovered!",
+          description: "Successfully handovered the selected project.",
+        });
+        refreshAction();
+        onClose(); // Close the modal after successful deletion
+      } else {
+        toast({
+          title: "Error",
+          variant: "destructive",
+          description: "Failed to handover the project.",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        variant: "destructive",
+        description: "Something went wrong. Please try again later.",
+      });
+    }
 
     refreshAction();
-    closeModal();
-    // onSubmit(formData);
+    onClose();
   };
 
   const handleOverlayClick = (e) => {
@@ -36,10 +102,10 @@ const HandoverModal = ({ isOpen, onClose, refreshAction }) => {
       onClick={handleOverlayClick}
       className=" fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
     >
-      <div className="bg-[#303531] mx-6 p-8 rounded-lg relative shadow-lg">
+      <div className="bg-[#303531] mx-6 p-8 rounded-lg relative shadow-lg w-[40rem] ">
         <div className="flex item-center justify-between mb-6">
           <h2 className="text-xl font-semibold">Handover Project</h2>
-          <button onClick={onClose} className=" hover:text-gray-400">
+          <button onClick={onClose} className="hover:text-gray-400">
             <XIcon />
           </button>
         </div>
@@ -47,19 +113,37 @@ const HandoverModal = ({ isOpen, onClose, refreshAction }) => {
           onSubmit={handleSubmit}
           className="flex flex-col gap-6 items-center justify-center"
         >
+          {/* Dropdown for User Selection */}
           <div className="w-full flex items-center justify-center">
             <label className="w-1/2">Account</label>
-            <input
-              type="text"
-              name="field2"
-              value={formData.field2}
+            <select
+              name="selectedUser"
+              value={formData.selectedUser}
               onChange={handleChange}
               className="w-1/2 px-3 py-2 bg-white bg-opacity-5 border rounded focus:outline-none focus:ring focus:ring-blue-200 text-white"
               required
-            />
+            >
+              <option
+                value=""
+                disabled
+                className="bg-[#303531] text-white hover:bg-white hover:bg-opacity-5"
+              >
+                Select a user
+              </option>
+              {users.map((user) => (
+                <option
+                  key={user.uid}
+                  value={user.email}
+                  className="bg-[#303531] text-white hover:bg-white hover:bg-opacity-5"
+                >
+                  {user.nickname}
+                </option>
+              ))}
+            </select>
           </div>
 
-          <div className={`flex flex-wrap gap-4 mt-4 justify-center`}>
+          {/* Action Buttons */}
+          <div className="flex flex-wrap gap-4 mt-4 justify-center">
             <button
               onClick={onClose}
               type="button"

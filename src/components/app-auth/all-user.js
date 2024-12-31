@@ -16,6 +16,7 @@ import { LockIcon } from "lucide-react";
 import { MailIcon } from "lucide-react";
 import { UserIcon } from "lucide-react";
 import { TicketIcon } from "lucide-react";
+import { Button } from "../ui/button";
 
 export default function AllUsers({}) {
   const [devices, setDevices] = useState([]); // State for all devices
@@ -27,52 +28,51 @@ export default function AllUsers({}) {
   const [selectedAuthType, setSelectedAuthType] = useState("all"); // State for the selected authType filter
   const { toast } = useToast();
 
+  const fetchDevices = async () => {
+    try {
+      const data = await fetchProtectedInfo("/devices/gateway-device");
+      const deviceList = data.gateways || [];
+      setDevices(deviceList);
+      if (deviceList.length > 0) {
+        setSelectedDevice(deviceList[0].deviceId); // Default to the first device
+      }
+    } catch (error) {
+      console.error("Error fetching devices:", error);
+      toast({
+        description: "Failed to fetch devices.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchGuestUsers = async () => {
+    setLoadingUsers(true);
+    try {
+      const data = await fetchProtectedInfo(
+        `/devices/guest-users/${selectedDevice}`
+      );
+      setGuestUsers(data.guests || []); // Adjusted to match the new JSON structure
+    } catch (error) {
+      console.error("Error fetching guest users:", error);
+      toast({
+        description: "Failed to fetch guest users.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoadingUsers(false);
+    }
+  };
+
   // Fetch devices on component mount
   useEffect(() => {
-    async function fetchDevices() {
-      try {
-        const data = await fetchProtectedInfo("/devices/gateway-device");
-        const deviceList = data.gateways || [];
-        setDevices(deviceList);
-        if (deviceList.length > 0) {
-          setSelectedDevice(deviceList[0].deviceId); // Default to the first device
-        }
-      } catch (error) {
-        console.error("Error fetching devices:", error);
-        toast({
-          description: "Failed to fetch devices.",
-          variant: "destructive",
-        });
-      } finally {
-        setLoading(false);
-      }
-    }
-
     fetchDevices();
   }, []);
 
   // Fetch guest users for the selected device
   useEffect(() => {
     if (!selectedDevice) return;
-
-    async function fetchGuestUsers() {
-      setLoadingUsers(true);
-      try {
-        const data = await fetchProtectedInfo(
-          `/devices/guest-users/${selectedDevice}`
-        );
-        setGuestUsers(data.guests || []); // Adjusted to match the new JSON structure
-      } catch (error) {
-        console.error("Error fetching guest users:", error);
-        toast({
-          description: "Failed to fetch guest users.",
-          variant: "destructive",
-        });
-      } finally {
-        setLoadingUsers(false);
-      }
-    }
-
     fetchGuestUsers();
   }, [selectedDevice]);
 
@@ -85,6 +85,39 @@ export default function AllUsers({}) {
       selectedAuthType === "all" || user.authType === selectedAuthType;
     return matchesSearch && matchesAuthType;
   });
+
+  const handleDeleteUser = async (user) => {
+    const apiData = user._id;
+    console.log("User", apiData);
+
+    try {
+      const response = await fetchProtectedInfo(
+        `/devices/delete-guest/${apiData}`,
+        "DELETE"
+      );
+
+      if (response) {
+        toast({
+          title: "Guest User removed!",
+          description: "Successfully removed guest user.",
+        });
+      } else {
+        toast({
+          title: "Error",
+          variant: "destructive",
+          description: "Failed to remove guest user.",
+        });
+      }
+
+      fetchGuestUsers();
+    } catch (error) {
+      toast({
+        title: "Error",
+        variant: "destructive",
+        description: "Something went wrong. Please try again later.",
+      });
+    }
+  };
 
   // Define table columns to match the guest user data structure
   const columns = [
@@ -134,6 +167,22 @@ export default function AllUsers({}) {
         info.getValue()
           ? new Date(parseInt(info.getValue()) * 1000).toLocaleString()
           : "Never",
+    },
+    {
+      id: "config",
+      enableHiding: false,
+      header: "Config",
+      cell: ({ row }) => {
+        return (
+          <Button
+            variant="destructive"
+            size="sm"
+            onClick={() => handleDeleteUser(row.original)}
+          >
+            Delete User
+          </Button>
+        );
+      },
     },
   ];
 
