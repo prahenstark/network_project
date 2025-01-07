@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import Navbar from "@/components/navbar";
 import BandwidthTable from "@/components/bandwidth-management/bandwidth-table";
 import { ChevronRight } from "lucide-react";
+import BandwidthControlModal from "./bandwidth-modal";
 
 export default function BandwidthManagement({}) {
   const [devices, setDevices] = useState([]); // State for all devices
@@ -117,15 +118,13 @@ export default function BandwidthManagement({}) {
     return <div>Loading logs...</div>;
   }
 
-  if (!devices.length) {
-    return <div>No devices available.</div>;
-  }
 
   return (
     <div>
       <Navbar title="Bandwidth Management" />
       <div>
         <div className="flex max-md:flex-col items-center justify-center md:justify-end gap-4 p-6">
+          <BandwidthControlModal>Open</BandwidthControlModal>
           <Input
             className="max-w-sm bg-green-900/40"
             placeholder="Search Users..."
