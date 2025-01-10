@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useEffect, useState } from "react";
-import { fetchProtectedInfo } from "@/lib/api"; // Ensure this is implemented correctly
+import { fetchDashboardInfo, fetchProtectedInfo } from "@/lib/api"; // Ensure this is implemented correctly
 import { useToast } from "@/hooks/use-toast";
 import { LockIcon } from "lucide-react";
 import { MailIcon } from "lucide-react";
@@ -91,9 +91,11 @@ export default function AllUsers({}) {
     console.log("User", apiData);
 
     try {
-      const response = await fetchProtectedInfo(
+      const response = await fetchDashboardInfo(
         `/devices/delete-guest/${apiData}`,
-        "DELETE"
+        "DELETE",
+        null,
+        false
       );
 
       if (response) {

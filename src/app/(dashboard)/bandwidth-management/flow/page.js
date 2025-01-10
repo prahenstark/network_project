@@ -1,24 +1,12 @@
 "use client";
 
-import {
-  Select,
-  SelectTrigger,
-  SelectContent,
-  SelectItem,
-  SelectValue,
-} from "@/components/ui/select";
 import { useEffect, useState } from "react";
 import { fetchProtectedInfo } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
-import ApLogsTable from "@/components/logs/logs-table";
-import { Input } from "@/components/ui/input";
-import Navbar from "@/components/navbar";
-import BandwidthTable from "@/components/bandwidth-management/bandwidth-table";
-import { ChevronRight } from "lucide-react";
-import BandwidthControlModal from "../../../components/bandwidth-management/bandwidth-control-modal";
 import { useBandwidthDevice } from "@/context/bandwidth-device-provider";
+import FreeflowTable from "@/components/bandwidth-management/freeflow-table";
 
-export default function BandwidthManagement({}) {
+export default function Flow({}) {
   const [devices, setDevices] = useState([]); // State for all devices
   const [selectedDevice, setSelectedDevice] = useState(""); // State for the currently selected device
   const [bandwidthData, setBandwidthData] = useState([]); // State for guest users
@@ -60,9 +48,9 @@ export default function BandwidthManagement({}) {
       setLoading(true);
       try {
         const data = await fetchProtectedInfo(
-          `/devices/bandwidth-rules/${selectedBandwidthDevice}?pageSize=10&pageNo=1`
+          `/devices/get-free-flow-control/${selectedBandwidthDevice}`
         );
-        setBandwidthData(data.response.BAND_CONTROL_RULE_array || []);
+        setBandwidthData(data?.response?.exception_array || []);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching logs:", error);
@@ -85,35 +73,13 @@ export default function BandwidthManagement({}) {
   };
 
   const columns = [
-    { header: "Name", accessorKey: "Name" },
-    { header: "Address", accessorKey: "Address" },
     { header: "Enabled", accessorKey: "Enabled" },
-    { header: "Schedule", accessorKey: "Schedule" },
-    { header: "AddrType", accessorKey: "AddrType" },
-    {
-      header: "Object",
-      accessorKey: "Obj",
-      cell: ({ row }) => {
-        const isExpanded = expandedRows.includes(row.index);
-        return (
-          <div>
-            <button
-              onClick={() => toggleRowExpansion(row.index)}
-              className="flex items-center text-green-500"
-            >
-              <span
-                className={`transition-transform ${
-                  isExpanded ? "rotate-90" : ""
-                }`}
-              >
-                <ChevronRight />
-              </span>
-              <span className="ml-2 ">Details</span>
-            </button>
-          </div>
-        );
-      },
-    },
+    { header: "Name", accessorKey: "Name" },
+    { header: "Source Address Type", accessorKey: "SrcAddrType" },
+
+    { header: "Source Address", accessorKey: "SrcAddress" },
+    { header: "Route Table", accessorKey: "RouteTable" },
+    { header: "Service", accessorKey: "Service" },
   ];
 
   if (loading) {
@@ -127,35 +93,10 @@ export default function BandwidthManagement({}) {
   return (
     <div>
       <div>
-        {/* <div className="flex max-md:flex-col items-center justify-center md:justify-end gap-4 p-6">
-          <BandwidthControlModal>Open</BandwidthControlModal>
-          <Input
-            className="max-w-sm bg-green-900/40"
-            placeholder="Search Users..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          <div className="md:min-w-48 max-md:w-full">
-            <Select value={selectedDevice} onValueChange={setSelectedDevice}>
-              <SelectTrigger className="max-w-sm bg-green-900/40">
-                <SelectValue placeholder="Select a device" />
-              </SelectTrigger>
-              <SelectContent>
-                {devices.map((device) => (
-                  <SelectItem key={device.deviceId} value={device.deviceId}>
-                    {device.deviceId}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        </div> */}
-        <BandwidthTable
+        <FreeflowTable
           columns={columns}
           rawData={bandwidthData}
           loading={loading}
-          expandedRows={expandedRows}
-          setExpandedRows={setExpandedRows}
         />
       </div>
     </div>
