@@ -68,24 +68,25 @@ export default function FlowModal({ toggleModal }) {
       Enabled: 1,
       SrcAddrType: 1,
       SrcAddress: selectedSourceIP,
-      DestinationIP: selectedDestinationIP,
+      RouteTable: selectedDestinationIP,
       Schedule: "ANY",
     };
 
     try {
       const response = await fetchDashboardInfo(
-        "/devices/bandwidth-rules/add",
-        "POST",
-        payload
+        `/devices/set-free-flow-control/${selectedBandwidthDevice}?action=add`,
+        "PUT",
+        payload,
+        false
       );
       console.log("API Payload:", payload);
       console.log("API Response:", response);
-      toast({ description: "Bandwidth rule added successfully!" });
+      toast({ description: "Free flow rule added successfully!" });
       toggleModal(); // Close modal on success
     } catch (error) {
-      console.error("Error adding bandwidth rule:", error);
+      console.error("Error adding Free flow rule:", error);
       toast({
-        description: "There was an error adding the bandwidth rule.",
+        description: "There was an error adding the Free flow rule.",
         variant: "destructive",
       });
     }
@@ -103,7 +104,7 @@ export default function FlowModal({ toggleModal }) {
       <div className="relative bg-background rounded-lg shadow-lg w-full max-w-md">
         {/* Header */}
         <div className="flex justify-between items-center p-4 border-b">
-          <h2 className="text-lg font-bold">Bandwidth Control Rule</h2>
+          <h2 className="text-lg font-bold">Free Flow Control Rules</h2>
           <Button onClick={toggleModal} variant="ghost" size="icon">
             <XIcon size={20} />
           </Button>
@@ -137,8 +138,8 @@ export default function FlowModal({ toggleModal }) {
               </SelectTrigger>
               <SelectContent>
                 {destinationOptions.map((ip) => (
-                  <SelectItem key={ip} value={ip.Name}>
-                    {ip.Name}
+                  <SelectItem key={ip} value={ip.IspId}>
+                    {ip.IspId}
                   </SelectItem>
                 ))}
               </SelectContent>

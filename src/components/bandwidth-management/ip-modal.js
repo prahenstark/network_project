@@ -13,11 +13,30 @@ import { toast } from "@/hooks/use-toast";
 import { fetchDashboardInfo } from "@/lib/api";
 import { useBandwidthDevice } from "@/context/bandwidth-device-provider";
 import { Input } from "../ui/input";
+import { cn } from "@/lib/utils";
+
+function getMaskFromCIDR(cidr) {
+  const prefixLength = parseInt(cidr.replace("/", ""), 10);
+  let maskBinary = "1".repeat(prefixLength) + "0".repeat(32 - prefixLength);
+  let maskArray = maskBinary.match(/.{8}/g);
+  return maskArray.map((bin) => parseInt(bin, 2)).join(".");
+}
+
+function getNetworkAndMask(inputCIDR) {
+  const prefixLength = inputCIDR.split("/")[1];
+  const Net = inputCIDR.split("/")[0];
+  const Mask = getMaskFromCIDR(inputCIDR);
+  return { Net, Mask };
+}
 
 export default function IpModal({ toggleModal }) {
   const [activeTab, setActiveTab] = useState("form1"); // State to track the active tab
   const [addressOptions, setAddressOptions] = useState([]); // Source IP options
   const [destinationOptions, setDestinationOptions] = useState([]); // Destination IP options
+  const [selectedSourceIPName, setSelectedSourceIPName] = useState(""); // Selected Source IP
+  const [remarks, setRemarks] = useState("");
+  const [notes, setNotes] = useState(""); // Textarea input for IPs
+  const [name, setName] = useState(""); // Name field value
   const { selectedBandwidthDevice } = useBandwidthDevice();
 
   useEffect(() => {
@@ -50,14 +69,121 @@ export default function IpModal({ toggleModal }) {
     fetchOptions();
   }, [selectedBandwidthDevice]);
 
-  const handleSubmitForm1 = () => {
-    toast({ description: "Form 1 submitted successfully!" });
-    toggleModal();
+  const handleSubmitForm1 = async () => {
+    const ipLines = notes
+      .split("\n")
+      .map((line) => line.trim())
+      .filter((line) => line); // Split and filter out empty lines
+
+    const routeTable = ipLines.map((ip) => getNetworkAndMask(ip)); // Generate route table
+
+    const payload = {
+      Name: selectedSourceIPName,
+      ZH_Desc: remarks,
+      EN_Desc: remarks,
+      RouteCount: routeTable.length,
+      RouteTable: routeTable,
+    };
+
+    console.log("Payload:", payload);
+
+    try {
+      const response = await fetchDashboardInfo(
+        `/devices/set-destination-ip/${selectedBandwidthDevice}?action=add`,
+        "PUT",
+        payload,
+        false
+      );
+      console.log("API Payload:", payload);
+      console.log("API Response:", response);
+      toast({ description: "Destination IP added successfully!" });
+      toggleModal(); // Close modal on success
+    } catch (error) {
+      console.error("Error adding Destination IP:", error);
+      toast({
+        description: "There was an error adding the destination ip.",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleSubmitForm2 = () => {
-    toast({ description: "Form 2 submitted successfully!" });
-    toggleModal();
+    // Collect all "Start IP" and "End IP" inputs from the form
+    const startIPs = Array.from(
+      document.querySelectorAll('input[placeholder="Enter start IP"]')
+    ).map((input) => input.value.trim());
+
+    const endIPs = Array.from(
+      document.querySelectorAll('input[placeholder="Enter end IP"]')
+    ).map((input) => input.value.trim());
+
+    // Validate pairs: Ensure that if one value is entered, the other is also provided
+    const invalidPairs = startIPs.some(
+      (startIP, index) =>
+        (startIP && !endIPs[index]) || (!startIP && endIPs[index])
+    );
+
+    if (invalidPairs) {
+      toast({
+        description:
+          "Each Start IP must have a corresponding End IP and vice versa.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Filter valid pairs (both Start IP and End IP are provided)
+    const validPairs = startIPs
+      .map((startIP, index) => ({
+        StartIP: startIP,
+        EndIP: endIPs[index],
+      }))
+      .filter((pair) => pair.StartIP && pair.EndIP);
+
+    // If no valid pairs exist, prompt the user
+    if (validPairs.length === 0) {
+      toast({
+        description:
+          "Please provide at least one valid Start IP and End IP pair.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Construct the payload
+    const payload = {
+      Name: selectedSourceIPName, // Selected name from the dropdown
+      AddressObjCount: validPairs.length, // Count of valid address pairs
+      address_array: validPairs, // Array of valid Start IP and End IP pairs
+    };
+
+    // Log the payload for debugging
+    console.log("Form 2 Payload:", payload);
+
+    // Send the payload to the API
+    fetchDashboardInfo(
+      `/devices/address-object/${selectedBandwidthDevice}?action=add`,
+      "PUT",
+      payload,
+      false
+    )
+      .then((response) => {
+        // Handle success
+        console.log("API Response:", response);
+        toast({
+          description: "Source IPs added successfully!",
+          variant: "default",
+        });
+        toggleModal(); // Close the modal
+      })
+      .catch((error) => {
+        // Handle errors
+        console.error("Error submitting form 2:", error);
+        toast({
+          description: "Error adding Source IPs.",
+          variant: "destructive",
+        });
+      });
   };
 
   return (
@@ -82,14 +208,14 @@ export default function IpModal({ toggleModal }) {
                 variant={activeTab === "form1" ? "default" : "outline"}
                 onClick={() => setActiveTab("form1")}
               >
-                Add Source IP
+                Add Destination IP
               </Button>
               <Button
                 className="min-w-40"
                 variant={activeTab === "form2" ? "default" : "outline"}
                 onClick={() => setActiveTab("form2")}
               >
-                Add Destination IP
+                Add Source IP
               </Button>
             </div>
           </div>
@@ -99,13 +225,20 @@ export default function IpModal({ toggleModal }) {
             {activeTab === "form1" && (
               <>
                 {/* Name Field */}
-                <div className="bg-background rounded-lg">
-                  <Label className="mb-4">Name</Label>
-                  <Input
-                    type="text"
-                    className="input w-full text-white p-2"
-                    placeholder="Enter name"
-                  />
+                <div>
+                  <Label className="mb-2">Name</Label>
+                  <Select onValueChange={setSelectedSourceIPName}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select Name" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {addressOptions.map((ip) => (
+                        <SelectItem key={ip} value={ip.Name}>
+                          {ip.Name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 {/* Remarks Field */}
@@ -115,6 +248,8 @@ export default function IpModal({ toggleModal }) {
                     type="text"
                     className="input w-full text-white p-2"
                     placeholder="Enter remarks"
+                    value={remarks}
+                    onChange={(e) => setRemarks(e.target.value)}
                   />
                 </div>
 
@@ -122,8 +257,28 @@ export default function IpModal({ toggleModal }) {
                 <div className="flex items-start space-x-2 text-white py-2">
                   <LightbulbIcon className="mt-1 " size={20} />
                   <p className="text-sm ">
-                    Add useful tips here to guide users on completing the form.
+                    The destination address format is IP/mask bits, for e.g{" "}
+                    <b className="text-green-500">1.25.0.0/15</b>
                   </p>
+                </div>
+
+                {/* Additional Notes (Textarea) */}
+                <div>
+                  <Label className="mb-2">Additional Notes</Label>
+                  <textarea
+                    className={cn(
+                      "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-white text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    )}
+                    style={{
+                      height: "100px", // Set a specific height
+                      resize: "none", // Disable resizing
+                      overflowY: "auto", // Enable vertical scrolling
+                    }}
+                    rows={4}
+                    placeholder="Enter additional notes..."
+                    value={notes}
+                    onChange={(e) => setNotes(e.target.value)}
+                  ></textarea>
                 </div>
               </>
             )}
@@ -133,11 +288,18 @@ export default function IpModal({ toggleModal }) {
                 {/* Name Field */}
                 <div>
                   <Label className="mb-2">Name</Label>
-                  <Input
-                    type="text"
-                    className="input w-full"
-                    placeholder="Enter name"
-                  />
+                  <Select onValueChange={setSelectedSourceIPName}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select Name" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {addressOptions.map((ip) => (
+                        <SelectItem key={ip} value={ip.Name}>
+                          {ip.Name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 {/* Start and End IP Fields */}
@@ -146,7 +308,47 @@ export default function IpModal({ toggleModal }) {
                     <Label className="mb-2">Start IP</Label>
                     <Input
                       type="text"
-                      className="input w-full"
+                      className="input w-full mb-1"
+                      placeholder="Enter start IP"
+                    />
+                    <Input
+                      type="text"
+                      className="input w-full mb-1"
+                      placeholder="Enter start IP"
+                    />
+                    <Input
+                      type="text"
+                      className="input w-full mb-1"
+                      placeholder="Enter start IP"
+                    />
+                    <Input
+                      type="text"
+                      className="input w-full mb-1"
+                      placeholder="Enter start IP"
+                    />
+                    <Input
+                      type="text"
+                      className="input w-full mb-1"
+                      placeholder="Enter start IP"
+                    />
+                    <Input
+                      type="text"
+                      className="input w-full mb-1"
+                      placeholder="Enter start IP"
+                    />
+                    <Input
+                      type="text"
+                      className="input w-full mb-1"
+                      placeholder="Enter start IP"
+                    />
+                    <Input
+                      type="text"
+                      className="input w-full mb-1"
+                      placeholder="Enter start IP"
+                    />
+                    <Input
+                      type="text"
+                      className="input w-full mb-1"
                       placeholder="Enter start IP"
                     />
                   </div>
@@ -154,7 +356,47 @@ export default function IpModal({ toggleModal }) {
                     <Label className="mb-2">End IP</Label>
                     <Input
                       type="text"
-                      className="input w-full"
+                      className="input w-full mb-1"
+                      placeholder="Enter end IP"
+                    />
+                    <Input
+                      type="text"
+                      className="input w-full mb-1"
+                      placeholder="Enter end IP"
+                    />
+                    <Input
+                      type="text"
+                      className="input w-full mb-1"
+                      placeholder="Enter end IP"
+                    />
+                    <Input
+                      type="text"
+                      className="input w-full mb-1"
+                      placeholder="Enter end IP"
+                    />
+                    <Input
+                      type="text"
+                      className="input w-full mb-1"
+                      placeholder="Enter end IP"
+                    />
+                    <Input
+                      type="text"
+                      className="input w-full mb-1"
+                      placeholder="Enter end IP"
+                    />
+                    <Input
+                      type="text"
+                      className="input w-full mb-1"
+                      placeholder="Enter end IP"
+                    />
+                    <Input
+                      type="text"
+                      className="input w-full mb-1"
+                      placeholder="Enter end IP"
+                    />
+                    <Input
+                      type="text"
+                      className="input w-full mb-1"
                       placeholder="Enter end IP"
                     />
                   </div>
