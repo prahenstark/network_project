@@ -18,6 +18,7 @@ export default function FlowModal({ toggleModal }) {
   const [destinationOptions, setDestinationOptions] = useState([]); // Destination IP options
   const [selectedSourceIP, setSelectedSourceIP] = useState(""); // Selected Source IP
   const [selectedDestinationIP, setSelectedDestinationIP] = useState(""); // Selected Destination IP
+  const [selectedDestinationPort, setSelectedDestinationPort] = useState(""); // Selected Destination Port
   const [sourceType, setSourceType] = useState("address"); // Destination Port type (static for now)
   const { selectedBandwidthDevice } = useBandwidthDevice();
 
@@ -69,7 +70,7 @@ export default function FlowModal({ toggleModal }) {
       SrcAddrType: 1,
       SrcAddress: selectedSourceIP,
       RouteTable: selectedDestinationIP,
-      Schedule: "ANY",
+      Service: selectedDestinationPort,
     };
 
     try {
@@ -139,7 +140,7 @@ export default function FlowModal({ toggleModal }) {
               <SelectContent>
                 {destinationOptions.map((ip) => (
                   <SelectItem key={ip} value={ip.IspId}>
-                    {ip.IspId}
+                    {ip.Name}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -149,15 +150,18 @@ export default function FlowModal({ toggleModal }) {
           {/* Destination Port */}
           <div>
             <Label className="mb-2">Destination Port</Label>
-            <Select
-              value={sourceType}
-              onValueChange={(value) => setSourceType(value)}
-            >
+            <Select onValueChange={setSelectedDestinationPort}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select Destination Port" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="address">ANY</SelectItem>
+                <SelectItem value="ANY">ANY</SelectItem>
+                <SelectItem value="DNS">DNS</SelectItem>
+                <SelectItem value="HTTP">HTTP</SelectItem>
+                <SelectItem value="ICMP">ICMP</SelectItem>
+                <SelectItem value="SSL">SSL</SelectItem>
+                <SelectItem value="TCP">TCP</SelectItem>
+                <SelectItem value="UDP">UDP</SelectItem>
               </SelectContent>
             </Select>
           </div>

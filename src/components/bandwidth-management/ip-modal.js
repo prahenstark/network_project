@@ -16,24 +16,38 @@ import { Input } from "../ui/input";
 import { cn } from "@/lib/utils";
 
 function getMaskFromCIDR(cidr) {
-  const prefixLength = parseInt(cidr.replace("/", ""), 10);
-  let maskBinary = "1".repeat(prefixLength) + "0".repeat(32 - prefixLength);
-  let maskArray = maskBinary.match(/.{8}/g);
-  return maskArray.map((bin) => parseInt(bin, 2)).join(".");
+  // Extract the prefix length from CIDR (e.g., 15 from /15)
+  const prefixLength = parseInt(cidr.split("/")[1], 10);
+
+  // Generate the subnet mask based on the prefix length
+  let maskBinary = "1".repeat(prefixLength) + "0".repeat(32 - prefixLength); // Create binary mask
+  let maskArray = maskBinary.match(/.{8}/g); // Split into octets (8 bits each)
+
+  // Convert the binary octets to decimal
+  const subnetMask = maskArray.map((bin) => parseInt(bin, 2)).join(".");
+
+  // Return the subnet mask
+  return subnetMask;
 }
 
 function getNetworkAndMask(inputCIDR) {
   const prefixLength = inputCIDR.split("/")[1];
-  const Net = inputCIDR.split("/")[0];
-  const Mask = getMaskFromCIDR(inputCIDR);
-  return { Net, Mask };
+  const Net = inputCIDR.split("/")[0]; // The network address (e.g., 1.25.0.0)
+  const Mask = getMaskFromCIDR(inputCIDR); // Get the subnet mask based on CIDR
+
+  // Return the result in the requested object format
+  return {
+    Net: Net,
+    Mask: Mask,
+  };
 }
 
 export default function IpModal({ toggleModal }) {
   const [activeTab, setActiveTab] = useState("form1"); // State to track the active tab
   const [addressOptions, setAddressOptions] = useState([]); // Source IP options
   const [destinationOptions, setDestinationOptions] = useState([]); // Destination IP options
-  const [selectedSourceIPName, setSelectedSourceIPName] = useState(""); // Selected Source IP
+  const [destinationIPName, setDestinationIPName] = useState(""); // Destination IP Name
+  const [sourceIPName, setSourceIPName] = useState(""); //Source IP
   const [remarks, setRemarks] = useState("");
   const [notes, setNotes] = useState(""); // Textarea input for IPs
   const [name, setName] = useState(""); // Name field value
@@ -78,7 +92,7 @@ export default function IpModal({ toggleModal }) {
     const routeTable = ipLines.map((ip) => getNetworkAndMask(ip)); // Generate route table
 
     const payload = {
-      Name: selectedSourceIPName,
+      Name: destinationIPName,
       ZH_Desc: remarks,
       EN_Desc: remarks,
       RouteCount: routeTable.length,
@@ -152,7 +166,7 @@ export default function IpModal({ toggleModal }) {
 
     // Construct the payload
     const payload = {
-      Name: selectedSourceIPName, // Selected name from the dropdown
+      Name: sourceIPName, // Selected name from the dropdown
       AddressObjCount: validPairs.length, // Count of valid address pairs
       address_array: validPairs, // Array of valid Start IP and End IP pairs
     };
@@ -227,18 +241,13 @@ export default function IpModal({ toggleModal }) {
                 {/* Name Field */}
                 <div>
                   <Label className="mb-2">Name</Label>
-                  <Select onValueChange={setSelectedSourceIPName}>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select Name" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {addressOptions.map((ip) => (
-                        <SelectItem key={ip} value={ip.Name}>
-                          {ip.Name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Input
+                    type="text"
+                    className="input w-full text-white p-2"
+                    placeholder="Enter Name"
+                    value={destinationIPName}
+                    onChange={(e) => setDestinationIPName(e.target.value)}
+                  />
                 </div>
 
                 {/* Remarks Field */}
@@ -288,18 +297,17 @@ export default function IpModal({ toggleModal }) {
                 {/* Name Field */}
                 <div>
                   <Label className="mb-2">Name</Label>
-                  <Select onValueChange={setSelectedSourceIPName}>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select Name" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {addressOptions.map((ip) => (
-                        <SelectItem key={ip} value={ip.Name}>
-                          {ip.Name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  {/* Name Field */}
+                  <div>
+                    <Label className="mb-2">Name</Label>
+                    <Input
+                      type="text"
+                      className="input w-full text-white p-2"
+                      placeholder="Enter Name"
+                      value={sourceIPName}
+                      onChange={(e) => setSourceIPName(e.target.value)}
+                    />
+                  </div>
                 </div>
 
                 {/* Start and End IP Fields */}
