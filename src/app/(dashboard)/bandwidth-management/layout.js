@@ -21,7 +21,16 @@ export default function BandwidthList({ children }) {
   const tabs = [
     { key: "bandwidth", label: "Bandwidth", link: "/bandwidth-management" },
     { key: "flow", label: "Flow", link: "/bandwidth-management/flow" },
-    { key: "ip", label: "IP", link: "/bandwidth-management/ip" },
+    {
+      key: "source-ip",
+      label: "Source IP",
+      link: "/bandwidth-management/source-ip",
+    },
+    {
+      key: "destination-ip",
+      label: "Destination IP",
+      link: "/bandwidth-management/destination-ip",
+    },
   ];
 
   const router = useRouter();

@@ -6,7 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useBandwidthDevice } from "@/context/bandwidth-device-provider";
 import FreeflowTable from "@/components/bandwidth-management/freeflow-table";
 
-export default function Ip({}) {
+export default function SourceIp({}) {
   const [devices, setDevices] = useState([]); // State for all devices
   const [selectedDevice, setSelectedDevice] = useState(""); // State for the currently selected device
   const [bandwidthData, setBandwidthData] = useState([]); // State for guest users

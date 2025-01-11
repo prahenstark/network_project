@@ -28,30 +28,6 @@ export default function BandwidthManagement({}) {
   const { selectedBandwidthDevice } = useBandwidthDevice();
   const { toast } = useToast();
 
-  // Fetch devices on component mount
-  // useEffect(() => {
-  //   async function fetchDevices() {
-  //     try {
-  //       const data = await fetchProtectedInfo("/devices/gateway-device");
-  //       const deviceList = data.gateways || [];
-  //       setDevices(deviceList);
-  //       if (deviceList.length > 0) {
-  //         setSelectedDevice(deviceList[0].deviceId); // Default to the first device
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching devices:", error);
-  //       toast({
-  //         description: "Failed to fetch devices.",
-  //         variant: "destructive",
-  //       });
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   }
-
-  //   fetchDevices();
-  // }, []);
-
   // Fetch guest users for the selected device
   useEffect(() => {
     if (!selectedBandwidthDevice) return;
