@@ -23,6 +23,7 @@ export default function BandwidthModal({ toggleModal }) {
 
   const [addressOptions, setAddressOptions] = useState([]); // Stores address options for the dropdown
   const [userOptions, setUserOptions] = useState([]); // Stores user options
+  const [departmentOptions, setDepartmentOptions] = useState([]); // Stores department options
   const [sourceType, setSourceType] = useState("address"); // Tracks the selected source type
   const [selectedField, setSelectedField] = useState("");
   const [upstreamLimit, setUpstreamLimit] = useState(0);
@@ -70,6 +71,28 @@ export default function BandwidthModal({ toggleModal }) {
       fetchUserOptions();
     }
   }, [sourceType]);
+
+  // Fetch user options when sourceType is 'department'
+  useEffect(() => {
+    console.log("Selected device", selectedBandwidthDevice);
+    if (sourceType === "address") {
+      const fetchAddressOptions = async () => {
+        try {
+          const data = await fetchProtectedInfo(
+            `/devices/get-department/${selectedBandwidthDevice}`
+          );
+          // Extract Name values from addressobj_array
+          const departmentNames =
+            data.response?.department_array?.map((obj) => obj.Name) || [];
+          setDepartmentOptions(departmentNames);
+        } catch (error) {
+          console.error("Error fetching address options:", error);
+        }
+      };
+
+      fetchAddressOptions();
+    }
+  }, [sourceType, selectedBandwidthDevice]);
 
   const handleSubmit = async () => {
     console.log("ADDRESS", selectedField);
@@ -204,11 +227,18 @@ export default function BandwidthModal({ toggleModal }) {
               <Label htmlFor="department" className="mb-2">
                 Enter Department:
               </Label>
-              <Input
-                id="department"
-                type="text"
-                placeholder="Enter department"
-              />
+              <Select onValueChange={setSelectedField}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select a Department" />
+                </SelectTrigger>
+                <SelectContent>
+                  {departmentOptions.map((user) => (
+                    <SelectItem key={user} value={user}>
+                      {user}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           )}
 
