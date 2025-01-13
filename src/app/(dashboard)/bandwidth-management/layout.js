@@ -31,6 +31,11 @@ export default function BandwidthList({ children }) {
       label: "Destination IP",
       link: "/bandwidth-management/destination-ip",
     },
+    {
+      key: "department",
+      label: "Department",
+      link: "/bandwidth-management/department",
+    },
   ];
 
   const router = useRouter();

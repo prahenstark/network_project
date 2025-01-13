@@ -8,6 +8,7 @@ import BandwidthModal from "./bandwidth-modal";
 import FlowModal from "./flow-modal";
 import SourceIpModal from "./source-ip-modal";
 import DestinationIpModal from "./destination-ip-modal";
+import DepartmentModal from "./department-modal";
 
 export default function BandwidthControlModal({ activeTab }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -24,6 +25,8 @@ export default function BandwidthControlModal({ activeTab }) {
         return <SourceIpModal toggleModal={toggleModal} />;
       case "destination-ip":
         return <DestinationIpModal toggleModal={toggleModal} />;
+      case "department":
+        return <DepartmentModal toggleModal={toggleModal} />;
       default:
         return <div>Select a tab to configure settings</div>;
     }
