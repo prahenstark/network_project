@@ -49,7 +49,6 @@ export default function SourceIpModal({ toggleModal }) {
   const [notes, setNotes] = useState(""); // Textarea input for IPs
   const { selectedBandwidthDevice } = useBandwidthDevice();
 
-
   const handleSubmit = () => {
     // Collect all "Start IP" and "End IP" inputs from the form
     const startIPs = Array.from(
@@ -157,49 +156,109 @@ export default function SourceIpModal({ toggleModal }) {
                 type="text"
                 className="input w-full text-white p-2"
                 placeholder="Enter Name"
-                value={destinationIPName}
-                onChange={(e) => setDestinationIPName(e.target.value)}
+                value={sourceIPName}
+                onChange={(e) => setSourceIPName(e.target.value)}
               />
             </div>
 
-            {/* Remarks Field */}
-            <div>
-              <Label className="mb-2">Remarks</Label>
-              <Input
-                type="text"
-                className="input w-full text-white p-2"
-                placeholder="Enter remarks"
-                value={remarks}
-                onChange={(e) => setRemarks(e.target.value)}
-              />
-            </div>
-
-            {/* Tips */}
-            <div className="flex items-start space-x-2 text-white py-2">
-              <LightbulbIcon className="mt-1 " size={20} />
-              <p className="text-sm ">
-                The destination address format is IP/mask bits, for e.g{" "}
-                <b className="text-green-500">1.25.0.0/15</b>
-              </p>
-            </div>
-
-            {/* Additional Notes (Textarea) */}
-            <div>
-              <Label className="mb-2">Additional Notes</Label>
-              <textarea
-                className={cn(
-                  "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-white text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                )}
-                style={{
-                  height: "100px", // Set a specific height
-                  resize: "none", // Disable resizing
-                  overflowY: "auto", // Enable vertical scrolling
-                }}
-                rows={4}
-                placeholder="Enter additional notes..."
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-              ></textarea>
+            {/* Start and End IP Fields */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label className="mb-2">Start IP</Label>
+                <Input
+                  type="text"
+                  className="input w-full mb-1"
+                  placeholder="Enter start IP"
+                />
+                <Input
+                  type="text"
+                  className="input w-full mb-1"
+                  placeholder="Enter start IP"
+                />
+                <Input
+                  type="text"
+                  className="input w-full mb-1"
+                  placeholder="Enter start IP"
+                />
+                <Input
+                  type="text"
+                  className="input w-full mb-1"
+                  placeholder="Enter start IP"
+                />
+                <Input
+                  type="text"
+                  className="input w-full mb-1"
+                  placeholder="Enter start IP"
+                />
+                <Input
+                  type="text"
+                  className="input w-full mb-1"
+                  placeholder="Enter start IP"
+                />
+                <Input
+                  type="text"
+                  className="input w-full mb-1"
+                  placeholder="Enter start IP"
+                />
+                <Input
+                  type="text"
+                  className="input w-full mb-1"
+                  placeholder="Enter start IP"
+                />
+                <Input
+                  type="text"
+                  className="input w-full mb-1"
+                  placeholder="Enter start IP"
+                />
+              </div>
+              <div>
+                <Label className="mb-2">End IP</Label>
+                <Input
+                  type="text"
+                  className="input w-full mb-1"
+                  placeholder="Enter end IP"
+                />
+                <Input
+                  type="text"
+                  className="input w-full mb-1"
+                  placeholder="Enter end IP"
+                />
+                <Input
+                  type="text"
+                  className="input w-full mb-1"
+                  placeholder="Enter end IP"
+                />
+                <Input
+                  type="text"
+                  className="input w-full mb-1"
+                  placeholder="Enter end IP"
+                />
+                <Input
+                  type="text"
+                  className="input w-full mb-1"
+                  placeholder="Enter end IP"
+                />
+                <Input
+                  type="text"
+                  className="input w-full mb-1"
+                  placeholder="Enter end IP"
+                />
+                <Input
+                  type="text"
+                  className="input w-full mb-1"
+                  placeholder="Enter end IP"
+                />
+                <Input
+                  type="text"
+                  className="input w-full mb-1"
+                  placeholder="Enter end IP"
+                />
+                <Input
+                  type="text"
+                  className="input w-full mb-1"
+                  placeholder="Enter end IP"
+                />
+              </div>
             </div>
           </div>
 
