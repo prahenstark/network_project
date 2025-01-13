@@ -13,34 +13,6 @@ import { toast } from "@/hooks/use-toast";
 import { fetchDashboardInfo } from "@/lib/api";
 import { useBandwidthDevice } from "@/context/bandwidth-device-provider";
 import { Input } from "../ui/input";
-import { cn } from "@/lib/utils";
-
-function getMaskFromCIDR(cidr) {
-  // Extract the prefix length from CIDR (e.g., 15 from /15)
-  const prefixLength = parseInt(cidr.split("/")[1], 10);
-
-  // Generate the subnet mask based on the prefix length
-  let maskBinary = "1".repeat(prefixLength) + "0".repeat(32 - prefixLength); // Create binary mask
-  let maskArray = maskBinary.match(/.{8}/g); // Split into octets (8 bits each)
-
-  // Convert the binary octets to decimal
-  const subnetMask = maskArray.map((bin) => parseInt(bin, 2)).join(".");
-
-  // Return the subnet mask
-  return subnetMask;
-}
-
-function getNetworkAndMask(inputCIDR) {
-  const prefixLength = inputCIDR.split("/")[1];
-  const Net = inputCIDR.split("/")[0]; // The network address (e.g., 1.25.0.0)
-  const Mask = getMaskFromCIDR(inputCIDR); // Get the subnet mask based on CIDR
-
-  // Return the result in the requested object format
-  return {
-    Net: Net,
-    Mask: Mask,
-  };
-}
 
 export default function SourceIpModal({ toggleModal }) {
   const [destinationIPName, setDestinationIPName] = useState(""); // Destination IP Name
