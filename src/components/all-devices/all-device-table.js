@@ -12,6 +12,7 @@ import DataTable from "@/components/data-table";
 import { Button } from "@/components/ui/button";
 import { fetchProtectedInfo } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
+import { Plus } from "lucide-react";
 
 function AllDeviceTable({ data, refreshAction, mode }) {
   const { toast } = useToast();
@@ -217,6 +218,7 @@ function AllDeviceTable({ data, refreshAction, mode }) {
           onClick={() => handleUnbind(row.original)}
         >
           Unbind
+          <Plus/>
         </Button>
       ),
     },

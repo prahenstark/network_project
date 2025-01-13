@@ -9,6 +9,7 @@ import FlowModal from "./flow-modal";
 import SourceIpModal from "./source-ip-modal";
 import DestinationIpModal from "./destination-ip-modal";
 import DepartmentModal from "./department-modal";
+import { Plus } from "lucide-react";
 
 export default function BandwidthControlModal({ activeTab }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -35,8 +36,18 @@ export default function BandwidthControlModal({ activeTab }) {
   return (
     <>
       {/* Trigger Button */}
-      <Button onClick={toggleModal} size="icon" variant="secondary">
-        <Wifi />
+      <Button onClick={toggleModal} size="sm" variant="secondary">
+        <Plus />
+        Add{" "}
+        {activeTab === "bandwidth"
+          ? "Bandwidth"
+          : activeTab === "flow"
+          ? "Flow"
+          : activeTab === "source-ip"
+          ? "Source IP"
+          : activeTab === "destination-ip"
+          ? "Destination Ip"
+          : "Department"}
       </Button>
 
       {/* Modal */}
