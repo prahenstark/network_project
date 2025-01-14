@@ -110,22 +110,22 @@ export default function Devices() {
                 </div>
 
                 <div className="flex-1 flex items-center gap-2 justify-center md:justify-start">
-                  <div className="text-5xl font-bold">N/A</div>
+                  <div className="text-4xl font-bold">N/A</div>
                   <div className="text-lg font-medium">AP</div>
                 </div>
 
                 <div className="flex-1 flex items-center gap-2  justify-center md:justify-start">
-                  <div className="text-5xl font-bold">N/A</div>
+                  <div className="text-4xl font-bold">N/A</div>
                   <div className="text-lg font-medium">CPE</div>
                 </div>
 
                 <div className="flex-1 flex items-center gap-2  justify-center md:justify-start">
-                  <div className="text-5xl font-bold">N/A</div>
+                  <div className="text-4xl font-bold">N/A</div>
                   <div className="text-lg font-medium">4G</div>
                 </div>
 
                 <div className="flex-1 flex items-center gap-2  justify-center md:justify-start">
-                  <div className="text-5xl font-bold">N/A</div>
+                  <div className="text-4xl font-bold">N/A</div>
                   <div className="text-lg font-medium">5G</div>
                 </div>
               </div>

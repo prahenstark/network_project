@@ -54,7 +54,6 @@ export default function LogsList({ children }) {
   const router = useRouter();
   const pathname = usePathname();
   const [activeTab, setActiveTab] = useState("");
-  const [searchQuery, setSearchQuery] = useState(""); // Search query
   const [selectedDevice, setSelectedDevice] = useState(""); // Currently selected device
   const [devices, setDevices] = useState([]); // State for all devices
   const { setSelectedLogDevice } = useLogDevice();
@@ -123,12 +122,6 @@ export default function LogsList({ children }) {
       <Navbar title="Logs" />
       <div className="flex flex-col m-6">
         <div className="flex max-md:flex-col items-center justify-center md:justify-end gap-4 mb-4">
-          <Input
-            className="max-w-sm bg-green-900/40"
-            placeholder="Search Logs..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
 
           <div className="md:min-w-48 max-md:w-full">
             <Select
