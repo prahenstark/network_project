@@ -79,6 +79,7 @@ export default function Accounts({}) {
   ];
 
   const [data, setData] = useState([]);
+  const [expandedRows, setExpandedRows] = useState([]); // Track expanded rows
 
   useEffect(() => {
     const fetchData = async () => {
@@ -86,6 +87,7 @@ export default function Accounts({}) {
       try {
         setLoading(true); // Start loading
         const response = await fetchDashboardInfo(path);
+        console.log("Response:", response);
         const transformedData = response.users.map((user, index) => ({
           id: user.uid,
           sn: index + 1,
@@ -95,6 +97,7 @@ export default function Accounts({}) {
           role: "User", // Assuming role is "User"; adjust if role data is available
           status: user.status === "1" ? <CircleCheck /> : <CircleX />, // Assuming status mapping
           creationTime: user.created_at,
+          projects: user.projects || [], // Projects data
         }));
         setData(transformedData);
       } catch (error) {
@@ -113,6 +116,14 @@ export default function Accounts({}) {
       item.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.nickName.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const handleRowExpansion = (rowIndex) => {
+    setExpandedRows((prev) =>
+      prev.includes(rowIndex)
+        ? prev.filter((index) => index !== rowIndex)
+        : [...prev, rowIndex]
+    );
+  };
 
   const columns = [
     {
@@ -230,6 +241,42 @@ export default function Accounts({}) {
       ),
     },
     {
+      id: "projects",
+      header: "Projects",
+      cell: ({ row }) => {
+        const isExpanded = expandedRows.includes(row.index);
+        return (
+          <div>
+            <button
+              onClick={() => handleRowExpansion(row.index)}
+            >
+              {isExpanded ? "Hide Projects" : "Show Projects"}
+            </button>
+            {isExpanded && (
+              <div className="mt-2">
+                <table className="table-auto w-full">
+                  <thead>
+                    <tr>
+                      <th className="border border-green-800 px-4">Name</th>
+                      <th className="border border-green-800 px-4">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {row.original.projects.map((project) => (
+                      <tr key={project.projectId}>
+                        <td className="border border-green-800 px-4">{project.name}</td>
+                        <td className="border border-green-800 px-4">{project.description}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        );
+      },
+    },
+    {
       accessorKey: "creationTime",
       header: ({ column }) => {
         return (
@@ -247,21 +294,7 @@ export default function Accounts({}) {
       ),
     },
 
-    //   {
-    //     accessorKey: "amount",
-    //     header: () => <div className="text-right">Amount</div>,
-    //     cell: ({ row }) => {
-    //       const amount = parseFloat(row.getValue("amount"));
-
-    //       // Format the amount as a dollar amount
-    //       const formatted = new Intl.NumberFormat("en-US", {
-    //         style: "currency",
-    //         currency: "USD",
-    //       }).format(amount);
-
-    //       return <div className="text-right font-medium">{formatted}</div>;
-    //     },
-    //   },
+    
     {
       id: "config",
       enableHiding: false,
