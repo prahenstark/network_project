@@ -63,10 +63,10 @@ export const fetchDashboardInfo = async (
 
     return response.data;
   } catch (error) {
-    console.log(
+/*     console.log(
       `Error ${method === "POST" ? "posting" : "fetching"} dashboard data:`,
       error
-    );
+    ); */
   }
 };
 
@@ -83,9 +83,9 @@ export const fetchProtectedInfo = async (path, method = "GET", data = null) => {
 
     return response.data;
   } catch (error) {
-    console.log(
+/*     console.log(
       `Error ${method === "POST" ? "posting" : "fetching"} dashboard data:`,
       error
-    );
+    ); */
   }
 };

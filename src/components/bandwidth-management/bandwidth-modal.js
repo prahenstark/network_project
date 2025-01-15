@@ -123,7 +123,7 @@ export default function BandwidthModal({ toggleModal }) {
       console.log("API Payload:", payload);
       console.log("API Response:", response);
       toast({ description: "Bandwidth rule added successfully!" });
-      // window.location.reload(); // Reloads the page after successful submission
+      window.location.reload(); // Reloads the page after successful submission
       toggleModal(); // Closes the modal
     } catch (error) {
       console.error("Error adding bandwidth rule:", error);

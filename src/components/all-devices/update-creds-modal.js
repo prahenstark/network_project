@@ -28,14 +28,10 @@ const UpdateCredsModal = ({ device, isOpen, onClose }) => {
     try {
       const response = await fetchProtectedInfo(
         `/devices/update-credentials/${device.deviceId}`, // Path to API
-        "POST", // HTTP method
+        "PUT", // HTTP method
         { username, password } // Data payload
       );
   
-      toast({
-        title: "Success",
-        description: `Credentials updated for device ${device.deviceId}.`,
-      });
 
 
       if (response) {
@@ -46,12 +42,12 @@ const UpdateCredsModal = ({ device, isOpen, onClose }) => {
         onClose();
       } else {
         toast({
-          title: "Success",
-          description: `Credentials updated for device ${device.deviceId}.`,
+          title: "Error",
+          variant: "destructive",
+          description: "You dont have permission to update the credentials for "+device.deviceId,
         });
       }
     } catch (error) {
-      console.error("Error updating credentials:", error);
       toast({
         title: "Error",
         variant: "destructive",
