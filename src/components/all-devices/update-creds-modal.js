@@ -60,7 +60,8 @@ const UpdateCredsModal = ({ device, isOpen, onClose }) => {
     } finally {
       setLoading(false);
       onClose();
-
+      setUsername("");
+      setPassword("");
     }
   };
   
