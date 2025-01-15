@@ -13,11 +13,14 @@ import { Button } from "@/components/ui/button";
 import { fetchProtectedInfo } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 import { Plus } from "lucide-react";
+import UpdateCredsModal from "@/components/all-devices/update-creds-modal";
 
 function AllDeviceTable({ data, refreshAction, mode }) {
   const { toast } = useToast();
   const [tableData, setTableData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedDevice, setSelectedDevice] = useState(null);
 
   const handleUnbind = async (device) => {
     const apiData = { deviceId: device.deviceId };
@@ -52,22 +55,27 @@ function AllDeviceTable({ data, refreshAction, mode }) {
     }
   };
 
+  const handleUpdateCreds = (device) => {
+    setSelectedDevice(device); // Set the selected device
+    setIsModalOpen(true); // Open the modal
+    console.log("Selected Device for Update Creds:", device);
+  };
+  
+
   // Transform data for the table
   useEffect(() => {
     if (data) {
-      // Filter data based on the mode (offline, online, or all)
       const filteredData = data.filter((device) => {
-        const deviceStatus = String(device.status); // Ensure status is a string for comparison
+        const deviceStatus = String(device.status);
         if (mode === "offline") {
-          return deviceStatus === "0"; // Show only offline devices
+          return deviceStatus === "0";
         }
         if (mode === "online") {
-          return deviceStatus === "1"; // Show only online devices
+          return deviceStatus === "1";
         }
-        return true; // Show all devices for 'all' mode
+        return true;
       });
 
-      // Format the filtered data
       const formattedData = filteredData.map((device, index) => ({
         id: index,
         deviceId: device.deviceId || "N/A",
@@ -85,7 +93,7 @@ function AllDeviceTable({ data, refreshAction, mode }) {
 
       setTableData(formattedData);
     }
-  }, [data, mode]); // Re-run the effect if data or mode changes
+  }, [data, mode]);
 
   const columns = [
     {
@@ -221,21 +229,37 @@ function AllDeviceTable({ data, refreshAction, mode }) {
         </Button>
       ),
     },
+    {
+      id: "updateCreds",
+      enableHiding: false,
+      cell: ({ row }) => (
+        <Button size="sm" onClick={() => handleUpdateCreds(row.original)}>
+          Update Creds
+        </Button>
+      ),
+    },
   ];
 
-  // Function to alternate row colors
   const getRowClassName = (index) => {
     return index % 2 === 0
       ? "bg-green-500 bg-opacity-10"
-      : "bg-red-500 bg-opacity-20"; // Alternates green and red
+      : "bg-red-500 bg-opacity-20";
   };
 
   return (
-    <DataTable
-      columns={columns}
-      data={tableData}
-      rowClassName={getRowClassName} // Pass the row class function
-    />
+    <>
+      <DataTable
+        columns={columns}
+        data={tableData}
+        rowClassName={getRowClassName}
+      />
+
+      <UpdateCredsModal
+        device={selectedDevice}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
+    </>
   );
 }
 

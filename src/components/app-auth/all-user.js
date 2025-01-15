@@ -86,40 +86,38 @@ export default function AllUsers({}) {
     return matchesSearch && matchesAuthType;
   });
 
+  
   const handleDeleteUser = async (user) => {
-    const apiData = user._id;
-    console.log("User", apiData);
+  const userId = user._id;
+  const path = `/devices/delete-guest/${userId}`; // Ensure full path for the API
 
-    try {
-      const response = await fetchDashboardInfo(
-        `/devices/delete-guest/${apiData}`,
-        "DELETE",
-        null,
-        false
-      );
+  try {
+    const response = await fetchDashboardInfo(path, "DELETE", null, false);
 
-      if (response) {
-        toast({
-          title: "Guest User removed!",
-          description: "Successfully removed guest user.",
-        });
-      } else {
-        toast({
-          title: "Error",
-          variant: "destructive",
-          description: "Failed to remove guest user.",
-        });
-      }
-
-      fetchGuestUsers();
-    } catch (error) {
+    if (response) {
+      toast({
+        title: "Guest User removed!",
+        description: "Successfully removed guest user.",
+      });
+    } else {
       toast({
         title: "Error",
         variant: "destructive",
-        description: "Something went wrong. Please try again later.",
+        description: "Failed to remove guest user.",
       });
     }
-  };
+
+    fetchGuestUsers();
+  } catch (error) {
+    console.log("Error deleting user:", error);
+    toast({
+      title: "Error",
+      variant: "destructive",
+      description: "Something went wrong. Please try again later.",
+    });
+  }
+};
+
 
   // Define table columns to match the guest user data structure
   const columns = [
