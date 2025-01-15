@@ -88,35 +88,40 @@ export default function AllUsers({}) {
 
   
   const handleDeleteUser = async (user) => {
-  const userId = user._id;
-  const path = `/devices/delete-guest/${userId}`; // Ensure full path for the API
-
-  try {
-    const response = await fetchDashboardInfo(path, "DELETE", null, false);
-
-    if (response) {
-      toast({
-        title: "Guest User removed!",
-        description: "Successfully removed guest user.",
-      });
-    } else {
+    const guestId = user._id; // Assuming user._id contains the guestId
+    const path = `/devices/delete-guest`; // Adjust the path as needed
+  
+    const requestData = {
+      guestId: guestId, // Pass the guestId as per your requirement
+    };
+  
+    try {
+      const response = await fetchDashboardInfo(path, "POST", requestData, false);
+  
+      if (response) {
+        toast({
+          title: "Guest User removed!",
+          description: "Successfully removed guest user.",
+        });
+      } else {
+        toast({
+          title: "Error",
+          variant: "destructive",
+          description: "Failed to remove guest user.",
+        });
+      }
+  
+      fetchGuestUsers();
+    } catch (error) {
+      console.log("Error deleting user:", error);
       toast({
         title: "Error",
         variant: "destructive",
-        description: "Failed to remove guest user.",
+        description: "Something went wrong. Please try again later.",
       });
     }
-
-    fetchGuestUsers();
-  } catch (error) {
-    console.log("Error deleting user:", error);
-    toast({
-      title: "Error",
-      variant: "destructive",
-      description: "Something went wrong. Please try again later.",
-    });
-  }
-};
+  };
+  
 
 
   // Define table columns to match the guest user data structure
