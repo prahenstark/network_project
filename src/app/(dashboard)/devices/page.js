@@ -103,29 +103,29 @@ export default function Devices() {
             <>
               <div className="flex items-center p-6 flex-wrap gap-4">
                 <div className="flex-1 flex items-center gap-2 text-primary justify-center md:justify-start">
-                  <div className="text-5xl font-bold">
+                  <div className="text-4xl font-bold">
                     {selectedDevice?.deviceStatistics?.all ?? 0}
                   </div>
                   <div className="text-lg font-medium">All</div>
                 </div>
 
                 <div className="flex-1 flex items-center gap-2 justify-center md:justify-start">
-                  <div className="text-4xl font-bold">N/A</div>
+                  <div className="text-3xl font-bold">N/A</div>
                   <div className="text-lg font-medium">AP</div>
                 </div>
 
                 <div className="flex-1 flex items-center gap-2  justify-center md:justify-start">
-                  <div className="text-4xl font-bold">N/A</div>
+                  <div className="text-3xl font-bold">N/A</div>
                   <div className="text-lg font-medium">CPE</div>
                 </div>
 
                 <div className="flex-1 flex items-center gap-2  justify-center md:justify-start">
-                  <div className="text-4xl font-bold">N/A</div>
+                  <div className="text-3xl font-bold">N/A</div>
                   <div className="text-lg font-medium">4G</div>
                 </div>
 
                 <div className="flex-1 flex items-center gap-2  justify-center md:justify-start">
-                  <div className="text-4xl font-bold">N/A</div>
+                  <div className="text-3xl font-bold">N/A</div>
                   <div className="text-lg font-medium">5G</div>
                 </div>
               </div>
