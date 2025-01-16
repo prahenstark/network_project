@@ -60,5 +60,12 @@ module.exports = {
       },
     },
   },
+  variants: {
+    extend: {
+      opacity: ["group-hover"], // Enable group-hover for opacity
+      display: ["group-hover"], // Enable group-hover for display
+      translate: ["group-hover", "hover"],
+    },
+  },
   plugins: [require("tailwindcss-animate")],
 };

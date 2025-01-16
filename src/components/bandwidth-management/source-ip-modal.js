@@ -16,13 +16,12 @@ import { Input } from "../ui/input";
 
 export default function SourceIpModal({ toggleModal }) {
   const [destinationIPName, setDestinationIPName] = useState(""); // Destination IP Name
-  const [sourceIPName, setSourceIPName] = useState(""); //Source IP
+  const [sourceIPName, setSourceIPName] = useState(""); // Source IP
   const [remarks, setRemarks] = useState("");
   const [notes, setNotes] = useState(""); // Textarea input for IPs
   const { selectedBandwidthDevice } = useBandwidthDevice();
 
   const handleSubmit = () => {
-    // Collect all "Start IP" and "End IP" inputs from the form
     const startIPs = Array.from(
       document.querySelectorAll('input[placeholder="Enter start IP"]')
     ).map((input) => input.value.trim());
@@ -31,7 +30,6 @@ export default function SourceIpModal({ toggleModal }) {
       document.querySelectorAll('input[placeholder="Enter end IP"]')
     ).map((input) => input.value.trim());
 
-    // Validate pairs: Ensure that if one value is entered, the other is also provided
     const invalidPairs = startIPs.some(
       (startIP, index) =>
         (startIP && !endIPs[index]) || (!startIP && endIPs[index])
@@ -46,7 +44,6 @@ export default function SourceIpModal({ toggleModal }) {
       return;
     }
 
-    // Filter valid pairs (both Start IP and End IP are provided)
     const validPairs = startIPs
       .map((startIP, index) => ({
         StartIP: startIP,
@@ -54,7 +51,6 @@ export default function SourceIpModal({ toggleModal }) {
       }))
       .filter((pair) => pair.StartIP && pair.EndIP);
 
-    // If no valid pairs exist, prompt the user
     if (validPairs.length === 0) {
       toast({
         description:
@@ -64,17 +60,14 @@ export default function SourceIpModal({ toggleModal }) {
       return;
     }
 
-    // Construct the payload
     const payload = {
-      Name: sourceIPName, // Selected name from the dropdown
-      AddressObjCount: validPairs.length, // Count of valid address pairs
-      address_array: validPairs, // Array of valid Start IP and End IP pairs
+      Name: sourceIPName,
+      AddressObjCount: validPairs.length,
+      address_array: validPairs,
     };
 
-    // Log the payload for debugging
     console.log("Form 2 Payload:", payload);
 
-    // Send the payload to the API
     fetchDashboardInfo(
       `/devices/address-object/${selectedBandwidthDevice}?action=add`,
       "PUT",
@@ -82,16 +75,14 @@ export default function SourceIpModal({ toggleModal }) {
       false
     )
       .then((response) => {
-        // Handle success
         console.log("API Response:", response);
         toast({
           description: "Source IPs added successfully!",
           variant: "default",
         });
-        toggleModal(); // Close the modal
+        toggleModal();
       })
       .catch((error) => {
-        // Handle errors
         console.error("Error submitting form 2:", error);
         toast({
           description: "Error adding Source IPs.",
@@ -110,7 +101,7 @@ export default function SourceIpModal({ toggleModal }) {
         />
 
         {/* Modal Content */}
-        <div className="relative bg-background rounded-lg shadow-lg w-full max-w-md text-right">
+        <div className="relative bg-background rounded-lg shadow-lg w-full max-w-md max-h-screen overflow-y-auto text-right">
           {/* Header */}
           <div className="flex justify-between items-center p-4 border-b">
             <h2 className="text-lg font-bold">Add Source IP</h2>
@@ -137,99 +128,25 @@ export default function SourceIpModal({ toggleModal }) {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label className="mb-2">Start IP</Label>
-                <Input
-                  type="text"
-                  className="input w-full mb-1"
-                  placeholder="Enter start IP"
-                />
-                <Input
-                  type="text"
-                  className="input w-full mb-1"
-                  placeholder="Enter start IP"
-                />
-                <Input
-                  type="text"
-                  className="input w-full mb-1"
-                  placeholder="Enter start IP"
-                />
-                <Input
-                  type="text"
-                  className="input w-full mb-1"
-                  placeholder="Enter start IP"
-                />
-                <Input
-                  type="text"
-                  className="input w-full mb-1"
-                  placeholder="Enter start IP"
-                />
-                <Input
-                  type="text"
-                  className="input w-full mb-1"
-                  placeholder="Enter start IP"
-                />
-                <Input
-                  type="text"
-                  className="input w-full mb-1"
-                  placeholder="Enter start IP"
-                />
-                <Input
-                  type="text"
-                  className="input w-full mb-1"
-                  placeholder="Enter start IP"
-                />
-                <Input
-                  type="text"
-                  className="input w-full mb-1"
-                  placeholder="Enter start IP"
-                />
+                {Array.from({ length: 9 }).map((_, idx) => (
+                  <Input
+                    key={`start-ip-${idx}`}
+                    type="text"
+                    className="input w-full mb-1"
+                    placeholder="Enter start IP"
+                  />
+                ))}
               </div>
               <div>
                 <Label className="mb-2">End IP</Label>
-                <Input
-                  type="text"
-                  className="input w-full mb-1"
-                  placeholder="Enter end IP"
-                />
-                <Input
-                  type="text"
-                  className="input w-full mb-1"
-                  placeholder="Enter end IP"
-                />
-                <Input
-                  type="text"
-                  className="input w-full mb-1"
-                  placeholder="Enter end IP"
-                />
-                <Input
-                  type="text"
-                  className="input w-full mb-1"
-                  placeholder="Enter end IP"
-                />
-                <Input
-                  type="text"
-                  className="input w-full mb-1"
-                  placeholder="Enter end IP"
-                />
-                <Input
-                  type="text"
-                  className="input w-full mb-1"
-                  placeholder="Enter end IP"
-                />
-                <Input
-                  type="text"
-                  className="input w-full mb-1"
-                  placeholder="Enter end IP"
-                />
-                <Input
-                  type="text"
-                  className="input w-full mb-1"
-                  placeholder="Enter end IP"
-                />
-                <Input
-                  type="text"
-                  className="input w-full mb-1"
-                  placeholder="Enter end IP"
-                />
+                {Array.from({ length: 9 }).map((_, idx) => (
+                  <Input
+                    key={`end-ip-${idx}`}
+                    type="text"
+                    className="input w-full mb-1"
+                    placeholder="Enter end IP"
+                  />
+                ))}
               </div>
             </div>
           </div>
@@ -248,3 +165,4 @@ export default function SourceIpModal({ toggleModal }) {
     </>
   );
 }
+

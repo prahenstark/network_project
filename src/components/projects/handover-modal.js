@@ -128,7 +128,7 @@ const HandoverModal = ({ isOpen, onClose, id, refreshAction }) => {
                 disabled
                 className="bg-[#303531] text-white hover:bg-white hover:bg-opacity-5"
               >
-                Select a user
+                Select an account
               </option>
               {users.map((user) => (
                 <option

@@ -169,7 +169,6 @@ export default function BandwidthModal({ toggleModal }) {
               <SelectContent>
                 <SelectItem value="address">Address</SelectItem>
                 <SelectItem value="user">User</SelectItem>
-                <SelectItem value="level">Level</SelectItem>
                 <SelectItem value="department">Department</SelectItem>
               </SelectContent>
             </Select>
