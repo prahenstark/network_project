@@ -135,7 +135,6 @@ export default function DestinationIpModal({ toggleModal }) {
 
             {/* Additional Notes (Textarea) */}
             <div>
-              
               <textarea
                 className={cn(
                   "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-white text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
@@ -146,7 +145,7 @@ export default function DestinationIpModal({ toggleModal }) {
                   overflowY: "auto", // Enable vertical scrolling
                 }}
                 rows={4}
-                placeholder="Enter additional notes..."
+                placeholder="Enter destination address..."
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
               ></textarea>
