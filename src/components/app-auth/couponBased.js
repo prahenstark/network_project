@@ -14,7 +14,7 @@ import {
 import { fetchProtectedInfo } from "@/lib/api"; // Import the fetchProtectedInfo function
 import { useToast } from "@/hooks/use-toast";
 
-export default function TokenBasedForm() {
+export default function CouponBasedForm() {
   const [devices, setDevices] = useState([]);
   const [username, setUsername] = useState(""); // State for username
   const [useHour, setUseHour] = useState(""); // State for use hour
@@ -45,24 +45,29 @@ export default function TokenBasedForm() {
 
     // Prepare data for the API call
     const payload = {
-      username,
       useHour,
       couponExpiry: expiryEpoch,
-      deviceId: selectedDevice,
-      authType: "coupon"
+      // deviceId: selectedDevice,
+      authType: "coupon",
     };
 
     try {
-      const response = await fetchProtectedInfo(`/devices/add-guest/${selectedDevice}`, 'PUT', payload);
+      const response = await fetchProtectedInfo(
+        `/devices/add-guest/${selectedDevice}`,
+        "PUT",
+        payload
+      );
 
       if (response) {
-        toast({description: "Guest added successfully"});
-        setUsername("");
+        toast({ description: "Guest added successfully" });
         setSelectedDevice("");
         setExpiryDate("");
         setUseHour("");
       } else {
-        toast({description: "Guest added successfully", variant: "destructive"});
+        toast({
+          description: "Guest added successfully",
+          variant: "destructive",
+        });
       }
     } catch (error) {
       console.error("Error during PUT request:", error);
@@ -72,7 +77,9 @@ export default function TokenBasedForm() {
   return (
     <div className="flex flex-col items-center justify-center">
       <div className="p-6 border rounded-lg shadow-md w-96 space-y-4 bg-background">
-        <h2 className="text-center text-lg font-bold">Token Based Login Method</h2>
+        <h2 className="text-center text-lg font-bold">
+          Coupon Based Login Method
+        </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <Label className="block mb-2">Select Device</Label>
@@ -89,14 +96,14 @@ export default function TokenBasedForm() {
               </SelectContent>
             </Select>
           </div>
-          <div>
+          {/* <div>
             <Label className="block mb-2">Username</Label>
             <Input
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Enter username"
             />
-          </div>
+          </div> */}
           <div>
             <Label className="block mb-2">Use Hour</Label>
             <Input

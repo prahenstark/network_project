@@ -6,9 +6,17 @@ import { toast } from "@/hooks/use-toast";
 import { fetchDashboardInfo } from "@/lib/api";
 import { useBandwidthDevice } from "@/context/bandwidth-device-provider";
 import { Input } from "../ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
 export default function DepartmentModal({ toggleModal }) {
   const [departmentName, setDepartmentName] = useState(""); // Department Name
+  const [type, setType] = useState("coupon"); // Tracks the selected source type
   const { selectedBandwidthDevice } = useBandwidthDevice();
 
   const handleSubmit = async () => {
@@ -22,6 +30,7 @@ export default function DepartmentModal({ toggleModal }) {
 
     const payload = {
       Name: departmentName,
+      Type: type,
     };
 
     try {
@@ -76,6 +85,22 @@ export default function DepartmentModal({ toggleModal }) {
                 value={departmentName}
                 onChange={(e) => setDepartmentName(e.target.value)}
               />
+            </div>
+            <div>
+              <Label htmlFor="source-address" className="mb-2">
+                Type:
+              </Label>
+              <Select value={type} onValueChange={(value) => setType(value)}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select Source Address" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="coupon">Coupon</SelectItem>
+                  <SelectItem value="closed-sms">Closed SMS</SelectItem>
+                  <SelectItem value="open-sms">Open SMS</SelectItem>
+                  <SelectItem value="auth">Auth</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
         </div>

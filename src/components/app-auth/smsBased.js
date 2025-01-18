@@ -42,11 +42,13 @@ export default function SMSBasedForm() {
 
     // Prepare data for the API call
     const payload = {
-      deviceId: selectedDevice,
+      // deviceId: selectedDevice,
+      mobile: mobile,
       authType: "sms",
-      ...(selectedSMSType === "open"
-        ? { usageHours }
-        : { mobile }),
+      selectedSMSType: "closed",
+      // ...(selectedSMSType === "open"
+      //   ? { usageHours }
+      //   : { mobile }),
     };
 
     try {
@@ -72,7 +74,9 @@ export default function SMSBasedForm() {
   return (
     <div className="flex flex-col items-center justify-center">
       <div className="p-6 border rounded-lg shadow-md w-96 space-y-4 bg-background">
-        <h2 className="text-center text-lg font-bold">SMS Based Login Method</h2>
+        <h2 className="text-center text-lg font-bold">
+          SMS Based Login Method
+        </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <Label className="block mb-2">Select Device</Label>
@@ -89,7 +93,7 @@ export default function SMSBasedForm() {
               </SelectContent>
             </Select>
           </div>
-          <div>
+          {/* <div>
             <Label className="block mb-2">Select SMS Type</Label>
             <Select required value={selectedSMSType} onValueChange={setSelectedSMSType}>
               <SelectTrigger>
@@ -100,7 +104,7 @@ export default function SMSBasedForm() {
                 <SelectItem value="closed">Closed SMS</SelectItem>
               </SelectContent>
             </Select>
-          </div>
+          </div> */}
           {selectedSMSType === "open" ? (
             <div>
               <Label className="block mb-2">Usage Hours</Label>
@@ -113,11 +117,11 @@ export default function SMSBasedForm() {
             </div>
           ) : (
             <div>
-              <Label className="block mb-2">Mobile</Label>
+              <Label className="block mb-2">Phone</Label>
               <Input
                 value={mobile}
                 onChange={(e) => setMobile(e.target.value)}
-                placeholder="Enter mobile number"
+                placeholder="Enter phone number"
               />
             </div>
           )}

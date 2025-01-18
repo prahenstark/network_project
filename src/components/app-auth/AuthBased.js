@@ -44,7 +44,7 @@ export default function AuthBasedForm() {
     const payload = {
       username,
       password,
-      deviceId: selectedDevice,
+      // deviceId: selectedDevice,
       authType: "auth"
     };
 

@@ -17,6 +17,8 @@ import { MailIcon } from "lucide-react";
 import { UserIcon } from "lucide-react";
 import { TicketIcon } from "lucide-react";
 import { Button } from "../ui/button";
+import { Download } from "lucide-react";
+import * as XLSX from "xlsx";
 
 export default function AllUsers({}) {
   const [devices, setDevices] = useState([]); // State for all devices
@@ -86,18 +88,22 @@ export default function AllUsers({}) {
     return matchesSearch && matchesAuthType;
   });
 
-  
   const handleDeleteUser = async (user) => {
     const guestId = user._id; // Assuming user._id contains the guestId
     const path = `/devices/delete-guest`; // Adjust the path as needed
-  
+
     const requestData = {
       guestId: guestId, // Pass the guestId as per your requirement
     };
-  
+
     try {
-      const response = await fetchDashboardInfo(path, "POST", requestData, false);
-  
+      const response = await fetchDashboardInfo(
+        path,
+        "POST",
+        requestData,
+        false
+      );
+
       if (response) {
         toast({
           title: "Guest User removed!",
@@ -110,7 +116,7 @@ export default function AllUsers({}) {
           description: "Failed to remove guest user.",
         });
       }
-  
+
       fetchGuestUsers();
     } catch (error) {
       console.log("Error deleting user:", error);
@@ -121,13 +127,85 @@ export default function AllUsers({}) {
       });
     }
   };
-  
 
+  const handleDownload = () => {
+    // Define columns to export for each auth type
+    const columnsByAuthType = {
+      all: [
+        "Name",
+        "SSID",
+        "Department",
+        "Phone",
+        "Password",
+        "Auth Type",
+        "Coupon Code",
+        "Coupon Expiry",
+      ],
+      auth: ["Name", "SSID", "Password"],
+      sms: ["Phone"],
+      coupon: ["Coupon Code", "Coupon Expiry"],
+    };
+
+    // Get the columns for the selected auth type
+    const selectedColumns =
+      columnsByAuthType[selectedAuthType] || columnsByAuthType["all"];
+
+    // Filter data based on the selected authentication type
+    const dataToExport =
+      selectedAuthType === "all"
+        ? guestUsers // If "all" is selected, export all users
+        : guestUsers.filter((user) => user.authType === selectedAuthType);
+
+    if (dataToExport.length === 0) {
+      toast({
+        description: "No data available for the selected filter.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Map the data to include only the selected columns
+    const exportData = dataToExport.map((user) => {
+      const rowData = {};
+      if (selectedColumns.includes("Name"))
+        rowData["Name"] = user.name || "N/A";
+      if (selectedColumns.includes("SSID"))
+        rowData["SSID"] = user.ssid || "N/A";
+      if (selectedColumns.includes("Department"))
+        rowData["Department"] = user.department || "N/A";
+      if (selectedColumns.includes("Phone"))
+        rowData["Phone"] = user.phone || "N/A";
+      if (selectedColumns.includes("Password"))
+        rowData["Password"] = user.password || "N/A";
+      if (selectedColumns.includes("Auth Type"))
+        rowData["Auth Type"] = user.authType || "N/A";
+      if (selectedColumns.includes("Coupon Code"))
+        rowData["Coupon Code"] = user.couponCode || "N/A";
+      if (selectedColumns.includes("Coupon Expiry"))
+        rowData["Coupon Expiry"] = user.couponExpiry
+          ? new Date(parseInt(user.couponExpiry) * 1000).toLocaleString()
+          : "Never";
+      return rowData;
+    });
+
+    // Create a new worksheet and workbook
+    const worksheet = XLSX.utils.json_to_sheet(exportData);
+    const workbook = XLSX.utils.book_new();
+
+    // Append the worksheet to the workbook
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Users");
+
+    // Generate Excel file and trigger download
+    const excelFileName = `Guest_Users_${selectedAuthType}.xlsx`;
+    XLSX.writeFile(workbook, excelFileName);
+  };
 
   // Define table columns to match the guest user data structure
   const columns = [
     { header: "Name", accessorKey: "name" },
     { header: "SSID", accessorKey: "ssid" },
+    { header: "Department", accessorKey: "department" },
+    { header: "Phone", accessorKey: "phone" },
     {
       header: "Password",
       accessorKey: "password",
@@ -171,7 +249,7 @@ export default function AllUsers({}) {
       cell: (info) =>
         info.getValue()
           ? new Date(parseInt(info.getValue()) * 1000).toLocaleString()
-          : "Never",
+          : "N/A",
     },
     {
       id: "config",
@@ -202,6 +280,9 @@ export default function AllUsers({}) {
   return (
     <div>
       <div className="flex max-md:flex-col items-center justify-center md:justify-end gap-4 mb-4">
+        <Button onClick={handleDownload}>
+          <Download />
+        </Button>
         {/* Search Input */}
         <Input
           className="max-w-sm bg-green-900/40"
