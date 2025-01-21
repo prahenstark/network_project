@@ -22,17 +22,17 @@ const DeleteModal = ({ isOpen, onClose, gids }) => {
       return;
     }
 
+    console.log("GIDS", gids);
+
     try {
       // Send API call to delete the user with the provided UID
       const result = await fetchProtectedInfo(
         "cloudnet/portal/dashboard/account/delete-users",
         "DELETE",
         {
-          uids: [gids[0]],
+          uids: gids,
         }
       );
-
-
 
       if (result) {
         toast({
@@ -74,10 +74,7 @@ const DeleteModal = ({ isOpen, onClose, gids }) => {
         {/* Header Modal */}
         <div className="flex item-center justify-between mb-6">
           <h2 className="text-xl font-semibold">System Tips</h2>
-          <button
-            onClick={onClose}
-            className=" hover:text-gray-400"
-          >
+          <button onClick={onClose} className=" hover:text-gray-400">
             <XIcon />
           </button>
         </div>
@@ -90,6 +87,7 @@ const DeleteModal = ({ isOpen, onClose, gids }) => {
           </h1>
           <div className="flex flex-wrap gap-4 mt-4 justify-center">
             <button
+              type="button"
               onClick={onClose}
               className="min-w-32 px-4 py-2 bg-transparent border-2 border-white border-opacity-5 rounded hover:bg-white hover:bg-opacity-5"
             >
