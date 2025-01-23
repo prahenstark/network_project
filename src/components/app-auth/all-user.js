@@ -270,11 +270,11 @@ export default function AllUsers({}) {
   ];
 
   if (loading) {
-    return <div>Loading devices...</div>;
+    return <div className="text-center">Loading devices...</div>;
   }
 
   if (!devices.length) {
-    return <div>No devices available.</div>;
+    return <div className="text-center">No devices available.</div>;
   }
 
   return (
