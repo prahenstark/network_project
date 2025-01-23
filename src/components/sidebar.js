@@ -17,7 +17,6 @@ import LogoutModal from "./logout-modal";
 import { useState } from "react";
 import Image from "next/image";
 import { useUIState } from "@/hooks/use-uiState";
-import { Tooltip } from "@material-tailwind/react"; // Import Tooltip
 import { RouterIcon } from "lucide-react";
 import { NetworkIcon } from "lucide-react";
 import { MonitorSmartphoneIcon } from "lucide-react";
@@ -82,7 +81,6 @@ export default function Sidebar() {
                 className="my-2 flex items-center w-full relative"
                 key={index}
               >
-                <Tooltip content={item.name} placement="right">
                   <div className="flex-1 flex justify-center items-center">
                     <Link href={item.href}>
                       <div
@@ -94,7 +92,6 @@ export default function Sidebar() {
                       </div>
                     </Link>
                   </div>
-                </Tooltip>
                 <div
                   className={`h-10 w-1 ml-auto rounded-tl-md rounded-bl-md ${
                     pathname === item.href ? "bg-primary" : ""

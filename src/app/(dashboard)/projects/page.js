@@ -6,11 +6,13 @@ import Loader from "@/components/loader";
 import { fetchDashboardInfo } from "@/lib/api";
 import { PlusIcon } from "lucide-react";
 import AddProjectModal from "@/components/projects/add-project-modal";
+import { Input } from "@/components/ui/input";
 
 const Projects = () => {
   const [loading, setLoading] = useState(true);
   const [projectData, setProjectData] = useState(null); // State to hold project data
   const [isAddModalOpen, setAddModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState(""); // State for search input
 
   const getData = async () => {
     try {
@@ -48,6 +50,11 @@ const Projects = () => {
   const parentProject = projectData[0];
   const childProjects = parentProject?.child || [];
 
+  // Filter projects based on the search query
+  const filteredProjects = childProjects.filter((project) =>
+    project.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <>
       <Navbar title="Projects" />
@@ -66,19 +73,34 @@ const Projects = () => {
             </button>
           </div>
 
+          {/* Search Bar */}
+          <div className="py-4">
+            <Input
+              type="text"
+              placeholder="Search projects..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full h-12 bg-green-900/40"
+            />
+          </div>
+
           {/* Section with List */}
           <div className="p-4 shadow-md rounded-lg bg-white bg-opacity-5">
-            <ul className="space-y-2">
-              {childProjects.map((project) => (
-                <ProjectItem
-                  key={project.gid}
-                  item={project.name}
-                  id={project.gid}
-                  refreshAction={getData}
-                  child={project.child}
-                />
-              ))}
-            </ul>
+            {filteredProjects.length > 0 ? (
+              <ul className="space-y-2">
+                {filteredProjects.map((project) => (
+                  <ProjectItem
+                    key={project.gid}
+                    item={project.name}
+                    id={project.gid}
+                    refreshAction={getData}
+                    child={project.child}
+                  />
+                ))}
+              </ul>
+            ) : (
+              <p>No matching projects found.</p>
+            )}
           </div>
 
           {/* Another Rounded Corner Section */}
