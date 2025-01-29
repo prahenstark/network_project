@@ -115,8 +115,9 @@ const AddProjectModal = ({ isOpen, onClose, id, name, refreshAction }) => {
               name="projectName"
               value={formData.projectName}
               onChange={handleChange}
-              className="w-1/2 px-3 py-2 text-white bg-white bg-opacity-5 border rounded focus:outline-none focus:ring focus:ring-blue-200 "
+              className="w-1/2 px-3 py-2 text-white bg-white bg-opacity-5 border rounded focus:outline-none focus:ring focus:ring-blue-200"
               required
+              maxLength="10"
             />
           </div>
           <div className="w-full flex">
