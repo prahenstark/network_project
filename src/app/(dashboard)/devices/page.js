@@ -13,6 +13,7 @@ import { fetchDashboardInfo } from "@/lib/api";
 import { useDevice } from "@/context/device-context";
 import AddDeviceModal from "@/components/devices/add-device-modal";
 import { useSearchParams } from "next/navigation";
+import { Input } from "@/components/ui/input";
 
 export default function Devices() {
   const [loading, setLoading] = useState(true);
@@ -20,7 +21,8 @@ export default function Devices() {
   const [projectData, setProjectData] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const params = useSearchParams();
-  const status = params.get('status')
+  const status = params.get("status");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const { selectedDeviceProject } = useDevice();
 
@@ -50,6 +52,10 @@ export default function Devices() {
   };
 
   const selectedDevice = getDeviceForSelectedProject();
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
 
   const dropdownOptions = [
     { label: "All", value: "all" },
@@ -129,7 +135,10 @@ export default function Devices() {
                   <div className="text-lg font-medium">5G</div>
                 </div>
               </div>
-              <ToggleHeader pageName="Device List" className="px-6 max-md:mb-32">
+              <ToggleHeader
+                pageName="Device List"
+                className="px-6 max-md:mb-32"
+              >
                 <div className="flex items-center justify-between gap-4 max-w-full">
                   {/* <button onClick={toggleProjectListFunction}>
                     <Menu />
@@ -154,7 +163,14 @@ export default function Devices() {
                   />
                 </div>
                 <div>
-                  <Searchbar displayText="🔍 Search" />
+                  {/* Search by IP Address */}
+                  <Input
+                    type="text"
+                    placeholder="Search by IP Address"
+                    value={searchQuery}
+                    onChange={handleSearchChange}
+                    className="bg-white bg-opacity-5"
+                  />
                 </div>
                 <div className="flex items-center gap-4">
                   <IconDropdown
@@ -182,8 +198,13 @@ export default function Devices() {
                   </button>
                 </div>
               </ToggleHeader>
-              
-              <DeviceTable statusFilter={status} data={selectedDevice} refreshAction={getData} />
+
+              <DeviceTable
+                searchQuery={searchQuery}
+                statusFilter={status}
+                data={selectedDevice}
+                refreshAction={getData}
+              />
             </>
           )}
         </div>

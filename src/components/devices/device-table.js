@@ -11,7 +11,7 @@ import { formatDate } from "date-fns";
 import { fetchProtectedInfo } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 
-function DeviceTable({ data, refreshAction, statusFilter }) {
+function DeviceTable({ data, refreshAction, statusFilter, searchQuery }) {
   // Transform the data as needed for the table
   const { toast } = useToast();
   const [tableData, setTableData] = useState([]);
@@ -55,8 +55,8 @@ function DeviceTable({ data, refreshAction, statusFilter }) {
 
   useEffect(() => {
     if (data) {
-      const deviceList = data?.deviceList;
-
+      const deviceList = data?.deviceList || [];
+  
       // Filter based on the statusFilter parameter
       let filteredDevices = deviceList?.filter((deviceListData) => {
         if (statusFilter === "offline") {
@@ -67,27 +67,35 @@ function DeviceTable({ data, refreshAction, statusFilter }) {
         }
         return true; // Show all devices when statusFilter is 'all'
       });
-
+  
+      // Filter based on the search query (IP address)
+      if (searchQuery.trim() !== "") {
+        filteredDevices = filteredDevices.filter((device) =>
+          device.ip.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+      }
+  
       // Map the filtered devices to a formatted structure
       const formattedData = filteredDevices?.map((deviceListData, index) => ({
         id: index,
         deviceId: deviceListData?.deviceId || "N/A",
-        name: deviceListData?.name || "N/A", // Provide a default
-        type: deviceListData?.type || "N/A", // Provide a default
+        name: deviceListData?.name || "N/A",
+        type: deviceListData?.type || "N/A",
         sn: index + 1,
-        mac: deviceListData?.mac || "N/A", // Provide a fallback if MAC isn't in the data
-        ip: deviceListData?.ip || "N/A", // Same for IP
+        mac: deviceListData?.mac || "N/A",
+        ip: deviceListData?.ip || "N/A",
         mode: deviceListData?.mode || "N/A",
         version: deviceListData?.version || "N/A",
-        accessTime: deviceListData?.access_time || "N/A", // Or any other relevant field
+        accessTime: deviceListData?.access_time || "N/A",
         status: deviceListData?.status === "1" ? <CircleCheck /> : <CircleX />,
-        bg: deviceListData?.status === "1" ? "green" : "red"
+        bg: deviceListData?.status === "1" ? "green" : "red",
       }));
-
+  
       setTableData(formattedData);
-      console.log("Device data", formattedData);
+      console.log("Filtered device data", formattedData);
     }
-  }, [data, statusFilter]);
+  }, [data, statusFilter, searchQuery]);
+  
 
   const columns = [
     {
