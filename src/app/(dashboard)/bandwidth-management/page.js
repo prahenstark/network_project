@@ -41,7 +41,7 @@ export default function BandwidthManagement({}) {
         setBandwidthData(data.response.BAND_CONTROL_RULE_array || []);
         setLoading(false);
       } catch (error) {
-        console.error("Error fetching logs:", error);
+        // console.error("Error fetching logs:", error);
         toast({
           description: "Failed to fetch logs.",
           variant: "destructive",

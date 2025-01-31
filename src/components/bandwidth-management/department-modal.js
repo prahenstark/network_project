@@ -17,6 +17,7 @@ import {
 export default function DepartmentModal({ toggleModal }) {
   const [departmentName, setDepartmentName] = useState(""); // Department Name
   const [type, setType] = useState("coupon"); // Tracks the selected source type
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { selectedBandwidthDevice } = useBandwidthDevice();
 
   const handleSubmit = async () => {
@@ -27,6 +28,8 @@ export default function DepartmentModal({ toggleModal }) {
       });
       return;
     }
+
+    setIsSubmitting(true);
 
     const payload = {
       Name: departmentName,
@@ -42,6 +45,15 @@ export default function DepartmentModal({ toggleModal }) {
       );
       console.log("API Payload:", payload);
       console.log("API Response:", response);
+
+      // if (response.status !== 200 || response.status !== 204) {
+      //   toast({
+      //     description: "There was an error adding the department.",
+      //     variant: "destructive",
+      //   });
+      //   return;
+      // }
+
       toast({ description: "department added successfully!" });
       toggleModal(); // Close modal on success
     } catch (error) {
@@ -50,6 +62,8 @@ export default function DepartmentModal({ toggleModal }) {
         description: "There was an error adding the department.",
         variant: "destructive",
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -110,8 +124,12 @@ export default function DepartmentModal({ toggleModal }) {
           <Button onClick={toggleModal} variant="outline" className="mr-2">
             Cancel
           </Button>
-          <Button onClick={handleSubmit} variant="default">
-            Submit
+          <Button
+            onClick={handleSubmit}
+            variant="default"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Submitting..." : "Submit"}
           </Button>
         </div>
       </div>

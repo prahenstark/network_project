@@ -20,6 +20,7 @@ export default function FlowModal({ toggleModal }) {
   const [selectedDestinationIP, setSelectedDestinationIP] = useState(""); // Selected Destination IP
   const [selectedDestinationPort, setSelectedDestinationPort] = useState(""); // Selected Destination Port
   const [sourceType, setSourceType] = useState("address"); // Destination Port type (static for now)
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { selectedBandwidthDevice } = useBandwidthDevice();
 
   // Fetch Source IP and Destination IP data from APIs
@@ -65,6 +66,8 @@ export default function FlowModal({ toggleModal }) {
       return;
     }
 
+    setIsSubmitting(true);
+
     const payload = {
       Enabled: 1,
       SrcAddrType: 1,
@@ -82,6 +85,15 @@ export default function FlowModal({ toggleModal }) {
       );
       console.log("API Payload:", payload);
       console.log("API Response:", response);
+
+      if (response.status !== 200) {
+        toast({
+          description: "There was an error adding the free flow rule.",
+          variant: "destructive",
+        });
+        return;
+      }
+
       toast({ description: "Free flow rule added successfully!" });
       toggleModal(); // Close modal on success
     } catch (error) {
@@ -90,6 +102,8 @@ export default function FlowModal({ toggleModal }) {
         description: "There was an error adding the Free flow rule.",
         variant: "destructive",
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -172,8 +186,12 @@ export default function FlowModal({ toggleModal }) {
           <Button onClick={toggleModal} variant="outline" className="mr-2">
             Cancel
           </Button>
-          <Button onClick={handleSubmit} variant="default">
-            Submit
+          <Button
+            onClick={handleSubmit}
+            variant="default"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Submitting..." : "Submit"}
           </Button>
         </div>
       </div>

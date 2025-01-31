@@ -47,7 +47,6 @@ function CreateAccountForm({ onClose }) {
     }
   };
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     const apiData = {
@@ -70,12 +69,15 @@ function CreateAccountForm({ onClose }) {
       );
       console.log("api data", apiData);
       console.log("API Response:", response);
-      toast({description: "Account created successfully!"});
+      toast({ description: "Account created successfully!" });
       window.location.reload();
       onClose();
     } catch (error) {
       console.error("Error creating account:", error);
-      toast({description: "There was an error creating device.", variant: "destructive"});
+      toast({
+        description: "There was an error creating device.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -124,7 +126,6 @@ function CreateAccountForm({ onClose }) {
       </ul>
     );
   };
-
 
   return (
     <form

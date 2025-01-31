@@ -39,9 +39,12 @@ export default function DestinationIpModal({ toggleModal }) {
   const [destinationIPName, setDestinationIPName] = useState(""); // Destination IP Name
   const [remarks, setRemarks] = useState("");
   const [notes, setNotes] = useState(""); // Textarea input for IPs
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { selectedBandwidthDevice } = useBandwidthDevice();
 
   const handleSubmit = async () => {
+    setIsSubmitting(true);
+
     const ipLines = notes
       .split("\n")
       .map((line) => line.trim())
@@ -68,6 +71,15 @@ export default function DestinationIpModal({ toggleModal }) {
       );
       console.log("API Payload:", payload);
       console.log("API Response:", response);
+
+      if (response.status !== 200) {
+        toast({
+          description: "There was an error adding the destination ip.",
+          variant: "destructive",
+        });
+        return;
+      }
+
       toast({ description: "Destination IP added successfully!" });
       toggleModal(); // Close modal on success
     } catch (error) {
@@ -76,6 +88,8 @@ export default function DestinationIpModal({ toggleModal }) {
         description: "There was an error adding the destination ip.",
         variant: "destructive",
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -157,8 +171,12 @@ export default function DestinationIpModal({ toggleModal }) {
             <Button onClick={toggleModal} variant="outline" className="mr-2">
               Cancel
             </Button>
-            <Button onClick={handleSubmit} variant="default">
-              Submit
+            <Button
+              onClick={handleSubmit}
+              variant="default"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Submitting..." : "Submit"}
             </Button>
           </div>
         </div>

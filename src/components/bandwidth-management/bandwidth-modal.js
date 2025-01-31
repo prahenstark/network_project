@@ -17,6 +17,7 @@ import { Wifi } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
 export default function BandwidthModal({ toggleModal }) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isUpstreamUnlimited, setIsUpstreamUnlimited] = useState(true);
   const [isDownstreamUnlimited, setIsDownstreamUnlimited] = useState(true);
   const { selectedBandwidthDevice } = useBandwidthDevice();
@@ -95,7 +96,8 @@ export default function BandwidthModal({ toggleModal }) {
   }, [sourceType, selectedBandwidthDevice]);
 
   const handleSubmit = async () => {
-    console.log("ADDRESS", selectedField);
+    setIsSubmitting(true);
+
     const payload = {
       Enabled: 1,
       AddrType: sourceType === "address" ? 1 : sourceType === "user" ? 2 : 4,
@@ -122,6 +124,15 @@ export default function BandwidthModal({ toggleModal }) {
       );
       console.log("API Payload:", payload);
       console.log("API Response:", response);
+
+      if (response.status !== 200) {
+        toast({
+          description: "There was an error adding the bandwidth rule.",
+          variant: "destructive",
+        });
+        return;
+      }
+
       toast({ description: "Bandwidth rule added successfully!" });
       window.location.reload(); // Reloads the page after successful submission
       toggleModal(); // Closes the modal
@@ -131,6 +142,8 @@ export default function BandwidthModal({ toggleModal }) {
         description: "There was an error adding the bandwidth rule.",
         variant: "destructive",
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -316,8 +329,12 @@ export default function BandwidthModal({ toggleModal }) {
           <Button onClick={toggleModal} variant="outline" className="mr-2">
             Cancel
           </Button>
-          <Button onClick={handleSubmit} variant="default">
-            Submit
+          <Button
+            onClick={handleSubmit}
+            variant="default"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Submitting..." : "Submit"}
           </Button>
         </div>
       </div>

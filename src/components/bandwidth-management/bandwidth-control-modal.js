@@ -36,7 +36,7 @@ export default function BandwidthControlModal({ activeTab }) {
   return (
     <>
       {/* Trigger Button */}
-      <Button onClick={toggleModal} size="sm" variant="secondary">
+      <Button className="py-5" onClick={toggleModal} size="sm" variant="secondary">
         <Plus />
         Add{" "}
         {activeTab === "bandwidth"

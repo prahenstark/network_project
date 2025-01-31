@@ -27,7 +27,7 @@ import Loader from "@/components/loader";
 import { CircleCheck } from "lucide-react";
 import { CircleX } from "lucide-react";
 
-export default function Accounts({}) {
+export default function AccountsPage() {
   const [selectediconDropdownOption, setSelectediconDropdownOption] =
     useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -247,9 +247,7 @@ export default function Accounts({}) {
         const isExpanded = expandedRows.includes(row.index);
         return (
           <div>
-            <button
-              onClick={() => handleRowExpansion(row.index)}
-            >
+            <button onClick={() => handleRowExpansion(row.index)}>
               {isExpanded ? "Hide Projects" : "Show Projects"}
             </button>
             {isExpanded && (
@@ -258,14 +256,20 @@ export default function Accounts({}) {
                   <thead>
                     <tr>
                       <th className="border border-green-800 px-4">Name</th>
-                      <th className="border border-green-800 px-4">Description</th>
+                      <th className="border border-green-800 px-4">
+                        Description
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
                     {row.original.projects.map((project) => (
                       <tr key={project.projectId}>
-                        <td className="border border-green-800 px-4">{project.name}</td>
-                        <td className="border border-green-800 px-4">{project.description}</td>
+                        <td className="border border-green-800 px-4">
+                          {project.name}
+                        </td>
+                        <td className="border border-green-800 px-4">
+                          {project.description}
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -294,7 +298,6 @@ export default function Accounts({}) {
       ),
     },
 
-    
     {
       id: "config",
       enableHiding: false,
@@ -330,9 +333,8 @@ export default function Accounts({}) {
   ];
 
   return (
-    <div>
-      <Navbar title="Accounts" />
-      <ToggleHeader pageName="Account List" className=" p-6">
+    <>
+      <ToggleHeader pageName="Account List" className="p-6">
         <div className="flex items-center max-md:flex-col gap-4">
           <div className="flex items-center gap-4">
             <SelectDropdown
@@ -373,11 +375,11 @@ export default function Accounts({}) {
 
       {loading ? (
         <div className="flex justify-center items-center h-full">
-          <Loader /> {/* Display your Loader component here */}
+          <Loader />
         </div>
       ) : (
         <DataTable columns={columns} data={filteredData} loading={loading} />
       )}
-    </div>
+    </>
   );
 }

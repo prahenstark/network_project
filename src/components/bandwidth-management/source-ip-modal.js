@@ -19,9 +19,12 @@ export default function SourceIpModal({ toggleModal }) {
   const [sourceIPName, setSourceIPName] = useState(""); // Source IP
   const [remarks, setRemarks] = useState("");
   const [notes, setNotes] = useState(""); // Textarea input for IPs
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { selectedBandwidthDevice } = useBandwidthDevice();
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
+
     const startIPs = Array.from(
       document.querySelectorAll('input[placeholder="Enter start IP"]')
     ).map((input) => input.value.trim());
@@ -41,6 +44,7 @@ export default function SourceIpModal({ toggleModal }) {
           "Each Start IP must have a corresponding End IP and vice versa.",
         variant: "destructive",
       });
+      setIsSubmitting(false);
       return;
     }
 
@@ -57,6 +61,7 @@ export default function SourceIpModal({ toggleModal }) {
           "Please provide at least one valid Start IP and End IP pair.",
         variant: "destructive",
       });
+      setIsSubmitting(false);
       return;
     }
 
@@ -66,29 +71,28 @@ export default function SourceIpModal({ toggleModal }) {
       address_array: validPairs,
     };
 
-    console.log("Form 2 Payload:", payload);
-
-    fetchDashboardInfo(
-      `/devices/address-object/${selectedBandwidthDevice}?action=add`,
-      "PUT",
-      payload,
-      false
-    )
-      .then((response) => {
-        console.log("API Response:", response);
-        toast({
-          description: "Source IPs added successfully!",
-          variant: "default",
-        });
-        toggleModal();
-      })
-      .catch((error) => {
-        console.error("Error submitting form 2:", error);
-        toast({
-          description: "Error adding Source IPs.",
-          variant: "destructive",
-        });
+    try {
+      const response = await fetchDashboardInfo(
+        `/devices/address-object/${selectedBandwidthDevice}?action=add`,
+        "PUT",
+        payload,
+        false
+      );
+      console.log("API Response:", response);
+      toast({
+        description: "Source IPs added successfully!",
+        variant: "default",
       });
+      toggleModal();
+    } catch (error) {
+      console.error("Error submitting form 2:", error);
+      toast({
+        description: "Error adding Source IPs.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -156,8 +160,12 @@ export default function SourceIpModal({ toggleModal }) {
             <Button onClick={toggleModal} variant="outline" className="mr-2">
               Cancel
             </Button>
-            <Button onClick={handleSubmit} variant="default">
-              Submit
+            <Button
+              onClick={handleSubmit}
+              variant="default"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Submitting..." : "Submit"}
             </Button>
           </div>
         </div>
@@ -165,4 +173,3 @@ export default function SourceIpModal({ toggleModal }) {
     </>
   );
 }
-
