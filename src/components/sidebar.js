@@ -17,6 +17,7 @@ import LogoutModal from "./logout-modal";
 import { useState } from "react";
 import Image from "next/image";
 import { useUIState } from "@/hooks/use-uiState";
+import { Tooltip } from "@material-tailwind/react"; // Import Tooltip
 import { RouterIcon } from "lucide-react";
 import { NetworkIcon } from "lucide-react";
 import { MonitorSmartphoneIcon } from "lucide-react";
@@ -81,6 +82,7 @@ export default function Sidebar() {
                 className="my-2 flex items-center w-full relative"
                 key={index}
               >
+                <Tooltip content={item.name} placement="right">
                   <div className="flex-1 flex justify-center items-center">
                     <Link href={item.href}>
                       <div
@@ -92,6 +94,7 @@ export default function Sidebar() {
                       </div>
                     </Link>
                   </div>
+                </Tooltip>
                 <div
                   className={`h-10 w-1 ml-auto rounded-tl-md rounded-bl-md ${
                     pathname === item.href ? "bg-primary" : ""
@@ -99,26 +102,30 @@ export default function Sidebar() {
                 />
               </div>
             ))}
-            <button
-              onClick={() => {
-                setIsModalOpen(true);
-              }}
-              className="icon py-4 md:hidden"
-            >
-              <LogOut size={20} />
-            </button>
+            <Tooltip content="Logout" placement="right">
+              <button
+                onClick={() => {
+                  setIsModalOpen(true);
+                }}
+                className="icon py-4 md:hidden"
+              >
+                <LogOut size={20} />
+              </button>
+            </Tooltip>
           </div>
         </div>
 
         <div className="w-full max-md:hidden lower-container flex flex-col size-16 items-center justify-center border-b pb-16">
-          <button
-            onClick={() => {
-              setIsModalOpen(true);
-            }}
-            className="icon p-4"
-          >
-            <LogOut size={20} />
-          </button>
+          <Tooltip content="Logout" placement="right">
+            <button
+              onClick={() => {
+                setIsModalOpen(true);
+              }}
+              className="icon p-4"
+            >
+              <LogOut size={20} />
+            </button>
+          </Tooltip>
         </div>
 
         <LogoutModal isOpen={isModalOpen} onClose={closeModal} />
