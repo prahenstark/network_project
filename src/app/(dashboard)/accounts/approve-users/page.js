@@ -52,11 +52,10 @@ export default function ApproveUserPage() {
       );
     }
   };
-
   const filteredData = data.filter(
     (item) =>
-      item.phone.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.message.toLowerCase().includes(searchQuery.toLowerCase())
+      item?.phone?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item?.message?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const columns = [
@@ -111,9 +110,15 @@ export default function ApproveUserPage() {
         <div className="flex gap-2">
           <Button
             onClick={() => approveOtpRequest(row.original.phone)}
-            className="bg-green-500 hover:bg-green-600 text-white"
+            className="text-white"
           >
             Approve
+          </Button>
+          <Button
+            onClick={() => approveOtpRequest(row.original.phone)}
+            className="bg-red-600 text-white"
+          >
+            Reject
           </Button>
         </div>
       ),
