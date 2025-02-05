@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import DataTable from "@/components/data-table";
 import Navbar from "@/components/navbar";
 import Searchbar from "@/components/searchbar";
@@ -11,60 +11,45 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import Loader from "@/components/loader";
 
-
 export default function ApproveUserPage() {
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [data, setData] = useState([]);
   const [socket, setSocket] = useState(null);
-  
+  const [connectionStatus, setConnectionStatus] = useState("disconnected");
+  const socketRef = useRef(null); // Store the socket
+
   useEffect(() => {
-    const ws = new WebSocket("ws://65.1.1.229:8080");
+    // Only run on client
+    if (typeof window !== "undefined") {
+      const ws = new WebSocket("ws://65.1.1.229:8080");
 
-    ws.onopen = () => {
-      console.log("Connected to WebSocket server.");
-      setSocket(ws);
-    };
+      ws.onopen = () => console.log("Connected");
+      ws.onmessage = (event) => {
+        try {
+          const receivedData = JSON.parse(event.data);
+          setData((prev) => [...prev, receivedData]);
+        } catch (error) {
+          console.error("Parsing error:", error);
+        }
+      };
 
-    ws.onmessage = (event) => {
-      try {
-        const receivedData = JSON.parse(event.data);
-        console.log("OTP Approval Request:", receivedData);
-        setData((prevData) => [
-          ...prevData,
-          {
-            phone: receivedData.phone,
-            message: receivedData.message,
-          },
-        ]);
-      } catch (error) {
-        console.error("Error parsing WebSocket message:", error);
-      }
-    };
+      ws.onerror = (error) => console.error("WebSocket Error:", error);
+      ws.onclose = () => console.log("Disconnected");
 
-    ws.onerror = (error) => {
-      console.error("WebSocket error:", error);
-    };
+      socketRef.current = ws;
 
-    ws.onclose = () => {
-      console.log("Disconnected from WebSocket server.");
-      setTimeout(() => {
-        console.log("Reconnecting...");
-        setSocket(new WebSocket("wss://65.1.1.229:8080"));
-      }, 3000); // Auto-reconnect after 3 seconds
-    };
-
-    return () => {
-      ws.close();
-    };
+      return () => {
+        ws.close();
+      };
+    }
   }, []);
 
   const approveOtpRequest = (phone) => {
-    if (socket && socket.readyState === WebSocket.OPEN) {
-      const message = JSON.stringify({ event: "approveOtpRequest", phone });
-      socket.send(message);
-    } else {
-      console.error("WebSocket is not connected.");
+    if (socketRef.current?.readyState === WebSocket.OPEN) {
+      socketRef.current.send(
+        JSON.stringify({ event: "approveOtpRequest", phone })
+      );
     }
   };
 
@@ -108,12 +93,16 @@ export default function ApproveUserPage() {
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       ),
-      cell: ({ row }) => <div className="lowercase">{row.getValue("phone")}</div>,
+      cell: ({ row }) => (
+        <div className="lowercase">{row.getValue("phone")}</div>
+      ),
     },
     {
       accessorKey: "message",
       header: "Message",
-      cell: ({ row }) => <div className="lowercase">{row.getValue("message")}</div>,
+      cell: ({ row }) => (
+        <div className="lowercase">{row.getValue("message")}</div>
+      ),
     },
     {
       id: "actions",
