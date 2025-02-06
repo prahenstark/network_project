@@ -90,7 +90,7 @@ export default function ApproveUser() {
         ws.close();
       };
     }
-  }, []);
+  }, [selectedDevice]);
 
   const approveOtpRequest = (phone) => {
     if (socketRef.current?.readyState === WebSocket.OPEN) {
