@@ -28,11 +28,17 @@ export default function ApproveUserPage() {
       ws.onmessage = (event) => {
         try {
           const receivedData = JSON.parse(event.data);
-          setData((prev) => [...prev, receivedData]);
+          console.log("Received WebSocket Data:", receivedData);
+  
+          // Check if the event type is 'newOtpRequest'
+          if (receivedData.event === "newOtpRequest") {
+            console.log("OTP Approval Request:", receivedData);
+            setData((prev) => [...prev, receivedData]); // Add data to state
+          }
         } catch (error) {
           console.error("Parsing error:", error);
         }
-      };
+      }
 
       ws.onerror = (error) => console.error("WebSocket Error:", error);
       ws.onclose = () => console.log("Disconnected");
