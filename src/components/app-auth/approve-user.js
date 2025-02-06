@@ -5,25 +5,67 @@ import DataTable from "@/components/data-table";
 import Navbar from "@/components/navbar";
 import Searchbar from "@/components/searchbar";
 import ToggleHeader from "@/components/toggle-header";
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+} from "@/components/ui/select";
 
 import { ArrowUpDown, Loader2 } from "lucide-react"; // Loader icon
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import Loader from "@/components/loader";
 import { toast } from "@/hooks/use-toast";
+import { fetchProtectedInfo } from "@/lib/api";
 
 export default function ApproveUser() {
   const [loading, setLoading] = useState(false);
+  const [devices, setDevices] = useState([]); // State for all devices
+  const [selectedDevice, setSelectedDevice] = useState(""); // State for the currently selected device
   const [searchQuery, setSearchQuery] = useState("");
   const [data, setData] = useState([]);
   const [loadingActions, setLoadingActions] = useState({}); // Track loading state for each row
   const socketRef = useRef(null); // WebSocket reference
 
+  const fetchDevices = async () => {
+    try {
+      const data = await fetchProtectedInfo("/devices/gateway-device");
+      const deviceList = data.gateways || [];
+      setDevices(deviceList);
+      if (deviceList.length > 0) {
+        setSelectedDevice(deviceList[0].deviceId); // Default to the first device
+      }
+    } catch (error) {
+      console.error("Error fetching devices:", error);
+      toast({
+        description: "Failed to fetch devices.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch devices on component mount
+  useEffect(() => {
+    fetchDevices();
+  }, []);
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       const ws = new WebSocket("ws://65.1.1.229:8080");
 
-      ws.onopen = () => console.log("Connected to WebSocket server.");
+      ws.onopen = () => {
+        console.log("Connected to WebSocket server.");
+        socketRef.current.send(
+          JSON.stringify({
+            event: "adminConnect",
+            deviceId: selectedDevice,
+          })
+        );
+      };
 
       ws.onmessage = (event) => {
         try {
@@ -55,7 +97,11 @@ export default function ApproveUser() {
       setLoadingActions((prev) => ({ ...prev, [phone]: true })); // Start loading
 
       socketRef.current.send(
-        JSON.stringify({ event: "approveOtpRequest", phone })
+        JSON.stringify({
+          event: "approveOtpRequest",
+          phone,
+          deviceId: selectedDevice,
+        })
       );
 
       setTimeout(() => {
@@ -171,6 +217,21 @@ export default function ApproveUser() {
             onChange={(e) => setSearchQuery(e.target.value)}
             displayText="🔍 Phone Number/Message"
           />
+        </div>
+        {/* Device Select Component */}
+        <div className="md:min-w-48 max-md:w-full">
+          <Select value={selectedDevice} onValueChange={setSelectedDevice}>
+            <SelectTrigger className="max-w-sm bg-green-900/40">
+              <SelectValue placeholder="Select a device" />
+            </SelectTrigger>
+            <SelectContent>
+              {devices.map((device) => (
+                <SelectItem key={device.deviceId} value={device.deviceId}>
+                  {device.deviceId}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       </ToggleHeader>
 
