@@ -52,6 +52,11 @@ export default function ApproveUserPage() {
       );
     }
   };
+
+  const rejectOtpRequest = (phone) => {
+    setData((prevData) => prevData.filter((item) => item.phone !== phone));
+  };
+
   const filteredData = data.filter(
     (item) =>
       item?.phone?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -115,7 +120,7 @@ export default function ApproveUserPage() {
             Approve
           </Button>
           <Button
-            onClick={() => approveOtpRequest(row.original.phone)}
+            onClick={() => rejectOtpRequest(row.original.phone)}
             className="bg-red-600 text-white"
           >
             Reject
