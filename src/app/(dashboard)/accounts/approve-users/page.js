@@ -6,42 +6,41 @@ import Navbar from "@/components/navbar";
 import Searchbar from "@/components/searchbar";
 import ToggleHeader from "@/components/toggle-header";
 
-import { ArrowUpDown } from "lucide-react";
+import { ArrowUpDown, Loader2 } from "lucide-react"; // Loader icon
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import Loader from "@/components/loader";
+import { toast } from "@/hooks/use-toast";
 
 export default function ApproveUserPage() {
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [data, setData] = useState([]);
-  const [socket, setSocket] = useState(null);
-  const [connectionStatus, setConnectionStatus] = useState("disconnected");
-  const socketRef = useRef(null); // Store the socket
+  const [loadingActions, setLoadingActions] = useState({}); // Track loading state for each row
+  const socketRef = useRef(null); // WebSocket reference
 
   useEffect(() => {
-    // Only run on client
     if (typeof window !== "undefined") {
       const ws = new WebSocket("ws://65.1.1.229:8080");
 
-      ws.onopen = () => console.log("Connected");
+      ws.onopen = () => console.log("Connected to WebSocket server.");
+
       ws.onmessage = (event) => {
         try {
           const receivedData = JSON.parse(event.data);
           console.log("Received WebSocket Data:", receivedData);
-  
-          // Check if the event type is 'newOtpRequest'
+
           if (receivedData.event === "newOtpRequest") {
             console.log("OTP Approval Request:", receivedData);
-            setData((prev) => [...prev, receivedData]); // Add data to state
+            setData((prev) => [...prev, receivedData]); // Add new OTP request
           }
         } catch (error) {
-          console.error("Parsing error:", error);
+          console.error("Error parsing WebSocket message:", error);
         }
-      }
+      };
 
-      ws.onerror = (error) => console.error("WebSocket Error:", error);
-      ws.onclose = () => console.log("Disconnected");
+      ws.onerror = (error) => console.error("WebSocket error:", error);
+      ws.onclose = () => console.log("Disconnected from WebSocket server.");
 
       socketRef.current = ws;
 
@@ -53,14 +52,33 @@ export default function ApproveUserPage() {
 
   const approveOtpRequest = (phone) => {
     if (socketRef.current?.readyState === WebSocket.OPEN) {
+      setLoadingActions((prev) => ({ ...prev, [phone]: true })); // Start loading
+
       socketRef.current.send(
         JSON.stringify({ event: "approveOtpRequest", phone })
       );
+
+      setTimeout(() => {
+        setLoadingActions((prev) => ({ ...prev, [phone]: false })); // Stop loading
+        setData((prev) => prev.filter((item) => item.phone !== phone));
+
+        toast({
+          description: `✅ OTP request approved for ${phone}`,
+        });
+      }, 500);
     }
   };
 
   const rejectOtpRequest = (phone) => {
-    setData((prevData) => prevData.filter((item) => item.phone !== phone));
+    setTimeout(() => {
+      setLoadingActions((prev) => ({ ...prev, [phone]: false })); // Stop loading
+      setData((prev) => prev.filter((item) => item.phone !== phone));
+
+      toast({
+        description: `❌ OTP request rejected for ${phone}`,
+        variant: "destructive",
+      });
+    }, 500);
   };
 
   const filteredData = data.filter(
@@ -117,22 +135,31 @@ export default function ApproveUserPage() {
     {
       id: "actions",
       header: "Actions",
-      cell: ({ row }) => (
-        <div className="flex gap-2">
-          <Button
-            onClick={() => approveOtpRequest(row.original.phone)}
-            className="text-white"
-          >
-            Approve
-          </Button>
-          <Button
-            onClick={() => rejectOtpRequest(row.original.phone)}
-            className="bg-red-600 text-white"
-          >
-            Reject
-          </Button>
-        </div>
-      ),
+      cell: ({ row }) => {
+        const phone = row.original.phone;
+        const isLoading = loadingActions[phone];
+
+        return (
+          <div className="flex gap-2">
+            <Button
+              onClick={() => approveOtpRequest(phone)}
+              disabled={isLoading}
+              className=" hover:bg-green-500 text-white flex items-center gap-2"
+            >
+              {isLoading ? <Loader2 className="animate-spin w-4 h-4" /> : null}
+              Approve
+            </Button>
+            <Button
+              onClick={() => rejectOtpRequest(phone)}
+              disabled={isLoading}
+              className="bg-red-600 hover:bg-red-500 text-white flex items-center gap-2"
+            >
+              {isLoading ? <Loader2 className="animate-spin w-4 h-4" /> : null}
+              Reject
+            </Button>
+          </div>
+        );
+      },
     },
   ];
 

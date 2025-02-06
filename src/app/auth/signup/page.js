@@ -79,7 +79,7 @@ export default function SignupPage() {
           Sign up to get started with our platform
         </p>
         {error && <div className="mb-4 text-red-600 text-center">{error}</div>}
-        <form onSubmit={handleSubmit} className="grid gap-4">
+        <form onSubmit={handleSubmit} className="grid gap-4 ">
           <div className="grid gap-2">
             <Label htmlFor="nickname">Nickname</Label>
             <Input
