@@ -12,7 +12,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import Loader from "@/components/loader";
 import { toast } from "@/hooks/use-toast";
 
-export default function ApproveUserPage() {
+export default function ApproveUser() {
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [data, setData] = useState([]);
