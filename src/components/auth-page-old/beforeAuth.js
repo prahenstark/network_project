@@ -157,7 +157,7 @@ export default function BeforeAuthComponent({}) {
       <div className="flex-1 p-6">
         {/* Device ToggleNav */}
         <ToggleNav
-          className="p-6"
+          className="p-6 bg-white bg-opacity-5 rounded-md"
           tabs={devices}
           activeTab={activeDevice}
           setActiveTab={setActiveDevice}
@@ -167,7 +167,7 @@ export default function BeforeAuthComponent({}) {
         <div className="flex mt-4 items-center">
           <label className="min-w-40 text-xl">Auth Procedure</label>
           <ToggleNav
-            className="flex-1 px-6"
+            className="flex-1 px-6 bg-white bg-opacity-5 rounded-md"
             tabs={modes}
             activeTab={activeMode}
             setActiveTab={setActiveMode}

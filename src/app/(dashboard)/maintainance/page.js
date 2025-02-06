@@ -31,7 +31,7 @@ export default function Maintainance({}) {
         <div className="min-h-screen flex flex-col items-center ">
           {/* Navbar for Tab Controls */}
           <ToggleNav
-            className="p-6"
+            className="p-6 bg-white bg-opacity-5 rounded-md"
             tabs={tabs}
             activeTab={activeTab}
             setActiveTab={setActiveTab}

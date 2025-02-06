@@ -25,7 +25,7 @@ export default function Auth() {
       <div className="min-h-screen flex flex-col p-6">
         {/* Navbar for Tab Controls */}
         <ToggleNav
-          className="pb-6"
+          className="pb-6 bg-white bg-opacity-5 rounded-md"
           tabs={tabs}
           activeTab={activeTab}
           setActiveTab={setActiveTab}
