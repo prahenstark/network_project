@@ -13,10 +13,10 @@ const ToggleNav = ({ tabs, activeTab, setActiveTab, className = "" }) => {
           // } ${
           //   index === 0 ? "rounded-l-md" : index === tabs.length - 1 ? "rounded-r-md" : ""
           // } transition`}
-          className={`py-2 flex-1 ${
+          className={`py-2 flex-1  ${
             activeTab === tab
-              ? "bg-white bg-opacity-5 border-2 border-green-500 rounded-md"
-              : "bg-white bg-opacity-5 hover:bg-opacity-10"
+              ? " border-2 border-green-500 rounded-md"
+              : " hover:bg-opacity-10"
           } transition`}
           onClick={() => setActiveTab(tab)}
         >
