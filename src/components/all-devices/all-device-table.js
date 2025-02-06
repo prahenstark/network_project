@@ -14,6 +14,7 @@ import { fetchProtectedInfo } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 import { Plus } from "lucide-react";
 import UpdateCredsModal from "@/components/all-devices/update-creds-modal";
+import { ToggleSwitch } from "../ui/toggle-switch";
 
 function AllDeviceTable({ data, refreshAction, mode }) {
   const { toast } = useToast();
@@ -55,12 +56,52 @@ function AllDeviceTable({ data, refreshAction, mode }) {
     }
   };
 
+  const handleToggle = async (row, checked, setChecked) => {
+    try {
+      // Store the new status
+      const newStatus = !checked;
+
+      const apiData = {
+        deviceId: row.original.deviceId,
+        flag: newStatus,
+      };
+
+      // Make API call before updating UI
+      const response = await fetchProtectedInfo(
+        "/devices/handle-device-approval",
+        "POST",
+        apiData
+      );
+
+      if (response) {
+        // Only update UI state if API call succeeds
+        toast({
+          title: "Device approved!",
+          description: "Successfully approved Device.",
+        });``
+      } else {
+        // setChecked();
+        toast({
+          title: "Error",
+          variant: "destructive",
+          description: "Failed to approve device.",
+        });
+      }
+      refreshAction();
+    } catch (error) {
+      toast({
+        title: "Error",
+        variant: "destructive",
+        description: "Something went wrong. Please try again later.",
+      });
+    }
+  };
+
   const handleUpdateCreds = (device) => {
     setSelectedDevice(device); // Set the selected device
     setIsModalOpen(true); // Open the modal
     console.log("Selected Device for Update Creds:", device);
   };
-  
 
   // Transform data for the table
   useEffect(() => {
@@ -89,6 +130,7 @@ function AllDeviceTable({ data, refreshAction, mode }) {
         accessTime: device.access_time || "N/A",
         status: device.status === "1" ? <CircleCheck /> : <CircleX />,
         bg: device.status === "1" ? "green" : "red",
+        onApproval: device.onApproval || false,
       }));
 
       setTableData(formattedData);
@@ -216,6 +258,29 @@ function AllDeviceTable({ data, refreshAction, mode }) {
       ),
     },
     {
+      accessorKey: "onApproval",
+      header: "Approval",
+      cell: ({ row }) => {
+        const [checked, setChecked] = useState(
+          row.getValue("onApproval") === true
+        );
+
+        // const handleToggle = (row, checked, setChecked) => {
+        //   // Your logic to handle toggle change
+        //   // For example, updating the row status, or some other operation based on toggle state
+        //   setChecked(!checked);
+        // };
+
+        return (
+          <ToggleSwitch
+            checked={checked}
+            onChange={() => handleToggle(row, checked, setChecked)}
+          />
+        );
+      },
+    },
+
+    {
       id: "config",
       enableHiding: false,
       header: "Config",
@@ -232,6 +297,7 @@ function AllDeviceTable({ data, refreshAction, mode }) {
     {
       id: "updateCreds",
       enableHiding: false,
+      header: "Action",
       cell: ({ row }) => (
         <Button size="sm" onClick={() => handleUpdateCreds(row.original)}>
           Update Creds
