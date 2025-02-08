@@ -15,12 +15,15 @@ import { useToast } from "@/hooks/use-toast";
 import { Plus } from "lucide-react";
 import UpdateCredsModal from "@/components/all-devices/update-creds-modal";
 import { ToggleSwitch } from "../ui/toggle-switch";
+import { ImageIcon } from "lucide-react";
+import LogoUplopadModal from "./logo-upload-modal";
 
 function AllDeviceTable({ data, refreshAction, mode }) {
   const { toast } = useToast();
   const [tableData, setTableData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLogoModalOpen, setIsLogoModalOpen] = useState(false);
   const [selectedDevice, setSelectedDevice] = useState(null);
 
   const handleUnbind = async (device) => {
@@ -78,7 +81,8 @@ function AllDeviceTable({ data, refreshAction, mode }) {
         toast({
           title: "Device approved!",
           description: "Successfully approved Device.",
-        });``
+        });
+        ``;
       } else {
         // setChecked();
         toast({
@@ -101,6 +105,11 @@ function AllDeviceTable({ data, refreshAction, mode }) {
     setSelectedDevice(device); // Set the selected device
     setIsModalOpen(true); // Open the modal
     console.log("Selected Device for Update Creds:", device);
+  };
+
+  const handleLogoUpload = (device) => {
+    setSelectedDevice(device); // Set the selected device
+    setIsLogoModalOpen(true);
   };
 
   // Transform data for the table
@@ -131,6 +140,7 @@ function AllDeviceTable({ data, refreshAction, mode }) {
         status: device.status === "1" ? <CircleCheck /> : <CircleX />,
         bg: device.status === "1" ? "green" : "red",
         onApproval: device.onApproval || false,
+        logo: device.logo || null,
       }));
 
       setTableData(formattedData);
@@ -264,13 +274,6 @@ function AllDeviceTable({ data, refreshAction, mode }) {
         const [checked, setChecked] = useState(
           row.getValue("onApproval") === true
         );
-
-        // const handleToggle = (row, checked, setChecked) => {
-        //   // Your logic to handle toggle change
-        //   // For example, updating the row status, or some other operation based on toggle state
-        //   setChecked(!checked);
-        // };
-
         return (
           <ToggleSwitch
             checked={checked}
@@ -278,6 +281,22 @@ function AllDeviceTable({ data, refreshAction, mode }) {
           />
         );
       },
+    },
+
+    {
+      id: "updateLogo",
+      enableHiding: false,
+      header: "Logo",
+      cell: ({ row }) => (
+        <Button
+          size="sm"
+          className="bg-blue-500 hover:bg-blue-600"
+          onClick={() => handleLogoUpload(row.original)}
+        >
+          <ImageIcon />
+          Upload Logo
+        </Button>
+      ),
     },
 
     {
@@ -325,6 +344,14 @@ function AllDeviceTable({ data, refreshAction, mode }) {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       />
+
+      {isLogoModalOpen && (
+        <LogoUplopadModal
+          device={selectedDevice}
+          isOpen={isLogoModalOpen}
+          onClose={() => (setIsLogoModalOpen(false), setSelectedDevice(null))}
+        />
+      )}
     </>
   );
 }
