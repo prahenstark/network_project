@@ -5,6 +5,8 @@ import ImageTracer from "imagetracerjs";
 import { XIcon, Loader2 } from "lucide-react";
 import { Button } from "../ui/button";
 import Loader from "../loader";
+import { toast } from "@/hooks/use-toast";
+import { fetchProtectedInfo } from "@/lib/api";
 
 const LogoUploadModal = ({ isOpen, onClose, device }) => {
   const [currentLogo, setCurrentLogo] = useState(null);
@@ -79,7 +81,7 @@ const LogoUploadModal = ({ isOpen, onClose, device }) => {
     }
   };
 
-  const handleFileUpload = async (event) => {
+  const handleLogoUpload = async (event) => {
     const file = event.target.files[0];
     if (file) {
       setUploadedImage(URL.createObjectURL(file));
@@ -92,6 +94,67 @@ const LogoUploadModal = ({ isOpen, onClose, device }) => {
       } finally {
         setLoading(false);
       }
+    }
+  };
+
+  const handleLogoSubmit = async () => {
+    console.log("SVG", svg);
+
+    if (!svg) {
+      toast({
+        title: "Error",
+        variant: "destructive",
+        description: "No SVG generated to upload.",
+      });
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      // Convert the SVG string into a Blob
+      // const svgBlob = new Blob([svg], { type: "image/svg+xml" });
+
+      // Create FormData object
+      const formData = new FormData();
+      formData.append(
+        "logo",
+        `<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n${svg}`
+      );
+
+      // Upload SVG via API
+      const response = await fetchProtectedInfo(
+        `/devices/upload-logo/${device.deviceId}`, // Path to API
+        "POST", // HTTP method
+        formData // Data payload
+      );
+
+      if (response) {
+        toast({
+          title: "Success",
+          description: "Logo uploaded successfully.",
+        });
+
+        // Optionally update the current logo
+        // setCurrentLogo(svg);
+        onClose();
+      } else {
+        toast({
+          title: "Error",
+          variant: "destructive",
+          description: "Failed to upload logo.",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        variant: "destructive",
+        description: "Something went wrong. Please try again later.",
+      });
+      console.error("Error uploading SVG:", error);
+    } finally {
+      setLoading(false);
+      setSvg(null); // Reset SVG after upload
     }
   };
 
@@ -114,8 +177,9 @@ const LogoUploadModal = ({ isOpen, onClose, device }) => {
           <div className="flex flex-col items-center mb-4">
             {/* Display Current Logo Properly */}
             {currentLogo && (
-              <div className="flex flex-col items-center mb-4">
-                {currentLogo.endsWith("</svg>\n") ? (
+              <div className="flex flex-col items-center mb-8">
+                {currentLogo.endsWith("</svg>\n") ||
+                currentLogo.endsWith("</svg>") ? (
                   // Render SVG inline
                   <>
                     <h3 className="text-lg font-medium">Current Logo</h3>
@@ -133,7 +197,7 @@ const LogoUploadModal = ({ isOpen, onClose, device }) => {
         )}
 
         {/* File Upload Input */}
-        <input type="file" accept="image/*" onChange={handleFileUpload} />
+        <input type="file" accept="image/*" onChange={handleLogoUpload} />
 
         {/* Display Uploaded Image */}
         {/* {uploadedImage && (
@@ -165,8 +229,13 @@ const LogoUploadModal = ({ isOpen, onClose, device }) => {
         )}
 
         {/* Modal Actions */}
-        <div className="flex justify-end mt-4">
-          <Button onClick={onClose}>Close</Button>
+        <div className="flex justify-end gap-2 mt-4">
+          <Button variant="secondary" onClick={onClose} disabled={loading}>
+            Cancel
+          </Button>
+          <Button onClick={handleLogoSubmit} disabled={loading}>
+            {loading ? "Uploading..." : "Upload"}
+          </Button>
         </div>
       </div>
     </div>
