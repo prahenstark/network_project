@@ -10,6 +10,7 @@ function GatewayForm({ onClose, projectData, refreshAction }) {
     username: "",
     password: "",
     location: "",
+    mac: "",
     deviceId: "",
     gid: "",
   });
@@ -38,6 +39,7 @@ function GatewayForm({ onClose, projectData, refreshAction }) {
       username: formData.username,
       password: formData.password,
       location: formData.location,
+      mac: formData.mac,
       deviceId: formData.deviceId,
       gid: formData.gid,
     };
@@ -57,6 +59,7 @@ function GatewayForm({ onClose, projectData, refreshAction }) {
         setFormData({
           location: "",
           deviceId: "",
+          mac: "",
           gid: "",
         });
         refreshAction();
@@ -77,6 +80,7 @@ function GatewayForm({ onClose, projectData, refreshAction }) {
       setFormData({
         location: "",
         deviceId: "",
+        mac: "",
         gid: "",
       });
       onClose();
@@ -104,33 +108,32 @@ function GatewayForm({ onClose, projectData, refreshAction }) {
   //   }, []);
 
   // Recursive component for rendering projects and their children
- const DeviceProjectHierarchy = ({ projects, isRoot = true }) => {
-   return (
-     <ul className="ml-4 border-l border-gray-600 pl-4">
-       {projects.map((project, index) => (
-         <li key={project.gid} className="my-2">
-           <label className="flex items-center">
-             {!(isRoot && index === 0) && ( // Skip rendering the radio button for the root parent
-               <input
-                 type="radio"
-                 name="gid"
-                 value={project.gid}
-                 checked={formData.gid === project.gid}
-                 onChange={handleChange}
-                 className="mr-2"
-               />
-             )}
-             {project.name}
-           </label>
-           {project.child?.length > 0 && (
-             <DeviceProjectHierarchy projects={project.child} isRoot={false} />
-           )}
-         </li>
-       ))}
-     </ul>
-   );
- };
-
+  const DeviceProjectHierarchy = ({ projects, isRoot = true }) => {
+    return (
+      <ul className="ml-4 border-l border-gray-600 pl-4">
+        {projects.map((project, index) => (
+          <li key={project.gid} className="my-2">
+            <label className="flex items-center">
+              {!(isRoot && index === 0) && ( // Skip rendering the radio button for the root parent
+                <input
+                  type="radio"
+                  name="gid"
+                  value={project.gid}
+                  checked={formData.gid === project.gid}
+                  onChange={handleChange}
+                  className="mr-2"
+                />
+              )}
+              {project.name}
+            </label>
+            {project.child?.length > 0 && (
+              <DeviceProjectHierarchy projects={project.child} isRoot={false} />
+            )}
+          </li>
+        ))}
+      </ul>
+    );
+  };
 
   return (
     <form
@@ -169,6 +172,18 @@ function GatewayForm({ onClose, projectData, refreshAction }) {
           type="text"
           name="location"
           value={formData.location}
+          onChange={handleChange}
+          className="mt-1 block w-full text-white bg-white bg-opacity-5 border rounded-md shadow-sm p-2 focus:outline-none focus:ring focus:ring-blue-200"
+          required
+        />
+      </div>
+
+      <div className="w-full flex items-center justify-center">
+        <label className="w-1/2 block text-sm font-medium mb-1">MAC</label>
+        <input
+          type="text"
+          name="mac"
+          value={formData.mac}
           onChange={handleChange}
           className="mt-1 block w-full text-white bg-white bg-opacity-5 border rounded-md shadow-sm p-2 focus:outline-none focus:ring focus:ring-blue-200"
           required
