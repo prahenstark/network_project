@@ -24,6 +24,8 @@
     "clsx": "^2.1.1",
     "d3-format": "^3.1.0",
     "date-fns": "^4.1.0",
+    "firebase": "^11.3.1",
+    "fs": "0.0.1-security",
     "imagetracerjs": "^1.2.6",
     "lucide-react": "^0.454.0",
     "next": "15.0.2",
@@ -39,6 +41,7 @@
     "recharts": "^2.15.0",
     "socket-client": "^1.0.0",
     "socket.io-client": "^4.8.1",
+    "svgo": "^3.3.2",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7",
     "xlsx": "^0.18.5"

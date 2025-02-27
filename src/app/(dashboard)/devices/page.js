@@ -46,6 +46,8 @@ export default function Devices() {
   const getDeviceForSelectedProject = () => {
     if (!selectedDeviceProject || !devicesData) return null;
 
+    // console.log("SELECTED PROJECT IN DEVICE", selectedDeviceProject);
+
     return devicesData?.devices.find(
       (device) => device.gid === selectedDeviceProject.gid
     );

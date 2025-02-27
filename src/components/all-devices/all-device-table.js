@@ -176,6 +176,13 @@ function AllDeviceTable({ data, refreshAction, mode }) {
       cell: ({ row }) => <div className="capitalize">{row.getValue("sn")}</div>,
     },
     {
+      accessorKey: "deviceId",
+      header: "deviceId",
+      cell: ({ row }) => (
+        <div className="lowercase">{row.getValue("deviceId")}</div>
+      ),
+    },
+    {
       accessorKey: "mac",
       header: "MAC",
       cell: ({ row }) => <div className="lowercase">{row.getValue("mac")}</div>,
@@ -349,6 +356,7 @@ function AllDeviceTable({ data, refreshAction, mode }) {
         <LogoUplopadModal
           device={selectedDevice}
           isOpen={isLogoModalOpen}
+          refreshAction={refreshAction}
           onClose={() => (setIsLogoModalOpen(false), setSelectedDevice(null))}
         />
       )}

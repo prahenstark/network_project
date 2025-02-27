@@ -54,48 +54,56 @@ function DeviceTable({ data, refreshAction, statusFilter, searchQuery }) {
   };
 
   useEffect(() => {
-    if (data) {
-      const deviceList = data?.deviceList || [];
-  
-      // Filter based on the statusFilter parameter
-      let filteredDevices = deviceList?.filter((deviceListData) => {
-        if (statusFilter === "offline") {
-          return deviceListData?.status === "0"; // Only show offline devices
+    try {
+      setLoading(true);
+      if (data) {
+        console.log("DATA", data);
+        const deviceList = data?.deviceList || [];
+
+        // Filter based on the statusFilter parameter
+        let filteredDevices = deviceList?.filter((deviceListData) => {
+          if (statusFilter === "offline") {
+            return deviceListData?.status === "0"; // Only show offline devices
+          }
+          if (statusFilter === "online") {
+            return deviceListData?.status === "1"; // Only show online devices
+          }
+          return true; // Show all devices when statusFilter is 'all'
+        });
+
+        // Filter based on the search query (IP address)
+        if (searchQuery.trim() !== "") {
+          filteredDevices = filteredDevices.filter((device) =>
+            device.ip.toLowerCase().includes(searchQuery.toLowerCase())
+          );
         }
-        if (statusFilter === "online") {
-          return deviceListData?.status === "1"; // Only show online devices
-        }
-        return true; // Show all devices when statusFilter is 'all'
-      });
-  
-      // Filter based on the search query (IP address)
-      if (searchQuery.trim() !== "") {
-        filteredDevices = filteredDevices.filter((device) =>
-          device.ip.toLowerCase().includes(searchQuery.toLowerCase())
-        );
+
+        // Map the filtered devices to a formatted structure
+        const formattedData = filteredDevices?.map((deviceListData, index) => ({
+          id: index,
+          deviceId: deviceListData?.deviceId || "N/A",
+          name: deviceListData?.name || "N/A",
+          type: deviceListData?.type || "N/A",
+          sn: index + 1,
+          mac: deviceListData?.mac || "N/A",
+          ip: deviceListData?.ip || "N/A",
+          mode: deviceListData?.mode || "N/A",
+          version: deviceListData?.version || "N/A",
+          accessTime: deviceListData?.access_time || "N/A",
+          status:
+            deviceListData?.status === "1" ? <CircleCheck /> : <CircleX />,
+          bg: deviceListData?.status === "1" ? "green" : "red",
+        }));
+
+        setTableData(formattedData);
+        console.log("Filtered device data", formattedData);
       }
-  
-      // Map the filtered devices to a formatted structure
-      const formattedData = filteredDevices?.map((deviceListData, index) => ({
-        id: index,
-        deviceId: deviceListData?.deviceId || "N/A",
-        name: deviceListData?.name || "N/A",
-        type: deviceListData?.type || "N/A",
-        sn: index + 1,
-        mac: deviceListData?.mac || "N/A",
-        ip: deviceListData?.ip || "N/A",
-        mode: deviceListData?.mode || "N/A",
-        version: deviceListData?.version || "N/A",
-        accessTime: deviceListData?.access_time || "N/A",
-        status: deviceListData?.status === "1" ? <CircleCheck /> : <CircleX />,
-        bg: deviceListData?.status === "1" ? "green" : "red",
-      }));
-  
-      setTableData(formattedData);
-      console.log("Filtered device data", formattedData);
+    } catch (error) {
+      console.log("Failed to fetch devices data:", error);
+    } finally {
+      setLoading(false);
     }
   }, [data, statusFilter, searchQuery]);
-  
 
   const columns = [
     {
@@ -124,6 +132,13 @@ function DeviceTable({ data, refreshAction, statusFilter, searchQuery }) {
       accessorKey: "sn",
       header: "SN",
       cell: ({ row }) => <div className="capitalize">{row.getValue("sn")}</div>,
+    },
+    {
+      accessorKey: "deviceId",
+      header: "deviceId",
+      cell: ({ row }) => (
+        <div className="lowercase">{row.getValue("deviceId")}</div>
+      ),
     },
     {
       accessorKey: "mac",

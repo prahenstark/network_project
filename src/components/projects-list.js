@@ -26,7 +26,7 @@ export default function ProjectList({ projects = [] }) {
     if (projects.length > 0) {
       const [mainProject] = projects;
       setSelected(mainProject?.child[0]);
-      setSelectedDeviceProject(mainProject);
+      setSelectedDeviceProject(mainProject?.child[0]);
     }
   }, [projects]);
 
@@ -40,7 +40,9 @@ export default function ProjectList({ projects = [] }) {
               onClick={!isRoot ? () => handleSelectProject(project) : undefined}
               className={`flex items-center gap-2 py-2 px-6 hover:bg-[#2C3E38] hover:border-2 border-2 border-transparent rounded-md cursor-pointer ${
                 isSelected(project) ? "bg-primary" : ""
-              } ${isRoot ? "cursor-default hover:bg-transparent font-bold" : ""}`}
+              } ${
+                isRoot ? "cursor-default hover:bg-transparent font-bold" : ""
+              }`}
             >
               <CornerDownRight size={16} />
               <FolderIcon size={16} />
