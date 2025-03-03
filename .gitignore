@@ -40,4 +40,5 @@ yarn-error.log*
 next-env.d.ts
 
 # files
-/src/firebase.js
+.env.local
+
