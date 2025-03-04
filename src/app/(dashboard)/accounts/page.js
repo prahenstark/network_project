@@ -247,7 +247,10 @@ export default function AccountsPage() {
         const isExpanded = expandedRows.includes(row.index);
         return (
           <div>
-            <button onClick={() => handleRowExpansion(row.index)}>
+            <button
+              className="text-green-600 hover:text-green-500"
+              onClick={() => handleRowExpansion(row.index)}
+            >
               {isExpanded ? "Hide Projects" : "Show Projects"}
             </button>
             {isExpanded && (
@@ -259,6 +262,7 @@ export default function AccountsPage() {
                       <th className="border border-green-800 px-4">
                         Description
                       </th>
+                      <th className="border border-green-800 px-4">Type</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -269,6 +273,9 @@ export default function AccountsPage() {
                         </td>
                         <td className="border border-green-800 px-4">
                           {project.description}
+                        </td>
+                        <td className="border border-green-800 px-4">
+                          {project.type}
                         </td>
                       </tr>
                     ))}
