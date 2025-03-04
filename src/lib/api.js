@@ -3,11 +3,11 @@
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
-export const API_URL = `http://65.1.1.229:5000/api`;
+export const API_URL = `http://13.232.192.143:5000/api`;
 
 // Axios instance for API calls
 const apiInstance = axios.create({
-  baseURL: "http://65.1.1.229:5000/api",
+  baseURL: "http://13.232.192.143:5000/api",
   headers: {
     "Content-Type": "application/json",
   },

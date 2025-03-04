@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }) => {
       }
 
       try {
-        const response = await fetch("http://65.1.1.229:5000/middleware", {
+        const response = await fetch("http://13.232.192.143:5000/middleware", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,

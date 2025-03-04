@@ -22,7 +22,7 @@ export default function Page() {
 
     try {
       const response = await axios.post(
-        "http://65.1.1.229:5000/api/auth/login",
+        "http://13.232.192.143:5000/api/auth/login",
         {
           email,
           password,
